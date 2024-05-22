@@ -34,6 +34,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.20.5",
     "@types/node": "^20.11.15",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
@@ -45,7 +46,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "nodemon": "^3.0.3",
     "postcss": "^8.4.33",
-    "shadcn-ui": "^0.8.0",
+    "shadcn-ui": "^0.2.3",
     "tailwindcss": "^3.4.1",
     "vite": "^5.0.8"
   }
