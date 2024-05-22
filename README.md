@@ -1,5 +1,11 @@
 # CSSWENG
 
+**Change to proper directory**
+```bash
+cd bridge-builders
+```
+-in case the commands below dont work input this in the terminal, used to ensure you are in the correct directory
+
 **Install Dependencies**
 
 ```bash
