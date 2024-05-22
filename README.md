@@ -1,7 +1,8 @@
-Install
-npm i or npm install
- - install dependencies(3rd-party libraries)
+# Installation Instructions
 
-Run
-npm run dev
- - run development server
+**Install Dependencies**
+
+```bash
+npm i
+# or
+npm install
