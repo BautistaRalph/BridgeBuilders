@@ -34,12 +34,10 @@ export default function Login() {
           />
         </div>
         <div className="mb-6">
-            <Button className="w-full px-4 py-2 bg-purple-600 text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg">
-              Login
-            </Button>
+          <Button className="w-1/2 h-12 px-3 mt-4 bg-purple-600 text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto">Login</Button>
         </div>
         <div className="text-center">
-          <p className="text-lg text-gray-600 dark:text-gray-400">
+          <p className="text-lg text-gray-600 dark:text-gray-400 font-bold">
             Don't have an account? <a href="/signup" className="text-purple-600 hover:text-purple-500">Sign up</a>
           </p>
         </div>
