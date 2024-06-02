@@ -16,10 +16,17 @@ export default function Login() {
       {/* Background component will go here */}
       <div className="w-full max-w-xl p-8 m-auto bg-pink-100 rounded-lg shadow-md">
         <div className="mb-8 text-center">
-          <img src={logo} alt="BridgeBuilder Foundation" className="w-50 h-50 mx-auto text-purple-600" />
+          <img
+            src={logo}
+            alt="BridgeBuilder Foundation"
+            className="w-50 h-50 mx-auto text-purple-600"
+          />
         </div>
         <div className="mb-6">
-          <Label className="block mb-2 text-lg font-bold text-kanit text-purple-600 dark:text-purple-500" htmlFor="username">
+          <Label
+            className="block mb-2 text-lg font-bold text-kanit text-purple-600 dark:text-purple-500"
+            htmlFor="username"
+          >
             Username
           </Label>
           <Input
@@ -30,7 +37,10 @@ export default function Login() {
           />
         </div>
         <div className="mb-6">
-          <Label className="block mb-2 text-lg font-bold text-kanit text-purple-600 dark:text-purple-500" htmlFor="password">
+          <Label
+            className="block mb-2 text-lg font-bold text-kanit text-purple-600 dark:text-purple-500"
+            htmlFor="password"
+          >
             Password
           </Label>
           <Input
@@ -50,7 +60,10 @@ export default function Login() {
         </div>
         <div className="text-center">
           <p className="text-lg text-gray-600 dark:text-gray-400 font-bold">
-            Don't have an account? <a href="/signup" className="text-purple-600 hover:text-purple-500">Sign up</a>
+            Don&apos;t have an account?{" "}
+            <a href="/signup" className="text-purple-600 hover:text-purple-500">
+              Sign up
+            </a>
           </p>
         </div>
       </div>
