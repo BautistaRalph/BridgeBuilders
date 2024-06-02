@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: #000;
+    --background: #ffffff;
     --foreground: 0 0% 98%;
     --card: 0 100% 0%;
     --card-foreground: 0 0% 98%;
@@ -37,4 +37,8 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.hover\:scale-105:hover {
+  transform: scale(1.20);
 }

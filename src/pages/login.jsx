@@ -1,9 +1,16 @@
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 
 export default function Login() {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    navigate("/overview");
+  };
+
   return (
     <div className="flex justify-center min-h-screen bg-gray-100 dark:bg-gray-950">
       {/* Background component will go here */}
@@ -34,7 +41,12 @@ export default function Login() {
           />
         </div>
         <div className="mb-6">
-          <Button className="w-1/2 h-12 px-3 mt-4 bg-purple-600 text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto">Login</Button>
+          <Button
+            className="w-1/2 h-12 px-3 mt-4 bg-purple-600 text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto"
+            onClick={handleLogin}
+          >
+            Login
+          </Button>
         </div>
         <div className="text-center">
           <p className="text-lg text-gray-600 dark:text-gray-400 font-bold">
@@ -43,5 +55,5 @@ export default function Login() {
         </div>
       </div>
     </div>
-  )
+  );
 }
