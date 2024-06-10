@@ -10,6 +10,7 @@ import filter from '@/assets/filter.png';
 import UserCard from '@/components/custom/UserCard'; 
 import { Modal } from '@/components/custom/Modal';
 import { AddYearModal } from '@/components/custom/AddYearModal';
+import Appbar from '@/components/ui/Appbar';
 
 const Overview = () => {
   const [clientsServedToday] = useState(11);
@@ -25,9 +26,9 @@ const Overview = () => {
   const [years, setYears] = useState(['All', '2018', '2019', '2020', '2021', '2022', '2023', '2024']);
 
   const clients = [
-    { name: 'John Doe', ageRange: '10-17', gender: 'Male', year: '2018', category: 'Home Care', profileLink: '/profile/1' },
-    { name: 'Jane Smith', ageRange: '18-24', gender: 'Female', year: '2019', category: 'Community', profileLink: '/profile/2' },
-    { name: 'Alice Johnson', ageRange: '25-34', gender: 'Female', year: '2020', category: 'Home Care', profileLink: '/profile/3' }
+    { name: 'John Doe', ageRange: '10-17', gender: 'Male', year: '2018', category: 'Home Care', profileLink: '/profile' },
+    { name: 'Jane Smith', ageRange: '18-24', gender: 'Female', year: '2019', category: 'Community', profileLink: '/profile' },
+    { name: 'Alice Johnson', ageRange: '25-34', gender: 'Female', year: '2020', category: 'Home Care', profileLink: '/profile' }
   ];
 
   const handleCategoryToggle = (category) => {
@@ -66,10 +67,7 @@ const Overview = () => {
 
   return (
     <>
-      {/* Navbar Placeholder */}
-      <div className="bg-pink-200 h-16 mb-4 flex items-center justify-center">
-        <span className="text-xl text-gray-600">Navbar Placeholder</span>
-      </div>
+      <Appbar />
 
       {/* Main Content */}
       <div className="bg-white p-6 rounded-lg w-full">
@@ -91,7 +89,7 @@ const Overview = () => {
           </ToggleButton>
           <Popover>
             <PopoverTrigger as="div" className="relative">
-              <Button className="bg-purple-600 text-white">
+              <Button className="bg-bb-violet text-white">
                 <MdEditNote className="h-6 w-6" />
               </Button>
             </PopoverTrigger>
@@ -156,7 +154,7 @@ const Overview = () => {
           {/* Filter Popover */}
           <Popover>
             <PopoverTrigger as="div" className="relative flex items-center">
-              <Button className="bg-purple-600 text-white pl-10" size="lg">
+              <Button className="bg-bb-violet text-white pl-10" size="lg">
                 Filter
               </Button>
               <img
@@ -198,7 +196,7 @@ const Overview = () => {
     
             {/* Client List */}
             <div className="space-y-4">
-              {clients.map((client, index) => (
+                {clients.map((client, index) => (
                 <UserCard
                   key={index}
                   name={client.name}
