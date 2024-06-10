@@ -9,10 +9,10 @@ export default function SignUp() {
       {/* Background component will go here */}
       <div className="w-full max-w-xl p-8 m-auto bg-pink-100 rounded-lg shadow-md">
         <div className="mb-8 text-center">
-          <img src={logo} alt="BridgeBuilder Foundation" className="w-50 h-50 mx-auto text-purple-600" />
+          <img src={logo} alt="BridgeBuilder Foundation" className="w-50 h-50 mx-auto text-bb-violet" />
         </div>
         <div className="mb-6">
-          <Label className="block mb-2 text-lg font-bold text-kanit text-purple-600 dark:text-purple-500" htmlFor="username">
+          <Label className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500" htmlFor="username">
             Username
           </Label>
           <Input
@@ -23,7 +23,7 @@ export default function SignUp() {
           />
         </div>
         <div className="mb-6">
-          <Label className="block mb-2 text-lg font-bold text-kanit text-purple-600 dark:text-purple-500" htmlFor="password">
+          <Label className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500" htmlFor="password">
             Password
           </Label>
           <Input
@@ -34,11 +34,11 @@ export default function SignUp() {
           />
         </div>
         <div className="mb-6">
-          <Button className="w-1/2 h-12 px-3 mt-4 bg-purple-600 text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto">Sign Up</Button>
+          <Button className="w-1/2 h-12 px-3 mt-4 bg-bb-violet text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto">Sign Up</Button>
         </div>
         <div className="text-center">
           <p className="text-lg text-gray-600 dark:text-gray-400 font-bold">
-            Already have an account? <a href="/" className="text-purple-600 hover:text-purple-500">Login</a>
+            Already have an account? <a href="/" className="text-purple-600 hover:text-bb-violet">Login</a>
           </p>
         </div>
       </div>
