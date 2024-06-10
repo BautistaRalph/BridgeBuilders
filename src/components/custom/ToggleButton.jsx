@@ -7,7 +7,7 @@ const ToggleButton = React.forwardRef(({ category, isActive, onClick }, ref) => 
       ref={ref}
       onClick={() => onClick(category)}
       className={`flex items-center px-4 py-2 rounded-lg transition-colors duration-200 ${
-        isActive ? 'bg-purple-800' : 'bg-purple-600'
+        isActive ? 'bg-purple-800' : 'bg-bb-violet'
       } text-white`}
     >
       {category} <MdArrowRight className="ml-2" style={{ fontSize: '24px' }} />
