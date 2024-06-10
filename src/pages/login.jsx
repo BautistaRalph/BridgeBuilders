@@ -19,12 +19,12 @@ export default function Login() {
           <img
             src={logo}
             alt="BridgeBuilder Foundation"
-            className="w-50 h-50 mx-auto text-purple-600"
+            className="w-50 h-50 mx-auto text-bb-violet"
           />
         </div>
         <div className="mb-6">
           <Label
-            className="block mb-2 text-lg font-bold text-kanit text-purple-600 dark:text-purple-500"
+            className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
             htmlFor="username"
           >
             Username
@@ -38,7 +38,7 @@ export default function Login() {
         </div>
         <div className="mb-6">
           <Label
-            className="block mb-2 text-lg font-bold text-kanit text-purple-600 dark:text-purple-500"
+            className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
             htmlFor="password"
           >
             Password
@@ -52,7 +52,7 @@ export default function Login() {
         </div>
         <div className="mb-6">
           <Button
-            className="w-1/2 h-12 px-3 mt-4 bg-purple-600 text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto"
+            className="w-1/2 h-12 px-3 mt-4 bg-bb-violet text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto"
             onClick={handleLogin}
           >
             Login
@@ -61,7 +61,7 @@ export default function Login() {
         <div className="text-center">
           <p className="text-lg text-gray-600 dark:text-gray-400 font-bold">
             Don&apos;t have an account?{" "}
-            <a href="/signup" className="text-purple-600 hover:text-purple-500">
+            <a href="/signup" className="text-purple-600 hover:text-bb-violet">
               Sign up
             </a>
           </p>
