@@ -1,40 +1,25 @@
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
+import bg from "@/assets/bb-bg.png";
 
 export default function SignUp() {
   return (
-    <div className="flex justify-center min-h-screen bg-gray-100 dark:bg-gray-950">
-      {/* Background component will go here */}
-      <div className="w-full max-w-xl p-8 m-auto bg-pink-100 rounded-lg shadow-md">
+    <div className="relative flex justify-center min-h-screen bg-gray-100 dark:bg-gray-950">
+      <img
+        src={bg}
+        alt="BridgeBuilder bg"
+        className="absolute top-0 left-0 w-full h-full object-cover"
+      />
+      <div className="relative w-full max-w-xl p-8 m-auto bg-pink-100 rounded-lg shadow-md">
         <div className="mb-8 text-center">
           <img src={logo} alt="BridgeBuilder Foundation" className="w-50 h-50 mx-auto text-bb-violet" />
         </div>
         <div className="mb-6">
-          <Label className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500" htmlFor="username">
-            Username
-          </Label>
-          <Input
-            className="w-full px-4 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-            id="username"
-            placeholder="Username"
-            type="text"
-          />
-        </div>
-        <div className="mb-6">
-          <Label className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500" htmlFor="password">
-            Password
-          </Label>
-          <Input
-            className="w-full px-4 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-            id="password"
-            placeholder="Password"
-            type="password"
-          />
-        </div>
-        <div className="mb-6">
-          <Button className="w-1/2 h-12 px-3 mt-4 bg-bb-violet text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto">Sign Up</Button>
+          <p className="text-lg text-gray-700 dark:text-gray-300 font-bold text-center">
+            Please contact your designated <span className="text-bb-violet">super user</span> to get an account.
+          </p>
         </div>
         <div className="text-center">
           <p className="text-lg text-gray-600 dark:text-gray-400 font-bold">
@@ -43,5 +28,5 @@ export default function SignUp() {
         </div>
       </div>
     </div>
-  )
+  );
 }

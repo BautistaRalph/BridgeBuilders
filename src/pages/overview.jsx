@@ -11,6 +11,7 @@ import UserCard from '@/components/custom/UserCard';
 import { Modal } from '@/components/custom/Modal';
 import { AddYearModal } from '@/components/custom/AddYearModal';
 import Appbar from '@/components/ui/Appbar';
+import { Users } from '@/lib/placeholder/users';
 
 const Overview = () => {
   const [clientsServedToday] = useState(11);
@@ -24,12 +25,6 @@ const Overview = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newYear, setNewYear] = useState('');
   const [years, setYears] = useState(['All', '2018', '2019', '2020', '2021', '2022', '2023', '2024']);
-
-  const clients = [
-    { name: 'John Doe', ageRange: '10-17', gender: 'Male', year: '2018', category: 'Home Care', profileLink: '/profile' },
-    { name: 'Jane Smith', ageRange: '18-24', gender: 'Female', year: '2019', category: 'Community', profileLink: '/profile' },
-    { name: 'Alice Johnson', ageRange: '25-34', gender: 'Female', year: '2020', category: 'Home Care', profileLink: '/profile' }
-  ];
 
   const handleCategoryToggle = (category) => {
     setActiveCategory(category);
@@ -131,10 +126,10 @@ const Overview = () => {
 
         {/* Statistics */}
         <div className="grid grid-cols-3 gap-4 mb-4">
-        <StatisticCard label="Clients served today" value={clientsServedToday} />
-        <StatisticCard label="Total clients served" value={totalClientsServed} />
-        <StatisticCard label="Total retained" value={totalRetained} />
-      </div>
+          <StatisticCard label="Clients served today" value={clientsServedToday} />
+          <StatisticCard label="Total clients served" value={totalClientsServed} />
+          <StatisticCard label="Total retained" value={totalRetained} />
+        </div>
 
         {/* Search and Filter */}
         <div className="flex space-x-4 mb-4 w-1/5 items-center">
@@ -162,73 +157,72 @@ const Overview = () => {
                 alt="Filter Icon"
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 h-6 w-6"
               />
-              </PopoverTrigger>
-              <PopoverContent className="p-4 bg-white shadow-md rounded max-w-md border border-pink-300 border-2">
-                <div className="flex flex-col space-y-4">
-                  {/* Age Range Filter */}
-                  <div className="flex flex-col">
-                    <label htmlFor="ageRangeFilter" className="text-sm text-black">Age Range:</label>
-                    <select id="ageRangeFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
-                      <option value="5-10">5-10</option>
-                      <option value="10-17">10-17</option>
-                    </select>
-                  </div>
-                  {/* Gender Filter */}
-                  <div className="flex flex-col">
-                    <label htmlFor="genderFilter" className="text-sm text-black">Gender:</label>
-                    <select id="genderFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
-                      <option value="Male">Male</option>
-                      <option value="Female">Female</option>
-                    </select>
-                  </div>
-                  {/* Category Filter */}
-                  <div className="flex flex-col">
-                    <label htmlFor="categoryFilter" className="text-sm text-black">Category:</label>
-                    <select id="categoryFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
-                      <option value="Home Care">Home Care</option>
-                      <option value="Community">Community</option>
-                    </select>
-                  </div>
+            </PopoverTrigger>
+            <PopoverContent className="p-4 bg-white shadow-md rounded max-w-md border border-pink-300 border-2">
+              <div className="flex flex-col space-y-4">
+                {/* Age Range Filter */}
+                <div className="flex flex-col">
+                  <label htmlFor="ageRangeFilter" className="text-sm text-black">Age Range:</label>
+                  <select id="ageRangeFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
+                    <option value="5-10">5-10</option>
+                    <option value="10-17">10-17</option>
+                  </select>
                 </div>
-              </PopoverContent>
-            </Popover>
-            </div>
-    
-            {/* Client List */}
-            <div className="space-y-4">
-                {clients.map((client, index) => (
-                <UserCard
-                  key={index}
-                  name={client.name}
-                  ageRange={client.ageRange}
-                  gender={client.gender}
-                  year={client.year}
-                  category={client.category}
-                  profileLink={client.profileLink}
-                  avatar={client.avatar} 
-                />
-              ))}
-            </div>
-          </div>
-    
-          {/* Delete Confirmation Modal */}
-          <Modal
-            isOpen={isDeleteModalOpen}
-            onClose={() => setIsDeleteModalOpen(false)}
-            onConfirm={confirmDeleteYear}
-            message={`Are you sure you want to delete the year ${yearToDelete}?`}
-          />
-    
-          {/* Add Year Modal */}
-          <AddYearModal
-            isOpen={isAddModalOpen}
-            onClose={() => setIsAddModalOpen(false)}
-            onConfirm={confirmAddYear}
-            message="Please enter the year to add:"
-          />
-        </>
-      );
-    };
-    
-    export default Overview;
-    
+                {/* Gender Filter */}
+                <div className="flex flex-col">
+                  <label htmlFor="genderFilter" className="text-sm text-black">Gender:</label>
+                  <select id="genderFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                {/* Category Filter */}
+                <div className="flex flex-col">
+                  <label htmlFor="categoryFilter" className="text-sm text-black">Category:</label>
+                  <select id="categoryFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
+                    <option value="Home Care">Home Care</option>
+                    <option value="Community">Community</option>
+                  </select>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+        {/* Client List */}
+        <div className="space-y-4">
+          {Users.map((user, index) => (
+            <UserCard
+              key={index}
+              name={user.pangalan}
+              ageRange={user.edad}
+              gender={user.kasarian}
+              year={user.program}
+              category={user.program}
+              profileLink={`/profile`} 
+              avatar={user.picture}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={confirmDeleteYear}
+        message={`Are you sure you want to delete the year ${yearToDelete}?`}
+      />
+
+      {/* Add Year Modal */}
+      <AddYearModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onConfirm={confirmAddYear}
+        message="Please enter the year to add:"
+      />
+    </>
+  );
+};
+
+export default Overview;

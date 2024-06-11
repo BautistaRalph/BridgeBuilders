@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
+import bg from "@/assets/bb-bg.png";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,13 +13,17 @@ export default function Login() {
   };
 
   return (
-    <div className="flex justify-center min-h-screen bg-gray-100 dark:bg-gray-950">
-      {/* Background component will go here */}
-      <div className="w-full max-w-xl p-8 m-auto bg-pink-100 rounded-lg shadow-md">
+    <div className="relative flex justify-center min-h-screen bg-gray-100 dark:bg-gray-950">
+      <img
+        src={bg}
+        alt="BridgeBuilder bg"
+        className="absolute top-0 left-0 w-full h-full object-cover"
+      />
+      <div className="relative w-full max-w-xl p-8 m-auto bg-pink-100 rounded-lg shadow-md">
         <div className="mb-8 text-center">
           <img
             src={logo}
-            alt="BridgeBuilder Foundation"
+            alt="BridgeBuilder logo"
             className="w-50 h-50 mx-auto text-bb-violet"
           />
         </div>
