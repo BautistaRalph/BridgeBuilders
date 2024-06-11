@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
-import bg from "@/assets/bb-bg.png";
+import bg from "@/assets/bb-bg-blurred.png";
 
 export default function Login() {
   const navigate = useNavigate();
