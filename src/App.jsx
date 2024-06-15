@@ -6,6 +6,7 @@ import SignUp from "./pages/signup";
 import Profile from "./pages/profile";
 import Edit from "./pages/edit";
 import Overview from "./pages/overview";
+import Forms from "./pages/forms";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/edit" element={<Edit />} />
         <Route path="/overview" element={<Overview />} />
+        <Route path="/create" element={<Forms />} />
       </Routes>
     </div>
   );
