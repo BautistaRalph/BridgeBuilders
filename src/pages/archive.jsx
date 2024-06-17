@@ -132,7 +132,7 @@ const Archive = () => {
               name={user.pangalan}
               ageRange={user.edad}
               gender={user.kasarian}
-              year={user.taon}
+              year={user.yearAdmitted}
               category={user.status}
               profileLink={`/profile`}
               avatar={user.picture}
