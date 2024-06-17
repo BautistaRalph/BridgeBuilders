@@ -1,7 +1,7 @@
 import React from 'react';
 import { MdArrowRight } from 'react-icons/md';
 
-const ToggleButton = React.forwardRef(({ category, isActive, onClick }, ref) => {
+const ToggleButton = React.forwardRef(({ category, isActive, onClick, showIcon = true }, ref) => {
   return (
     <button
       ref={ref}
@@ -10,7 +10,7 @@ const ToggleButton = React.forwardRef(({ category, isActive, onClick }, ref) => 
         isActive ? 'bg-purple-800' : 'bg-bb-violet'
       } text-white`}
     >
-      {category} <MdArrowRight className="ml-2" style={{ fontSize: '24px' }} />
+      {category} {showIcon && <MdArrowRight className="ml-2" style={{ fontSize: '24px' }} />}
     </button>
   );
 });

@@ -7,6 +7,7 @@ import Profile from "./pages/profile";
 import Edit from "./pages/edit";
 import Overview from "./pages/overview";
 import Forms from "./pages/forms";
+import Archive from "./pages/archive";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/edit" element={<Edit />} />
         <Route path="/overview" element={<Overview />} />
         <Route path="/create" element={<Forms />} />
+        <Route path="/archive" element={<Archive />} />
       </Routes>
     </div>
   );
