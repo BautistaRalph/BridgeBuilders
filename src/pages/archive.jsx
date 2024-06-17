@@ -1,31 +1,20 @@
 import React, { useState } from 'react';
-import StatisticCard from '@/components/custom/StatisticCard';
 import { Input } from "@/components/ui/input";
 import { ToggleButton } from "@/components/custom/ToggleButton";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
-import { MdEditNote, MdDeleteForever } from "react-icons/md";
 import search from '@/assets/search.png';
 import filter from '@/assets/filter.png';
 import UserCard from '@/components/custom/UserCard';
-import { Modal } from '@/components/custom/Modal';
-import { AddYearModal } from '@/components/custom/AddYearModal';
 import Appbar from '@/components/ui/Appbar';
 import { Users } from '@/lib/placeholder/users';
-import { statisticsData } from '@/lib/placeholder/statistics';
 
-const Overview = () => {
+const Archive = () => {
   const [activeCategory, setActiveCategory] = useState('Home Care');
   const [activeYear, setActiveYear] = useState('All');
-  const [editMode, setEditMode] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [yearToDelete, setYearToDelete] = useState(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [newYear, setNewYear] = useState('');
-  const [years, setYears] = useState(['All', '2018', '2019', '2020', '2021', '2022', '2023', '2024']);
-  const [activeStatistic, setActiveStatistic] = useState('General');
+  const [years] = useState(['All', '2018', '2019', '2020', '2021', '2022', '2023', '2024']);
 
-  const activeUsers = Users.filter(user => user.status === "Active");
+  const deletedUsers = Users.filter(user => user.status === "Deleted");
 
   const handleCategoryToggle = (category) => {
     setActiveCategory(category);
@@ -35,42 +24,12 @@ const Overview = () => {
     setActiveYear(year);
   };
 
-  const handleEditClick = () => {
-    setEditMode(!editMode);
-  };
-
-  const handleDeleteYear = (year) => {
-    setYearToDelete(year);
-    setIsDeleteModalOpen(true);
-  };
-
-  const confirmDeleteYear = () => {
-    setYears(years.filter(year => year !== yearToDelete));
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleAddClick = () => {
-    setIsAddModalOpen(true);
-  };
-
-  const confirmAddYear = () => {
-    if (newYear && !years.includes(newYear)) {
-      setYears([...years, newYear]);
-    }
-    setIsAddModalOpen(false);
-    setNewYear('');
-  };
-
-  const handleStatisticToggle = (statistic) => {
-    setActiveStatistic(statistic);
-  };
-
   return (
     <>
       <Appbar />
 
       {/* Main Content */}
-      <div className="bg-white p-6 rounded-lg w-full"><h1 class="header">Overview</h1>
+      <div className="bg-white p-6 rounded-lg w-full"><h1 class="header">Archive</h1>
         <hr className="my-4 border-t-2 border-bb-violet" />
         {/* Tabs */}
         <div className="mb-2 text-lg font-bold text-bb-violet">Categoy:</div>
@@ -89,23 +48,6 @@ const Overview = () => {
           >
             Community
           </ToggleButton>
-          <Popover>
-            <PopoverTrigger as="div" className="relative">
-              <Button className="bg-bb-violet text-white">
-                <MdEditNote className="h-6 w-6" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-4 bg-white shadow-md rounded">
-              <div className="flex items-center space-x-4">
-                <Button className="bg-pink-300 text-white" onClick={handleEditClick}>
-                  <p className="text-white font-bold">Edit</p>
-                </Button>
-                <Button className="bg-pink-300 text-white" onClick={handleAddClick}>
-                  <p className="text-white font-bold">Add</p>
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
         </div>
 
         {/* Year Filters */}
@@ -118,48 +60,8 @@ const Overview = () => {
                 isActive={year === activeYear}
                 onClick={() => handleYearToggle(year)}
               />
-              {editMode && (
-                <button 
-                  className="absolute top-1/2 right-1 transform -translate-x-1/2 -translate-y-1/2 text-red-500 p-2"
-                  onClick={() => handleDeleteYear(year)}
-                  style={{ background: 'transparent' }}
-                >
-                  <MdDeleteForever style={{ color: 'red', fontSize: '24px' }} />
-                </button>
-              )}
             </div>
           ))}
-        </div>
-
-        {/* Statistic Toggle and Display */}
-        <div className="mb-2 text-lg font-bold text-bb-violet">Statistics:</div>
-        <div className="flex">
-          <div className="flex flex-col space-y-2">
-            {Object.keys(statisticsData).map(category => (
-              <ToggleButton
-                key={category}
-                category={category}
-                isActive={activeStatistic === category}
-                onClick={() => handleStatisticToggle(category)}
-                showIcon={false}
-              >
-                {category}
-              </ToggleButton>
-            ))}
-          </div>
-          <div className="flex-grow ml-4 space-y-4">
-            {statisticsData[activeStatistic] && (
-              <>
-                {statisticsData[activeStatistic].map((statistic, index) => (
-                  <StatisticCard
-                    key={index}
-                    label={statistic.label}
-                    value={statistic.valueKey} 
-                  />
-                ))}
-              </>
-            )}
-          </div>
         </div>
 
         <hr className="my-4 border-t-2 border-bb-violet" />
@@ -224,38 +126,22 @@ const Overview = () => {
 
         {/* Client List */}
         <div className="space-y-4">
-          {activeUsers.map((user, index) => (
+          {deletedUsers.map((user, index) => (
             <UserCard
               key={index}
               name={user.pangalan}
               ageRange={user.edad}
               gender={user.kasarian}
               year={user.taon}
-              category={user.program}
+              category={user.status}
               profileLink={`/profile`}
               avatar={user.picture}
             />
           ))}
         </div>
       </div>
-
-      {/* Delete Confirmation Modal */}
-      <Modal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={confirmDeleteYear}
-        message={`Are you sure you want to delete the year ${yearToDelete}?`}
-      />
-
-      {/* Add Year Modal */}
-      <AddYearModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onConfirm={confirmAddYear}
-        message="Please enter the year to add:"
-      />
     </>
   );
 };
 
-export default Overview;
+export default Archive;

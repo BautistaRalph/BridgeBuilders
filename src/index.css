@@ -117,3 +117,8 @@ input[type="range"]::-webkit-slider-thumb {
   background-color: #6B21A8;
   color: #FFF;
 }
+
+.header {
+  font-size: 2em; 
+  color: #6B21A8;
+}
