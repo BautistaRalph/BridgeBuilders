@@ -24,7 +24,7 @@
     --input: 116 39% 24%;
     --ring: 240 4.9% 83.9%;
     --radius: 0.75rem;
-    --light-violet: #7469B6;
+    --light-violet: #7469b6;
     font-family: "Kanit", sans-serif;
     font-size: 12px;
     line-height: 2rem;
@@ -74,8 +74,19 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
+.bridgeBuilderCheckbox:checked::after {
+  content: "\2713"; /* Unicode for check mark */
+  font-size: 16px; /* Size of the check mark */
+  color: purple; /* Color of the check mark */
+  position: absolute; /* Position it absolutely */
+  top: 50%; /* Align vertically */
+  left: 50%; /* Align horizontally */
+  transform: translate(-50%, -50%); /* Center it perfectly */
+  font-weight: 800;
+}
+
 .hover\:scale-105:hover {
-  transform: scale(1.20);
+  transform: scale(1.2);
 }
 
 .formtabs-vertical {
@@ -86,7 +97,7 @@ input[type="range"]::-webkit-slider-thumb {
   display: flex;
   flex-direction: column;
   width: 200px;
-  gap: 10px; 
+  gap: 10px;
 }
 
 .formtabs-vertical .formtabs-content {
@@ -102,23 +113,23 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   transition: background-color 0.3s, color 0.3s;
   background-color: #7469b6;
-  color: #FFF;
+  color: #fff;
   font-size: 1.2em;
   border-radius: 20px;
   padding: 10px 20px;
 }
 
 .formtabs-vertical .formtab-trigger[data-state="active"] {
-  background-color: #6B21A8;
-  color: #FFF;
+  background-color: #6b21a8;
+  color: #fff;
 }
 
 .formtabs-vertical .formtab-trigger:hover {
-  background-color: #6B21A8;
-  color: #FFF;
+  background-color: #6b21a8;
+  color: #fff;
 }
 
 .header {
-  font-size: 2em; 
-  color: #6B21A8;
+  font-size: 2em;
+  color: #6b21a8;
 }
