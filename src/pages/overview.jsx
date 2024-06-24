@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import StatisticCard from '@/components/custom/StatisticCard';
 import { Input } from "@/components/ui/input";
 import { ToggleButton } from "@/components/custom/ToggleButton";
@@ -13,9 +13,13 @@ import { AddYearModal } from '@/components/custom/AddYearModal';
 import Appbar from '@/components/ui/Appbar';
 import { Users } from '@/lib/placeholder/users';
 import { statisticsData } from '@/lib/placeholder/statistics';
+import welcome from '@/assets/welcome.mp3'
 
 const Overview = () => {
-  const [activeCategory, setActiveCategory] = useState('Home Care');
+  const userType = 'homeCare';
+  const username = 'John Doe';
+  const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
+  const [activeCategory, setActiveCategory] = useState('');
   const [activeYear, setActiveYear] = useState('All');
   const [editMode, setEditMode] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -26,6 +30,44 @@ const Overview = () => {
   const [activeStatistic, setActiveStatistic] = useState('General');
 
   const activeUsers = Users.filter(user => user.status === "Active");
+
+  useEffect(() => {
+    console.log("useEffect triggered");
+  
+    if (userType === 'homeCare') {
+      setActiveCategory('Home Care');
+    } else if (userType === 'community') {
+      setActiveCategory('Community');
+    } else {
+      setActiveCategory('Home Care');
+    }
+  
+    if (sessionStorage.getItem('fromLogin') === 'true') {
+      setShowWelcomeMessage(true);
+      sessionStorage.removeItem('fromLogin');
+  
+      const audio = new Audio(welcome);
+      audio.play();
+      
+      const timer = setTimeout(() => {
+        console.log("Timer elapsed, hiding welcome message");
+        setShowWelcomeMessage(false);
+      }, 2000);
+  
+      console.log("Timer set");
+  
+      return () => {
+        console.log("Clearing timer");
+        clearTimeout(timer);
+      };
+    }
+
+    const timer = setTimeout(() => {
+      console.log("Timer elapsed, hiding welcome message");
+      setShowWelcomeMessage(false);
+    }, 2000);
+
+  }, [userType]);
 
   const handleCategoryToggle = (category) => {
     setActiveCategory(category);
@@ -65,6 +107,16 @@ const Overview = () => {
     setActiveStatistic(statistic);
   };
 
+  if (showWelcomeMessage) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-bb-violet">
+        <div className="bg-white text-bb-violet text-2xl p-6 rounded-lg shadow-md">
+          Welcome, {username}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <Appbar />
@@ -73,39 +125,63 @@ const Overview = () => {
       <div className="bg-white p-6 rounded-lg w-full"><h1 class="header">Overview</h1>
         <hr className="my-4 border-t-2 border-bb-violet" />
         {/* Tabs */}
-        <div className="mb-2 text-lg font-bold text-bb-violet">Categoy:</div>
+        <div className="mb-2 text-lg font-bold text-bb-violet">Category:</div>
         <div className="flex space-x-4 mb-4">
-          <ToggleButton
-            category="Home Care"
-            isActive={activeCategory === 'Home Care'}
-            onClick={() => handleCategoryToggle('Home Care')}
-          >
-            Home Care
-          </ToggleButton>
-          <ToggleButton
-            category="Community"
-            isActive={activeCategory === 'Community'}
-            onClick={() => handleCategoryToggle('Community')}
-          >
-            Community
-          </ToggleButton>
-          <Popover>
-            <PopoverTrigger as="div" className="relative">
-              <Button className="bg-bb-violet text-white">
-                <MdEditNote className="h-6 w-6" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-4 bg-white shadow-md rounded">
-              <div className="flex items-center space-x-4">
-                <Button className="bg-pink-300 text-white" onClick={handleEditClick}>
-                  <p className="text-white font-bold">Edit</p>
+          {userType === 'superUser' && (
+            <>
+              <ToggleButton
+                category="Home Care"
+                isActive={activeCategory === 'Home Care'}
+                onClick={() => handleCategoryToggle('Home Care')}
+              >
+                Home Care
+              </ToggleButton>
+              <ToggleButton
+                category="Community"
+                isActive={activeCategory === 'Community'}
+                onClick={() => handleCategoryToggle('Community')}
+              >
+                Community
+              </ToggleButton>
+            </>
+          )}
+          {userType === 'homeCare' && (
+            <ToggleButton
+              category="Home Care"
+              isActive={true}
+              onClick={() => handleCategoryToggle('Home Care')}
+            >
+              Home Care
+            </ToggleButton>
+          )}
+          {userType === 'community' && (
+            <ToggleButton
+              category="Community"
+              isActive={true}
+              onClick={() => handleCategoryToggle('Community')}
+            >
+              Community
+            </ToggleButton>
+          )}
+          {userType === 'superUser' && (
+            <Popover>
+              <PopoverTrigger as="div" className="relative">
+                <Button className="bg-bb-violet text-white">
+                  <MdEditNote className="h-6 w-6" />
                 </Button>
-                <Button className="bg-pink-300 text-white" onClick={handleAddClick}>
-                  <p className="text-white font-bold">Add</p>
-                </Button>
-              </div>
-            </PopoverContent>
-          </Popover>
+              </PopoverTrigger>
+              <PopoverContent className="p-4 bg-white shadow-md rounded">
+                <div className="flex items-center space-x-4">
+                  <Button className="bg-pink-300 text-white" onClick={handleEditClick}>
+                    <p className="text-white font-bold">Edit</p>
+                  </Button>
+                  <Button className="bg-pink-300 text-white" onClick={handleAddClick}>
+                    <p className="text-white font-bold">Add</p>
+                  </Button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
         </div>
 
         {/* Year Filters */}

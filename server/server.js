@@ -5,7 +5,7 @@ const app = express();
 const port = 3002;
 const apiRouter = express.Router();
 
-const mongoURI = "mongodb://127.0.0.1:27017/BBDB";
+const mongoURI = "mongodb+srv://bridge-builders:Izq3puXdBqbAfD86@bbdb.i5uydnl.mongodb.net/?retryWrites=true&w=majority&appName=BBDB";
 
 mongoose.connect(mongoURI);
 
