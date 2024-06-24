@@ -1,3 +1,5 @@
+import axios from "axios";
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -5,12 +7,27 @@ import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 import bg from "@/assets/bb-bg-blurred.png";
 
-const Login = () => {
+export default function Login() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    sessionStorage.setItem('fromLogin', 'true'); 
-    navigate("/overview");
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:3002/api/login', {
+        username,
+        password,
+      });
+      console.log('Login successful', response.data);
+      
+      sessionStorage.setItem('fromLogin', 'true');
+
+      // Navigate to overview page
+      navigate('/overview');
+    } catch (error) {
+      console.error('Error logging in', error.response.data);
+      // Handle error (e.g., show error message)
+    }
   };
 
   return (
@@ -40,6 +57,7 @@ const Login = () => {
             id="username"
             placeholder="Username"
             type="text"
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div className="mb-6">
@@ -54,6 +72,7 @@ const Login = () => {
             id="password"
             placeholder="Password"
             type="password"
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div className="mb-6">
@@ -75,6 +94,4 @@ const Login = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}
