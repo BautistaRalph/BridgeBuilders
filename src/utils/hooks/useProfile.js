@@ -10,11 +10,8 @@ const initialState = {
   kasarian: "",
   birthday: "",
   relihiyon: "",
-  goal1Progress: 0,
-  goal2Progress: 0,
-  goal3Progress: 0,
-  goal4Progress: 0,
   caseNo: "",
+  goalsAchieved: [],
 };
 
 const useProfile = (username) => {

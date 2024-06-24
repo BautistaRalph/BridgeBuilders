@@ -106,30 +106,31 @@ const Profile = () => {
             </h2>
 
             <div className="flex items-center mt-12">
-              <h1 className="text-4xl mr-4">Goal Progress</h1>
+              <h1 className="text-4xl mr-4">Intervention</h1>
               <div className="flex-grow h-1 bg-bb-violet"></div>
             </div>
 
             <div className="flex w-full overflow-auto">
               <Goal
+                name="goal1"
+                goalsAchieved={profileData.goalsAchieved}
                 image={"/src/assets/logo.png"}
                 title="Mental"
-                progress={profileData.goal1Progress}
+                goal={1}
               />
               <Goal
+                name="goal2"
+                goalsAchieved={profileData.goalsAchieved}
                 image={"/src/assets/logo.png"}
                 title="Physical/Social"
-                progress={profileData.goal2Progress}
+                goal={2}
               />
               <Goal
+                name="goal3"
+                goalsAchieved={profileData.goalsAchieved}
                 image={"/src/assets/logo.png"}
                 title="Support to Caregiver"
-                progress={profileData.goal3Progress}
-              />
-              <Goal
-                image={"/src/assets/logo.png"}
-                title="Organizational Effectiveness"
-                progress={profileData.goal4Progress}
+                goal={3}
               />
             </div>
 

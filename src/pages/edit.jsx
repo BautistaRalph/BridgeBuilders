@@ -1,12 +1,17 @@
 import Appbar from "@/components/ui/Appbar";
+import Select from "@/components/ui/Select";
 import Goal from "@/components/ui/Goal";
 import Tooltip from "@/components/ui/Tooltip";
 import useMedia from "@/utils/hooks/useMedia";
 import useProfile from "@/utils/hooks/useProfile";
 import { useRef } from "react";
 
+const programOptions = [
+  { value: "Community Based Program", name: "program" },
+  { value: "Home Care", name: "program" },
+];
+
 const Edit = () => {
-  const dropdownRef = useRef(null);
   const pictureRef = useRef(null);
   const { profileData, setProfileData } = useProfile("Darryl Javier");
   const { image, handleImageChange } = useMedia();
@@ -16,47 +21,26 @@ const Edit = () => {
   };
 
   const handleChange = (event) => {
-    console.log("changed");
     setProfileData({
       ...profileData,
       [event.target.name]: event.target.value,
     });
   };
 
-  const snapToValue = (value) => {
-    const snapValues = [0, 25, 50, 75, 100];
-    return snapValues.reduce((prev, curr) =>
-      Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
-    );
-  };
-
-  const handleDropdownOpen = () => {
-    dropdownRef.current.style.display = "block";
-  };
-
-  const handleDropdownClose = () => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.relatedTarget)
-    ) {
-      dropdownRef.current.style.display = "none";
+  const handleGoalChange = (event) => {
+    if (!profileData.goalsAchieved.includes(event.target.value)) {
+      setProfileData({
+        ...profileData,
+        goalsAchieved: [...profileData.goalsAchieved, event.target.value],
+      });
+    } else {
+      setProfileData({
+        ...profileData,
+        goalsAchieved: profileData.goalsAchieved.filter(
+          (goal) => goal != event.target.value
+        ),
+      });
     }
-  };
-
-  const handleProgramChange = (event) => {
-    handleChange(event);
-    handleDropdownClose();
-  };
-
-  const handleRangeChange = (event) => {
-    const rangeValue = snapToValue(event.target.value);
-    setProfileData({
-      ...profileData,
-      [event.target.name]: rangeValue,
-    });
-
-    const percentage = rangeValue + "%"; // Use newValue instead of range1Val
-    event.target.style.background = `linear-gradient(to right, #AD88C6 0%, #AD88C6 ${percentage}, #E1AFD1 ${percentage}, #E1AFD1 100%)`;
   };
 
   return (
@@ -210,144 +194,57 @@ const Edit = () => {
             <div className="flex items-center">
               <h2 className="text-3xl xl:text-5xl mr-2">Program: </h2>
               <div className="relative flex-grow">
-                <button
+                <Select
                   className="flex items-center h-14 w-full border-2 border-bb-purple pr-4 pl-4 rounded-md transition-colors duration-300 hover:border-bb-violet"
-                  onFocus={handleDropdownOpen}
-                  onBlur={handleDropdownClose}
+                  optionList={programOptions}
+                  handleChange={handleChange}
                 >
-                  <h1 className="text-2xl text-left flex-grow">
+                  <h1 className="text-2xl xl:text-4xl flex-grow text-left">
                     {profileData.program}
                   </h1>
-                  <span className="material-symbols-outlined">
-                    arrow_drop_down
-                  </span>
-                </button>
-                <div
-                  ref={dropdownRef}
-                  className="hidden absolute bg-bb-white w-full shadow-lg z-10 flex-col"
-                >
-                  <div>
-                    <button
-                      className="text-bb-violet bg-bb-white text-3xl text-left p-4 w-full transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
-                      value={"Community Based Program"}
-                      name="program"
-                      onClick={handleProgramChange}
-                    >
-                      Community Based Program
-                    </button>
-                  </div>
-                  <div>
-                    <button
-                      className="text-bb-violet bg-bb-white text-3xl text-left p-4 w-full transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
-                      value={"Home Care"}
-                      name="program"
-                      onClick={handleProgramChange}
-                    >
-                      Home Care
-                    </button>
-                  </div>
-                </div>
+                </Select>
               </div>
             </div>
 
             <div className="flex items-center mt-12">
-              <h1 className="text-4xl mr-4">Goal Progress</h1>
+              <h1 className="text-4xl mr-4">Intervention</h1>
               <div className="flex-grow h-1 bg-bb-violet"></div>
             </div>
 
             <div className="flex w-full overflow-auto">
               <div className="flex flex-col">
                 <Goal
+                  name="goal1"
+                  goalsAchieved={profileData.goalsAchieved}
+                  editMode
+                  handleGoalChange={handleGoalChange}
                   image={"/src/assets/logo.png"}
                   title="Mental"
-                  progress={profileData.goal1Progress}
-                />
-
-                <h1 className="ml-4 text-2xl mb-2">
-                  Completion Progress: {`${profileData.goal1Progress}%`}
-                </h1>
-
-                <input
-                  name="goal1Progress"
-                  value={profileData.goal1Progress}
-                  onChange={handleRangeChange}
-                  type="range"
-                  id="customRange"
-                  className="h-2 bg-bb-light-purple rounded-lg appearance-none cursor-pointer mb-4 mr-4 ml-4"
-                  min="0"
-                  max="100"
-                  step="25"
+                  goal={1}
                 />
               </div>
 
               <div className="flex flex-col">
                 <Goal
+                  name="goal2"
+                  goalsAchieved={profileData.goalsAchieved}
+                  editMode
+                  handleGoalChange={handleGoalChange}
                   image={"/src/assets/logo.png"}
                   title="Physical/Social"
-                  progress={profileData.goal2Progress}
-                />
-
-                <h1 className="ml-4 text-2xl mb-2">
-                  Completion Progress: {`${profileData.goal2Progress}%`}
-                </h1>
-                <input
-                  name="goal2Progress"
-                  value={profileData.goal2Progress}
-                  onChange={handleRangeChange}
-                  type="range"
-                  id="customRange"
-                  className="h-2 bg-bb-light-purple rounded-lg appearance-none cursor-pointer mb-4 mr-4 ml-4"
-                  min="0"
-                  max="100"
-                  step="25"
+                  goal={2}
                 />
               </div>
 
               <div className="flex flex-col">
                 <Goal
+                  name="goal3"
+                  goalsAchieved={profileData.goalsAchieved}
+                  editMode
+                  handleGoalChange={handleGoalChange}
                   image={"/src/assets/logo.png"}
                   title="Support to Caregiver"
-                  progress={profileData.goal3Progress}
-                />
-
-                <h1 className="ml-4 text-2xl mb-2">
-                  Completion Progress: {`${profileData.goal3Progress}%`}
-                </h1>
-
-                <input
-                  name="goal3Progress"
-                  value={profileData.goal3Progress}
-                  onChange={handleRangeChange}
-                  type="range"
-                  id="customRange"
-                  className="h-2 bg-bb-light-purple rounded-lg appearance-none cursor-pointer mb-4 mr-4 ml-4"
-                  min="0"
-                  max="100"
-                  step="25"
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <Goal
-                  image={"/src/assets/logo.png"}
-                  title="Organizational Effectiveness"
-                  progress={profileData.goal4Progress}
-                />
-
-                <h1 className="ml-4 text-2xl mb-2">
-                  Completion Progress: {`${profileData.goal4Progress}%`}
-                </h1>
-
-                <input
-                  name="goal4Progress"
-                  value={profileData.goal4Progress}
-                  onChange={handleRangeChange}
-                  type="range"
-                  id="customRange"
-                  className="h-2 bg-bb-light-purple rounded-lg appearance-none cursor-pointer mb-4 mr-4 ml-4"
-                  min="0"
-                  max="100"
-                  step="25"
+                  goal={3}
                 />
               </div>
             </div>
