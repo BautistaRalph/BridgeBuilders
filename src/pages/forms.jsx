@@ -17,94 +17,33 @@ const Forms = () => {
     <>
       <Appbar />
       <div className="flex h-[calc(100vh-7rem)]">
-        <div className="md:w-1/3 lg:w-1/4 bg-bb-purple p-4">
+        <div className="md:w-1/3 lg:w-1/4 bg-bb-purple p-4 space-y-8">
           <h1 className="text-6xl mb-16">Intake Form</h1>
 
-          <div
-            id="s1-nav"
-            className={`mt-8 mb-8 ${
-              sectionActive == "s1"
-                ? "bg-bb-violet text-bb-white"
-                : "bg-bb-white text-bb-violet"
-            }  flex items-center p-4 transition-colors duration-200 cursor-pointer`}
-            onClick={navigateSection}
-          >
-            <h2 className={`text-2xl `}>Pangunahing Impormasyon</h2>
-          </div>
+          {["s1", "s2", "s3", "s4", "s5", "s6", "s7"].map((section, index) => (
+            <div
+              key={section}
+              id={`${section}-nav`}
+              className={`transition-colors duration-200 cursor-pointer flex items-center p-4 rounded-lg ${
+                sectionActive === section
+                  ? "bg-bb-violet text-bb-white"
+                  : "bg-bb-white text-bb-violet"
+              }`}
+              onClick={navigateSection}
+            >
+              <h2 className="text-2xl">{[
+                "Pangunahing Impormasyon",
+                "Problemang Inihain ng Pamilya",
+                "Nanay",
+                "Tatay",
+                "Kapatid",
+                "Dokumento/Requirements",
+                "Ibang Impormasyon",
+              ][index]}</h2>
+            </div>
+          ))}
 
-          <div
-            id="s2-nav"
-            className={`mt-8 mb-8 ${
-              sectionActive == "s2"
-                ? "bg-bb-violet text-bb-white"
-                : "bg-bb-white text-bb-violet"
-            }  flex items-center p-4 transition-colors duration-200 cursor-pointer`}
-            onClick={navigateSection}
-          >
-            <h2 className="text-2xl">Problemang Inihain ng Pamilya</h2>
-          </div>
-
-          <div
-            id="s3-nav"
-            className={`mt-8 mb-8 ${
-              sectionActive == "s3"
-                ? "bg-bb-violet text-bb-white"
-                : "bg-bb-white text-bb-violet"
-            }  flex items-center p-4 transition-colors duration-200 cursor-pointer`}
-            onClick={navigateSection}
-          >
-            <h2 className="text-2xl">Nanay</h2>
-          </div>
-
-          <div
-            id="s4-nav"
-            className={`mt-8 mb-8 ${
-              sectionActive == "s4"
-                ? "bg-bb-violet text-bb-white"
-                : "bg-bb-white text-bb-violet"
-            }  flex items-center p-4 transition-colors duration-200 cursor-pointer`}
-            onClick={navigateSection}
-          >
-            <h2 className="text-2xl">Tatay</h2>
-          </div>
-
-          <div
-            id="s5-nav"
-            className={`mt-8 mb-8 ${
-              sectionActive == "s5"
-                ? "bg-bb-violet text-bb-white"
-                : "bg-bb-white text-bb-violet"
-            }  flex items-center p-4 transition-colors duration-200 cursor-pointer`}
-            onClick={navigateSection}
-          >
-            <h2 className="text-2xl">Kapatid</h2>
-          </div>
-
-          <div
-            id="s6-nav"
-            className={`mt-8 mb-8 ${
-              sectionActive == "s6"
-                ? "bg-bb-violet text-bb-white"
-                : "bg-bb-white text-bb-violet"
-            }  flex items-center p-4 transition-colors duration-200 cursor-pointer`}
-            onClick={navigateSection}
-          >
-            <h2 className="text-2xl">Dokumento/Requirements</h2>
-          </div>
-
-          <div
-            id="s7-nav"
-            className={`mt-8 mb-8 ${
-              sectionActive == "s7"
-                ? "bg-bb-violet text-bb-white"
-                : "bg-bb-white text-bb-violet"
-            }  flex items-center p-4 transition-colors duration-200 cursor-pointer`}
-            onClick={navigateSection}
-          >
-            <h2 className="text-2xl">Ibang Impormasyon</h2>
-          </div>
-
-          <button className="flex items-center justify-center p-4 bg-bb-violet text-bb-white w-full transition-colors duration-200 hover:bg-bb-white hover:text-bb-violet">
+          <button className="flex items-center justify-center p-4 bg-bb-violet text-bb-white w-full rounded-lg transition-colors duration-200 hover:bg-bb-white hover:text-bb-violet">
             <span className="material-symbols-outlined text-3xl mr-2">
               save_as
             </span>
@@ -113,41 +52,74 @@ const Forms = () => {
         </div>
 
         <div className="flex-grow p-8 overflow-auto text-bb-violet">
-          <Waypoint onEnter={() => setSectionActive("s1")}>
-            <div id="s1" className="h-screen mb-32 border-bb-violet border-2">
-              <h1>Pangunahing Impormasyon</h1>
-            </div>
-          </Waypoint>
-          <Waypoint onEnter={() => setSectionActive("s2")} bottomOffset={"50%"}>
-            <div id="s2" className="h-screen mb-32 border-bb-violet border-2">
-              <h1>Problemang Inihain ng Pamilya</h1>
-            </div>
-          </Waypoint>
-          <Waypoint onEnter={() => setSectionActive("s3")} bottomOffset={"50%"}>
-            <div id="s3" className="h-screen mb-32 border-bb-violet border-2">
-              <h1>Nanay</h1>
-            </div>
-          </Waypoint>
-          <Waypoint onEnter={() => setSectionActive("s4")} bottomOffset={"50%"}>
-            <div id="s4" className="h-screen mb-32 border-bb-violet border-2">
-              <h1>Tatay</h1>
-            </div>
-          </Waypoint>
-          <Waypoint onEnter={() => setSectionActive("s5")} bottomOffset={"50%"}>
-            <div id="s5" className="h-screen mb-32 border-bb-violet border-2">
-              <h1>Kapatid</h1>
-            </div>
-          </Waypoint>
-          <Waypoint onEnter={() => setSectionActive("s6")} bottomOffset={"50%"}>
-            <div id="s6" className="h-screen mb-32 border-bb-violet border-2">
-              <h1>Mga Dokumento</h1>
-            </div>
-          </Waypoint>
-          <Waypoint onEnter={() => setSectionActive("s7")} bottomOffset={"50%"}>
-            <div id="s7" className="h-screen border-bb-violet border-2">
-              <h1>Ibang Impormasyon</h1>
-            </div>
-          </Waypoint>
+          {[
+            "Pangunahing Impormasyon",
+            "Problemang Inihain ng Pamilya",
+            "Nanay",
+            "Tatay",
+            "Kapatid",
+            "Mga Dokumento",
+            "Ibang Impormasyon",
+          ].map((sectionTitle, index) => (
+            <Waypoint
+              key={index}
+              onEnter={() => setSectionActive(`s${index + 1}`)}
+              bottomOffset={"50%"}
+            >
+              <div id={`s${index + 1}`} className="h-screen mb-32 border-bb-violet border-2 p-4 rounded-lg shadow-lg">
+                <h1 className="text-4xl mb-4">{sectionTitle}</h1>
+                <p className="text-lg">Content for {sectionTitle}</p>
+                <div className="mt-4 space-y-4">
+                  {index === 0 && (
+                    <>
+                      <p>This is the main information about the form.</p>
+                      <input type="text" placeholder="Enter your name" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                      <input type="text" placeholder="Enter your address" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                    </>
+                  )}
+                  {index === 1 && (
+                    <>
+                      <p>Details about family problems.</p>
+                      <textarea placeholder="Describe the problem" className="p-2 border-bb-violet border-2 rounded-lg w-full h-32"></textarea>
+                    </>
+                  )}
+                  {index === 2 && (
+                    <>
+                      <p>Information about Nanay (Mother).</p>
+                      <input type="text" placeholder="Enter mother's name" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                      <input type="text" placeholder="Enter mother's occupation" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                    </>
+                  )}
+                  {index === 3 && (
+                    <>
+                      <p>Information about Tatay (Father).</p>
+                      <input type="text" placeholder="Enter father's name" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                      <input type="text" placeholder="Enter father's occupation" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                    </>
+                  )}
+                  {index === 4 && (
+                    <>
+                      <p>Information about siblings.</p>
+                      <input type="text" placeholder="Enter sibling's name" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                      <input type="text" placeholder="Enter sibling's age" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                    </>
+                  )}
+                  {index === 5 && (
+                    <>
+                      <p>Required documents.</p>
+                      <input type="file" className="p-2 border-bb-violet border-2 rounded-lg w-full"/>
+                    </>
+                  )}
+                  {index === 6 && (
+                    <>
+                      <p>Additional information.</p>
+                      <textarea placeholder="Any additional information" className="p-2 border-bb-violet border-2 rounded-lg w-full h-32"></textarea>
+                    </>
+                  )}
+                </div>
+              </div>
+            </Waypoint>
+          ))}
         </div>
       </div>
     </>
