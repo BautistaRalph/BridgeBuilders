@@ -69,8 +69,6 @@ const Goal = forwardRef(
         (achievedGoals.length / goalList.length) * 100
       );
 
-      console.log(achievedGoals.length, goalList.length);
-
       if (progressRef.current)
         progressRef.current.style.width = `${percentage}%`;
     }, [achievedGoals, goalList]);
