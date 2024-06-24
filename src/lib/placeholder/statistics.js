@@ -15,8 +15,4 @@ export const statisticsData = {
     { label: "Goal 3 statistic 1", valueKey: 0 }, 
     { label: "Goal 3 statistic 2", valueKey: 0 }, 
   ],
-  "Goal 4": [
-    { label: "Goal 4 statistic 1", valueKey: 0 }, 
-    { label: "Goal 4 statistic 2", valueKey: 0 }, 
-  ],
 };
