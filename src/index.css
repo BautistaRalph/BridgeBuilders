@@ -86,7 +86,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .hover\:scale-105:hover {
-  transform: scale(1.2);
+  transform: scale(1.05);
 }
 
 .formtabs-vertical {

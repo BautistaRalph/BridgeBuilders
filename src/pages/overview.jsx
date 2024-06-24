@@ -147,7 +147,7 @@ const Overview = () => {
               </ToggleButton>
             ))}
           </div>
-          <div className="flex-grow ml-4 space-y-4">
+          <div className="flex-grow ml-4 mr-10 space-y-2">
             {statisticsData[activeStatistic] && (
               <>
                 {statisticsData[activeStatistic].map((statistic, index) => (
@@ -230,7 +230,7 @@ const Overview = () => {
               name={user.pangalan}
               ageRange={user.edad}
               gender={user.kasarian}
-              year={user.taon}
+              year={user.yearAdmitted}
               category={user.program}
               profileLink={`/profile`}
               avatar={user.picture}
