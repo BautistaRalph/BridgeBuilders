@@ -35,7 +35,7 @@ const Forms = () => {
               key={section}
               id={`s${index + 1}-nav`}
               className={`transition-colors duration-200 cursor-pointer flex items-center p-4 rounded-lg ${
-                sectionActive === section
+                sectionActive === `s${index + 1}`
                   ? "bg-bb-violet text-bb-white"
                   : "bg-bb-white text-bb-violet"
               }`}
