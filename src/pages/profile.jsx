@@ -2,9 +2,14 @@ import Appbar from "@/components/ui/Appbar";
 import Goal from "@/components/ui/Goal";
 import Tooltip from "@/components/ui/Tooltip";
 import useProfile from "@/utils/hooks/useProfile";
+import { useParams } from 'react-router-dom';
 
 const Profile = () => {
-  const { profileData } = useProfile("Darryl Javier");
+  //const { profileData } = useProfile("Darryl Javier");
+
+  const { caseNo } = useParams();
+  const { profileData } = useProfile(caseNo);
+
   return (
     <>
       <div className="w-screen h-max md:h-screen bg-white">
@@ -86,7 +91,7 @@ const Profile = () => {
                 {profileData.pangalan}
               </h1>
               <Tooltip tooltipText={"Edit"} className=" mr-6 ml-6 ">
-                <a href="/edit">
+                <a href={`/edit/${profileData.caseNo}`}>
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     edit
                   </span>

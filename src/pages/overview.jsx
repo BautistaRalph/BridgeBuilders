@@ -11,9 +11,10 @@ import UserCard from '@/components/custom/UserCard';
 import { Modal } from '@/components/custom/Modal';
 import { AddYearModal } from '@/components/custom/AddYearModal';
 import Appbar from '@/components/ui/Appbar';
-import { Users } from '@/lib/placeholder/users';
+//import { Users } from '@/lib/placeholder/users';
 import { statisticsData } from '@/lib/placeholder/statistics';
 import welcome from '@/assets/welcome.mp3'
+import axios from '../axiosInstance.js'; 
 
 const Overview = () => {
   const userType = 'homeCare';
@@ -28,11 +29,16 @@ const Overview = () => {
   const [newYear, setNewYear] = useState('');
   const [years, setYears] = useState(['All', '2018', '2019', '2020', '2021', '2022', '2023', '2024']);
   const [activeStatistic, setActiveStatistic] = useState('General');
+  const [activeUsers, setUsers] = useState([])
 
-  const activeUsers = Users.filter(user => user.status === "Active");
+  //const activeUsers = Users.filter(user => user.status === "Active");
 
   useEffect(() => {
     console.log("useEffect triggered");
+
+    const response = axios.get('/api/overview')
+    .then(vals => setUsers(vals.data))
+    .catch(err => console.log(err))
   
     if (userType === 'homeCare') {
       setActiveCategory('Home Care');
@@ -308,7 +314,7 @@ const Overview = () => {
               gender={user.kasarian}
               year={user.yearAdmitted}
               category={user.program}
-              profileLink={`/profile`}
+              profileLink={`/profile/${user.caseNo}`}
               avatar={user.picture}
             />
           ))}

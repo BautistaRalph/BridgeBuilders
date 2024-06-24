@@ -5,6 +5,8 @@ import Tooltip from "@/components/ui/Tooltip";
 import useMedia from "@/utils/hooks/useMedia";
 import useProfile from "@/utils/hooks/useProfile";
 import { useRef } from "react";
+import { useParams } from 'react-router-dom';
+import axios from '../axiosInstance.js'; 
 
 const programOptions = [
   { value: "Community Based Program", name: "program" },
@@ -13,8 +15,12 @@ const programOptions = [
 
 const Edit = () => {
   const pictureRef = useRef(null);
-  const { profileData, setProfileData } = useProfile("Darryl Javier");
+  const { caseNo } = useParams();
+  //const { profileData, setProfileData } = useProfile("Darryl Javier");
+  const { profileData, setProfileData } = useProfile(caseNo);
   const { image, handleImageChange } = useMedia();
+
+  console.log(JSON.stringify(profileData, null, 2));
 
   const handlePictureClick = () => {
     pictureRef.current.click();
@@ -40,6 +46,15 @@ const Edit = () => {
           (goal) => goal != event.target.value
         ),
       });
+    }
+  };
+
+  const handleSaveClick = async () => {
+    console.log('handling save');
+    try {
+      const response = await axios.post(`/api/editProfile/${caseNo}`, {profileData});
+    } catch (error) {
+      console.error('Error saving profile:', error);
     }
   };
 
@@ -176,14 +191,14 @@ const Edit = () => {
                 />
               </h1>
               <Tooltip tooltipText={"Save"} className=" mr-6 ml-6 ">
-                <a href="/profile">
+                <a href={`/profile/${profileData.caseNo}`} onClick={handleSaveClick}>
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     save_as
                   </span>
                 </a>
               </Tooltip>
               <Tooltip tooltipText={"Return"} className=" mr-6 ml-6 ">
-                <a href="/profile">
+                <a href={`/profile/${profileData.caseNo}`}>
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     keyboard_return
                   </span>
