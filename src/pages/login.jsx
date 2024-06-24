@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 import bg from "@/assets/bb-bg-blurred.png";
 
-export default function Login() {
+const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    sessionStorage.setItem('fromLogin', 'true'); 
     navigate("/overview");
   };
 
@@ -74,4 +75,6 @@ export default function Login() {
       </div>
     </div>
   );
-}
+};
+
+export default Login;
