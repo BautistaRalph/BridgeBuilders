@@ -14,6 +14,7 @@ const sections = [
 
 const Forms = () => {
   const [sectionActive, setSectionActive] = useState("s1");
+  const [showNGOandLGU, setShowNGOandLGU] = useState(false);
 
   const navigateSection = (event) => {
     const targetDiv = event.currentTarget.id.split("-")[0];
@@ -21,6 +22,10 @@ const Forms = () => {
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const isReferral = (event) => {
+    setShowNGOandLGU(event.target.checked);
   };
 
   return (
@@ -62,24 +67,147 @@ const Forms = () => {
             >
               <div
                 id={`s${index + 1}`}
-                className="h-screen mb-32 border-bb-violet border-2 p-4 rounded-lg shadow-lg"
+                className="h-screen mb-48"
               >
                 <h1 className="text-4xl mb-4">{sectionTitle}</h1>
-                <p className="text-lg">Content for {sectionTitle}</p>
+                <p className="text-lg">Content para sa {sectionTitle}</p>
                 <div className="mt-4 space-y-4">
                   {index === 0 && (
                     <>
-                      <p>This is the main information about the form.</p>
-                      <input
-                        type="text"
-                        placeholder="Enter your name"
-                        className="p-2 border-bb-violet border-2 rounded-lg w-full"
-                      />
-                      <input
-                        type="text"
-                        placeholder="Enter your address"
-                        className="p-2 border-bb-violet border-2 rounded-lg w-full"
-                      />
+                      <div
+                        id={`s1`}
+                        className="h-screen mb-32"
+                      >
+                        <div className="mt-4 space-y-4">
+                          <div className="flex space-x-4">
+                            <input type="text" placeholder="Pangalan" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="pangalan" />
+                            <input type="text" placeholder="Palayaw" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="palayaw" />
+                          </div>
+                          <div className="flex space-x-4">
+                            <input type="text" placeholder="Kasarian" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="kasarian" />
+                            <input type="number" placeholder="Edad" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="edad" />
+                          </div>
+                          <div className="flex space-x-4">
+                            <input type="date" placeholder="Petsa ng Kapanganakan" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="petsa-ng-kapanganakan" />
+                            <input type="text" placeholder="Lugar ng Kapanganakan" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="lugar-ng-kapanganakan" />
+                          </div>
+                          <div className="flex space-x-4">
+                            <input type="text" placeholder="Relihiyon" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="relihiyon" />
+                            <input type="text" placeholder="Kasalukuyan/Naabot na Antas sa Paaralan" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="kasalukuyan-antas-sa-paaralan" />
+                          </div>
+                          <div className="flex space-x-4">
+                            <input type="text" placeholder="Huling Paaralang Pinasukan" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="huling-paaralang-pinasukan" />
+                            <input type="text" placeholder="Tirahan" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="tirahan" />
+                          </div>
+                          <div className="flex space-x-4">
+                            <input type="text" placeholder="Allergy" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="allergy" />
+                            <input type="text" placeholder="Vaccine" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="vaccine" />
+                          </div>
+                          <p><b>Inisyal na Itsurang Pisikal ng Bata:</b></p>
+                          <div className="flex flex-col">
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="madumi-punit-damit" />
+                              Madumi at punit na damit
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="sugat-katawan" />
+                              May sugat/galis sa katawan
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="mapayat" />
+                              Payat na pangangatawan
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="maduming-kuko" />
+                              Maduming kuko
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="magulong-buhok" />
+                              Magulong buhok
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="malaking-tiyan" />
+                              Malaki ang tiyan
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="sirang-ngipin" />
+                              May sirang ngipin
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="nakayapak" />
+                              Nakayapak/walang tsinelas
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="masamang-amoy" />
+                              May hindi magandang amoy
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="iba-pa-itsura" />
+                              Iba pa
+                            </label>
+                          </div>
+                          <p><b>Kategoryang Kinapapalooban:</b></p>
+                          <div className="flex flex-wrap space-x-4">
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="approached-voluntarily" />
+                              Kusang Lumapit
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="referral" onChange={isReferral} />
+                              Referral
+                            </label>
+                          </div>
+                          {showNGOandLGU && (
+                            <>
+                              <input type="text" placeholder="NGO" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="ngo" />
+                              <input type="text" placeholder="LGU" className="p-2 border-bb-violet border-2 rounded-lg w-full" id="lgu" />
+                            </>
+                          )}
+                          <p><b>Mga Dokumento/Requirements na Mayroon:</b></p>
+                          <div className="flex flex-col">
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="report-card" />
+                              School Report Card
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="baptismal" />
+                              Baptismal
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="school-id" />
+                              School I.D
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="birth-certificate" />
+                              Birth Certificate
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="health-card" />
+                              Health Card
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="malaking-tiyan" />
+                              Malaki ang tiyan
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="vaccination-card" />
+                              Vaccination Card
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="nakayapak" />
+                              Iba pa
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="masamang-amoy" />
+                              May hindi magandang amoy
+                            </label>
+                            <label className="flex items-center">
+                              <input type="checkbox" className="mr-2" id="iba-pa-dokumento" />
+                              Iba pa
+                            </label>
+                          </div>
+                        </div>
+                      </div>
                     </>
                   )}
                   {index === 1 && (
