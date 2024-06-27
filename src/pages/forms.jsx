@@ -58,7 +58,7 @@ const Forms = () => {
           </button>
         </div>
 
-        <div className="flex-grow p-8 overflow-auto text-bb-violet">
+        <div className="flex-grow p-8 overflow-y-auto text-bb-violet">
           {sections.map((sectionTitle, index) => (
             <Waypoint
               key={index}
@@ -67,7 +67,7 @@ const Forms = () => {
             >
               <div
                 id={`s${index + 1}`}
-                className="h-screen mb-48"
+                className="mb-48"
               >
                 <h1 className="text-4xl mb-4">{sectionTitle}</h1>
                 <p className="text-lg">Content para sa {sectionTitle}</p>
@@ -75,7 +75,7 @@ const Forms = () => {
                   {index === 0 && (
                     <>
                       <div
-                        id={`s1`}
+                        id={`s0`}
                         className="h-screen mb-32"
                       >
                         <div className="mt-4 space-y-4">
@@ -142,8 +142,7 @@ const Forms = () => {
                               May hindi magandang amoy
                             </label>
                             <label className="flex items-center">
-                              <input type="checkbox" className="mr-2" id="iba-pa-itsura" />
-                              Iba pa
+                              <input type="text" placeholder="Iba pa" className="p-1 border-bb-violet border-2 rounded-lg w-1/16" id="iba-pa-itsura"/>
                             </label>
                           </div>
                           <p><b>Kategoryang Kinapapalooban:</b></p>
@@ -194,16 +193,7 @@ const Forms = () => {
                               Vaccination Card
                             </label>
                             <label className="flex items-center">
-                              <input type="checkbox" className="mr-2" id="nakayapak" />
-                              Iba pa
-                            </label>
-                            <label className="flex items-center">
-                              <input type="checkbox" className="mr-2" id="masamang-amoy" />
-                              May hindi magandang amoy
-                            </label>
-                            <label className="flex items-center">
-                              <input type="checkbox" className="mr-2" id="iba-pa-dokumento" />
-                              Iba pa
+                              <input type="text" placeholder="Iba pa" className="p-1 border-bb-violet border-2 rounded-lg w-1/16"  id="iba-pa-dokumento"/>
                             </label>
                           </div>
                         </div>
