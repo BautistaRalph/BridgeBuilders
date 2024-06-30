@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { MongoClient } from 'mongodb';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
+import { Stats } from "../models/stats.js";
 
 const app = express();
 const port = 3002;
@@ -23,7 +24,6 @@ function successFn(res){
   console.log('Database query successful!');
 } 
 
-//const mongoURI = "mongodb://127.0.0.1:27017/BBDB";
 const mongoURI = "mongodb+srv://joemarlapasaran:2ShWKJtCIxRWo965@bbdb.t2tlkkr.mongodb.net/BBDB"
 const mongoClient = new MongoClient(mongoURI);
 
@@ -287,6 +287,47 @@ apiRouter.post('/editProfile/:caseNo', async (req, res) => {
   const { _id, ...profileData } = req.body['profileData'];
 
   const result = await col.replaceOne({ caseNo: caseNo }, profileData);
+});
+
+// Route to get distinct years
+apiRouter.get('/years', async (req, res) => {
+  try {
+    console.log('Fetching distinct years...');
+    const years = await Stats.distinct('year');
+    console.log('Years fetched:', years);
+    res.json(years);
+  } catch (error) {
+    console.error('Error fetching years:', error);
+    res.status(500).json({ error: 'Failed to fetch years' });
+  }
+});
+
+// Add a new year's statistics entry
+apiRouter.post('/stats/:year', async (req, res) => {
+  try {
+    const { year } = req.params;
+    const newStats = new Stats({ year, goals: req.body.goals });
+    await newStats.save();
+    res.status(201).json(newStats);
+  } catch (error) {
+    console.error('Error adding new statistics entry:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Get statistics for a specific year
+apiRouter.get('/stats/:year', async (req, res) => {
+  try {
+    const { year } = req.params;
+    const stats = await Stats.findOne({ year });
+    if (!stats) {
+      return res.status(404).json({ error: 'Statistics for the year not found' });
+    }
+    res.status(200).json(stats);
+  } catch (error) {
+    console.error('Error fetching statistics:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 app.use("/api", apiRouter);
