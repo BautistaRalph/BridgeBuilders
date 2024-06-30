@@ -5,8 +5,8 @@ import Tooltip from "@/components/ui/Tooltip";
 import useMedia from "@/utils/hooks/useMedia";
 import useProfile from "@/utils/hooks/useProfile";
 import { useRef } from "react";
-import { useParams } from 'react-router-dom';
-import axios from '../axiosInstance.js'; 
+import { useParams } from "react-router-dom";
+import axios from "../axiosInstance.js";
 
 const programOptions = [
   { value: "Community Based Program", name: "program" },
@@ -50,11 +50,13 @@ const Edit = () => {
   };
 
   const handleSaveClick = async () => {
-    console.log('handling save');
+    console.log("handling save");
     try {
-      const response = await axios.post(`/api/editProfile/${caseNo}`, {profileData});
+      const response = await axios.post(`/api/editProfile/${caseNo}`, {
+        profileData,
+      });
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error("Error saving profile:", error);
     }
   };
 
@@ -191,7 +193,10 @@ const Edit = () => {
                 />
               </h1>
               <Tooltip tooltipText={"Save"} className=" mr-6 ml-6 ">
-                <a href={`/profile/${profileData.caseNo}`} onClick={handleSaveClick}>
+                <a
+                  href={`/profile/${profileData.caseNo}`}
+                  onClick={handleSaveClick}
+                >
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     save_as
                   </span>
@@ -212,6 +217,8 @@ const Edit = () => {
                 <Select
                   className="flex items-center h-14 w-full border-2 border-bb-purple pr-4 pl-4 rounded-md transition-colors duration-300 hover:border-bb-violet"
                   optionList={programOptions}
+                  optionClassName="text-bb-violet bg-bb-white text-3xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
+                  listHeight=""
                   handleChange={handleChange}
                 >
                   <h1 className="text-2xl xl:text-4xl flex-grow text-left">

@@ -2,7 +2,18 @@ import { forwardRef, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const Select = forwardRef(
-  ({ className, handleChange, optionList, children, ...props }, ref) => {
+  (
+    {
+      className,
+      optionClassName,
+      handleChange,
+      optionList,
+      listHeight = "h-full",
+      children,
+      ...props
+    },
+    ref
+  ) => {
     const selectRef = useRef(null);
 
     const handleOpen = () => {
@@ -10,11 +21,15 @@ const Select = forwardRef(
     };
 
     const handleClose = () => {
+      selectRef.current.style.display = "none";
+    };
+
+    const handleBlur = () => {
       if (
         selectRef.current &&
         !selectRef.current.contains(event.relatedTarget)
       ) {
-        selectRef.current.style.display = "none";
+        handleClose();
       }
     };
 
@@ -24,11 +39,11 @@ const Select = forwardRef(
     };
 
     return (
-      <>
+      <div className="relative">
         <button
           ref={ref}
           onFocus={handleOpen}
-          onBlur={handleClose}
+          onBlur={handleBlur}
           className={cn(className)}
           {...props}
         >
@@ -38,12 +53,12 @@ const Select = forwardRef(
 
         <div
           ref={selectRef}
-          className="hidden absolute bg-bb-white w-full shadow-lg z-10 flex-col"
+          className={`hidden absolute bg-bb-white w-full ${listHeight} shadow-lg z-10 flex-col overflow-auto`}
         >
           {optionList.map((option) => (
             <>
               <button
-                className="text-bb-violet bg-bb-white text-3xl text-left p-4 w-full transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
+                className={cn("w-full p-4 text-left", optionClassName)}
                 value={option.value}
                 name={option.name}
                 onClick={handleSelectChange}
@@ -53,7 +68,7 @@ const Select = forwardRef(
             </>
           ))}
         </div>
-      </>
+      </div>
     );
   }
 );

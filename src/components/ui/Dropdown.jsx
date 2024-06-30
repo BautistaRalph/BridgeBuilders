@@ -15,7 +15,7 @@ const Dropdown = forwardRef(
         <button
           ref={ref}
           onClick={handleToggle}
-          className={cn(className)}
+          className={cn(`flex items-center`, className)}
           {...props}
         >
           <span className="flex-grow text-left">{title}</span>
