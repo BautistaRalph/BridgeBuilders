@@ -4,32 +4,35 @@ import { Input } from "@/components/ui/input";
 import { ToggleButton } from "@/components/custom/ToggleButton";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
-import { MdEditNote, MdDeleteForever } from "react-icons/md";
+import { MdEditNote, MdDeleteForever} from "react-icons/md";
+import { IoMdAddCircle } from "react-icons/io";
 import search from '@/assets/search.png';
 import filter from '@/assets/filter.png';
 import UserCard from '@/components/custom/UserCard';
 import { Modal } from '@/components/custom/Modal';
 import { AddYearModal } from '@/components/custom/AddYearModal';
+import { GoalModal } from '@/components/custom/GoalModal';
 import Appbar from '@/components/ui/Appbar';
 //import { Users } from '@/lib/placeholder/users';
-import { statisticsData } from '@/lib/placeholder/statistics';
 import welcome from '@/assets/welcome.mp3'
 import axios from '../axiosInstance.js'; 
 
 const Overview = () => {
-  const userType = 'homeCare';
+  const userType = 'superUser';
   const username = 'John Doe';
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
   const [activeCategory, setActiveCategory] = useState('');
-  const [activeYear, setActiveYear] = useState('All');
+  const [activeYear, setActiveYear] = useState('2018');
   const [editMode, setEditMode] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [yearToDelete, setYearToDelete] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
+  const [yearToDelete, setYearToDelete] = useState(null);
   const [newYear, setNewYear] = useState('');
-  const [years, setYears] = useState(['All', '2018', '2019', '2020', '2021', '2022', '2023', '2024']);
+  const [years, setYears] = useState(['All']);
   const [activeStatistic, setActiveStatistic] = useState('General');
   const [activeUsers, setUsers] = useState([])
+  const [statisticsData, setStatisticsData] = useState({});
 
   //const activeUsers = Users.filter(user => user.status === "Active");
 
@@ -79,6 +82,45 @@ const Overview = () => {
     setActiveCategory(category);
   };
 
+  useEffect(() => {
+    const fetchYears = async () => {
+      try {
+        const response = await axios.get('/api/years');
+        if (response.status !== 200) {
+          throw new Error('Failed to fetch years');
+        }
+        const data = response.data; 
+        setYears([...data]); 
+      } catch (error) {
+        console.error('Failed to fetch years:', error);
+      }
+    };
+
+    fetchYears();
+  }, []);
+
+  useEffect(() => {
+    console.log('Fetching statistics for year:', activeYear);
+
+    const fetchStatistics = async () => {
+      try {
+        const response = await axios.get(`/api/stats/${activeYear}`);
+        if (response.status !== 200) {
+          throw new Error('Failed to fetch statistics');
+        }
+        console.log('Fetched statistics:', response.data);
+        setStatisticsData(response.data); 
+      } catch (error) {
+        console.error('Failed to fetch statistics:', error);
+        setStatisticsData({}); 
+      }
+    };
+
+    if (activeYear) {
+      fetchStatistics();
+    }
+  }, [activeYear]);
+
   const handleYearToggle = (year) => {
     setActiveYear(year);
   };
@@ -111,6 +153,16 @@ const Overview = () => {
 
   const handleStatisticToggle = (statistic) => {
     setActiveStatistic(statistic);
+  };
+
+  const handleGoalClick = () => {
+    setIsGoalModalOpen(true);
+  };
+
+  const confirmAddGoal = () => {
+    // Placeholder function for adding a goal
+    console.log('Adding goal...');
+    setIsGoalModalOpen(false); 
   };
 
   if (showWelcomeMessage) {
@@ -213,36 +265,46 @@ const Overview = () => {
           ))}
         </div>
 
-        {/* Statistic Toggle and Display */}
-        <div className="mb-2 text-lg font-bold text-bb-violet">Statistics:</div>
-        <div className="flex">
-          <div className="flex flex-col space-y-2">
-            {Object.keys(statisticsData).map(category => (
-              <ToggleButton
-                key={category}
-                category={category}
-                isActive={activeStatistic === category}
-                onClick={() => handleStatisticToggle(category)}
-                showIcon={false}
-              >
-                {category}
-              </ToggleButton>
-            ))}
-          </div>
-          <div className="flex-grow ml-4 mr-10 space-y-2">
-            {statisticsData[activeStatistic] && (
-              <>
-                {statisticsData[activeStatistic].map((statistic, index) => (
-                  <StatisticCard
-                    key={index}
-                    label={statistic.label}
-                    value={statistic.valueKey} 
-                  />
-                ))}
-              </>
-            )}
-          </div>
+      {/* Statistic Toggle and Display */}
+      <div className="mb-2 text-lg font-bold text-bb-violet">Statistics:</div>
+      <div className="flex">
+        <div className="flex flex-col space-y-2">
+          {statisticsData && Object.keys(statisticsData.goals || {}).map(category => (
+            <ToggleButton
+              key={category}
+              category={category}
+              isActive={activeStatistic === category}
+              onClick={() => handleStatisticToggle(category)}
+              showIcon={false}
+            >
+              {category}
+            </ToggleButton>
+          ))}
         </div>
+        <div className="flex-grow ml-4 mr-10 space-y-2">
+          {statisticsData.goals && statisticsData.goals[activeStatistic] && (
+            <div className="flex flex-col space-y-2">
+              {statisticsData.goals[activeStatistic].map((statistic, index) => (
+                <div key={index}>
+                  <StatisticCard
+                    label={statistic.label}
+                    value={statistic.valueKey}
+                    fullWidth
+                  />
+                </div>
+              ))}
+              {editMode && (
+                <div className="flex items-center justify-center mt-4">
+                  <IoMdAddCircle
+                    className="cursor-pointer text-bb-violet text-4xl"
+                    onClick={handleGoalClick}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
 
         <hr className="my-4 border-t-2 border-bb-violet" />
 
@@ -277,26 +339,26 @@ const Overview = () => {
               <div className="flex flex-col space-y-4">
                 {/* Age Range Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="ageRangeFilter" className="text-sm text-black">Age Range:</label>
-                  <select id="ageRangeFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
-                    <option value="5-10">5-10</option>
-                    <option value="10-17">10-17</option>
+                  <label htmlFor="ageRangeFilter" className="text-sm text-bb-violet">Age Range:</label>
+                  <select id="ageRangeFilter" className="mt-1 p-2 border border-gray-300 rounded text-bb-violet">
+                    <option value="5-10" className="text-bb-violet">5-10</option>
+                    <option value="10-17" className="text-bb-violet">10-17</option>
                   </select>
                 </div>
                 {/* Gender Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="genderFilter" className="text-sm text-black">Gender:</label>
-                  <select id="genderFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                  <label htmlFor="genderFilter" className="text-sm text-bb-violet">Gender:</label>
+                  <select id="genderFilter" className="mt-1 p-2 border border-gray-300 rounded text-bb-violet">
+                    <option value="Male " className="text-bb-violet">Male</option>
+                    <option value="Female" className="text-bb-violet">Female</option>
                   </select>
                 </div>
                 {/* Category Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="categoryFilter" className="text-sm text-black">Category:</label>
-                  <select id="categoryFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
-                    <option value="Home Care">Home Care</option>
-                    <option value="Community">Community</option>
+                  <label htmlFor="categoryFilter" className="text-sm text-bb-violet">Category:</label>
+                  <select id="categoryFilter" className="mt-1 p-2 border border-gray-300 rounded text-bb-violet">
+                    <option value="Home Care" className="text-bb-violet">Home Care</option>
+                    <option value="Community" className="text-bb-violet">Community</option>
                   </select>
                 </div>
               </div>
@@ -335,6 +397,13 @@ const Overview = () => {
         onClose={() => setIsAddModalOpen(false)}
         onConfirm={confirmAddYear}
         message="Please enter the year to add:"
+      />
+
+      {/* Add Goal Modal */}
+      <GoalModal
+        isOpen={isGoalModalOpen}
+        onClose={() => setIsGoalModalOpen(false)}
+        onConfirm={confirmAddGoal}
       />
     </>
   );
