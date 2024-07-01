@@ -1,35 +1,44 @@
-import React from 'react';
-import { Button } from "@/components/ui/button";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import { Input } from "@/components/ui/input";
 
-const AddYearModal = React.forwardRef(({ isOpen, onClose, onConfirm, year, onYearChange }, ref) => {
+const AddYearModal = ({ isOpen, onClose, onConfirm, onChange = () => {} }) => {
+  const [newYear, setNewYear] = useState('');
+
+  const handleInputChange = (e) => {
+    const year = e.target.value;
+    setNewYear(year);
+    onChange(year);
+  };
+
+  const handleConfirm = () => {
+    onConfirm(newYear);
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-md max-w-md w-full">
-        <p className="mb-4 text-bb-violet">Please enter the year to add:</p>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div className="bg-white p-6 rounded shadow-lg">
+        <h2 className="text-lg font-semibold mb-4 text-bb-violet">Please enter the year to add:</h2>
         <Input
-          ref={ref}
           type="text"
-          value={year}
-          onChange={onYearChange}
-          placeholder="Enter year"
-          className="border border-gray-300 p-2 rounded w-full mb-4 text-bb-violet"
+          value={newYear}
+          onChange={handleInputChange}
+          placeholder="Enter year..."
+          className="border border-gray-300 p-2 rounded text-bb-violet"
         />
-        <div className="flex justify-end space-x-4">
-          <Button onClick={onClose} className="mr-2 bg-bb-violet">
-            Cancel
-          </Button>
-          <Button onClick={onConfirm} className="bg-bb-violet">
+        <div className="mt-4 flex justify-end">
+          <Button onClick={handleConfirm} className="bg-bb-violet text-white px-4 py-2 rounded">
             Confirm
+          </Button>
+          <Button onClick={onClose} className="bg-bb-violet text-white px-4 py-2 rounded ml-2">
+            Close
           </Button>
         </div>
       </div>
     </div>
   );
-});
-
-AddYearModal.displayName = 'AddYearModal';
+};
 
 export { AddYearModal };
