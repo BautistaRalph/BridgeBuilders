@@ -8,24 +8,40 @@ const documentList = [
   "Health Card",
 ];
 
-const Dokumento = () => {
-  const [additionalDocuments, setAdditionalDocuments] = useState([]);
+const Dokumento = ({ childData, setChildData }) => {
+  const [otherDocuments, setOtherDocuments] = useState([]);
 
-  const addDocument = () => {
-    const lastIndex =
-      additionalDocuments[additionalDocuments.length - 1]?.documentIndex ?? 0;
-    setAdditionalDocuments([
-      ...additionalDocuments,
-      { documentIndex: lastIndex + 1, pangalan: "" },
-    ]);
+  const handleCheckbox = (event) => {
+    const field = event.currentTarget.name;
+    const value = event.currentTarget.value;
+
+    setChildData({
+      ...childData,
+      [field]: event.currentTarget.checked
+        ? [...childData[field], value]
+        : childData[field].filter((data) => data != value),
+    });
   };
 
-  const removeDocument = (event) => {
-    const targetIndex = event.currentTarget.value;
-    const newKapatidList = additionalDocuments.filter(
-      (dokumento) => dokumento.documentIndex != targetIndex
+  const handleOtherDocuments = (event) => {
+    const value = event.currentTarget.value;
+    const documentList = value
+      .trim()
+      .split(/\s*,\s*/)
+      .filter((feature) => feature !== "");
+
+    const updatedDocuments = childData.dokumento.filter(
+      (document) => !otherDocuments.includes(document)
     );
-    setAdditionalDocuments(newKapatidList);
+
+    const newDocuments = [...updatedDocuments, ...documentList];
+
+    setChildData((prevChildData) => ({
+      ...prevChildData,
+      dokumento: newDocuments,
+    }));
+
+    setOtherDocuments(documentList);
   };
 
   return (
@@ -36,44 +52,23 @@ const Dokumento = () => {
           <input
             type="checkbox"
             className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
-            name="goal"
+            name="dokumento"
+            value={document}
+            onChange={handleCheckbox}
           />
           <p className="text-2xl">{document}</p>
         </span>
       ))}
-      {additionalDocuments.map((document) => (
-        <span className="flex items-center" key={document.documentIndex}>
-          <input
-            type="checkbox"
-            className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
-            name="goal"
-          />
 
-          <input
-            type="text"
-            placeholder="Pangalan ng dokumento"
-            className="p-2 border-bb-violet border-b-2 bg-inherit w-1/3 outline-none text-2xl"
-          />
-
-          <button value={document.documentIndex} onClick={removeDocument}>
-            <span className="material-symbols-outlined text-3xl">delete</span>
-          </button>
-        </span>
-      ))}
-
-      <button
-        className="border-dashed border-2 border-bb-violet h-16 w-full flex items-center p-2 hover:bg-bb-violet hover:text-bb-white hover:border-bb-white transition-colors duration-200"
-        onClick={addDocument}
-      >
-        <h1 className="flex-grow text-4xl text-left">Magdagdag ng Dokumento</h1>
-        <span className="material-symbols-outlined text-5xl self-end">add</span>
-      </button>
-
-      <h1 className="text-3xl mt-4">Form Intake</h1>
-      <input
-        type="file"
-        className="p-2 border-bb-violet border-2 rounded-lg w-full"
-      />
+      <span className="flex flex-col w-1/2">
+        <p>Iba pa: (Paghiwalayin ang mga dokumento gamit ng comma)</p>
+        <input
+          type="text"
+          placeholder="Iba pang mga dokumento"
+          onBlur={handleOtherDocuments}
+          className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
+        />
+      </span>
     </>
   );
 };

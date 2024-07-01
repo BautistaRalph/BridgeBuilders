@@ -25,68 +25,64 @@ const initialUser = {
   tirahan: "",
   allergies: [],
   vaccines: [],
-  kategorya: "",
+  kategorya: {
+    pangalan: "",
+    ngo: "",
+    lgu: "",
+  },
   initialItsura: [],
   problema: [],
-  nanay: [
-    {
-      pangalan: "",
-      palayaw: "",
-      kasarian: "",
-      edad: "",
-      birthday: "",
-      antas: "",
-      tirahan: "",
-      lugarNgKapanganakan: "",
-      hulingPaaralan: "",
-      probinsya: "",
-      trabaho: "",
-      kita: "",
-      skillsTraining: [],
-      skills: [],
-      dokumento: [],
-    },
-  ],
-  tatay: [
-    {
-      pangalan: "",
-      palayaw: "",
-      kasarian: "",
-      edad: "",
-      birthday: "",
-      antas: "",
-      tirahan: "",
-      lugarNgKapanganakan: "",
-      hulingPaaralan: "",
-      probinsya: "",
-      trabaho: "",
-      kita: "",
-      skillsTraining: [],
-      skills: [],
-      dokumento: [],
-    },
-  ],
-  kapatid: [
-    {
-      kapatidIndex: 1,
-      pangalan: "",
-      palayaw: "",
-      kasarian: "",
-      edad: "",
-      trabaho: "",
-      kita: "",
-      antas: null,
-      dokumento: [],
-    },
-  ],
+  nanay: {
+    pangalan: "",
+    palayaw: "",
+    kasarian: "",
+    edad: "",
+    birthday: "",
+    antas: "",
+    tirahan: "",
+    lugarNgKapanganakan: "",
+    hulingPaaralan: "",
+    probinsya: "",
+    trabaho: "",
+    kita: "",
+    skillsTraining: [],
+    skills: [],
+    dokumento: [],
+  },
+  tatay: {
+    pangalan: "",
+    palayaw: "",
+    kasarian: "",
+    edad: "",
+    birthday: "",
+    antas: "",
+    tirahan: "",
+    lugarNgKapanganakan: "",
+    hulingPaaralan: "",
+    probinsya: "",
+    trabaho: "",
+    kita: "",
+    skillsTraining: [],
+    skills: [],
+    dokumento: [],
+  },
+  kapatid: [],
   dokumento: [],
   formIntake: "",
-  schoolCount: "",
+  schoolCount: 0,
   baon: 0,
   baonExpense: "",
   extracurriculars: [],
+  familyIllnesses: [],
+  familyPlanning: "",
+  waterSource: "",
+  laundryPlace: "",
+  crPlace: "",
+  eatPerDay: 0,
+  showerPerDay: 0,
   eatBeforeSchool: false,
   attendedALS: false,
+  healthCenterCheckup: false,
   goalsAchieved: ["Tutorial", "Assignment Help", "WASH", "Health Assistance"],
 };
 
@@ -111,6 +107,8 @@ const Forms = () => {
       targetElement.scrollIntoView({ behavior: "smooth" });
     }
   };
+
+  console.log(childData);
 
   return (
     <>
@@ -156,18 +154,42 @@ const Forms = () => {
               >
                 <h1 className="text-4xl mb-4">{sectionTitle}</h1>
                 <div className="mt-4 space-y-4">
-                  {index === 0 && <PangunahingImpormasyon />}
-                  {index === 1 && <PamilyaProblema />}
-                  {index === 2 && <Nanay />}
-                  {index === 3 && <Tatay />}
+                  {index === 0 && (
+                    <PangunahingImpormasyon
+                      childData={childData}
+                      setChildData={setChildData}
+                    />
+                  )}
+                  {index === 1 && (
+                    <PamilyaProblema
+                      childData={childData}
+                      setChildData={setChildData}
+                    />
+                  )}
+                  {index === 2 && (
+                    <Nanay childData={childData} setChildData={setChildData} />
+                  )}
+                  {index === 3 && (
+                    <Tatay childData={childData} setChildData={setChildData} />
+                  )}
                   {index === 4 && (
                     <Kapatid
                       childData={childData}
                       setChildData={setChildData}
                     />
                   )}
-                  {index === 5 && <Dokumento />}
-                  {index === 6 && <IbangImpormasyon />}
+                  {index === 5 && (
+                    <Dokumento
+                      childData={childData}
+                      setChildData={setChildData}
+                    />
+                  )}
+                  {index === 6 && (
+                    <IbangImpormasyon
+                      childData={childData}
+                      setChildData={setChildData}
+                    />
+                  )}
                 </div>
               </div>
             </Waypoint>

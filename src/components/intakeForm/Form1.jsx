@@ -1,165 +1,320 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Select from "@/components/ui/Select";
 
-const PangunahingImpormasyon = () => {
+const antasList = [
+  { value: "None", name: "antas" },
+  { value: "Elementary", name: "antas" },
+  { value: "High School", name: "antas" },
+  { value: "College", name: "antas" },
+  { value: "ALS", name: "antas" },
+];
+
+const featureList = [
+  "Madumi at punit na damit",
+  "May sugat/galis sa katawan",
+  "Payat na pangangatawan",
+  "Maduming kuko",
+  "Magulong buhok",
+  "Malaki ang tiyan",
+  "May sirang ngipin",
+  "Nakayapak/walang tsinelas",
+  "May hindi magandang amoy",
+];
+
+const PangunahingImpormasyon = ({ childData, setChildData }) => {
+  const otherKasarianRef = useRef(null);
+  const [otherFeatures, setOtherFeatures] = useState([]);
   const [showNGOandLGU, setShowNGOandLGU] = useState(false);
-  const isReferral = (event) => {
-    setShowNGOandLGU(event.target.checked);
+
+  // Handling Kategorya radio buttons
+  const handleCategory = (event) => {
+    const value = event.currentTarget.value;
+    const isReferral = value === "Referral";
+
+    if (isReferral) {
+      setShowNGOandLGU(true);
+    } else setShowNGOandLGU(false);
+
+    setChildData({
+      ...childData,
+      kategorya: {
+        ...childData.kategorya,
+        pangalan: event.currentTarget.value,
+        ngo: isReferral ? childData.kategorya.ngo : "",
+        lgu: isReferral ? childData.kategorya.lgu : "",
+      },
+    });
+  };
+
+  // Handling Referral category textfield change
+  const handleReferral = (event) => {
+    const isNgo = event.target.name === "ngo";
+    const isLgu = event.target.name === "lgu";
+    setChildData({
+      ...childData,
+      kategorya: {
+        ...childData.kategorya,
+        ...(isNgo ? { ngo: event.currentTarget.value } : {}),
+        ...(isLgu ? { lgu: event.currentTarget.value } : {}),
+      },
+    });
+  };
+
+  // Handling textfield, number input, radio, and date input fields
+  const handleChange = (event) => {
+    setChildData({
+      ...childData,
+      [event.currentTarget.name]: event.currentTarget.value,
+    });
+  };
+
+  // Handling checkbox
+  const handleCheckbox = (event) => {
+    const field = event.currentTarget.name;
+    const value = event.currentTarget.value;
+
+    setChildData({
+      ...childData,
+      [field]: event.currentTarget.checked
+        ? [...childData[field], value]
+        : childData[field].filter((data) => data != value),
+    });
+  };
+
+  // Handling other kasarian input
+  const handleOtherKasarian = () => {
+    const kasarian = otherKasarianRef.current.value;
+    setChildData({ ...childData, kasarian });
+  };
+
+  const handleOtherFeatures = (event) => {
+    const value = event.currentTarget.value;
+    const featureList = value
+      .trim()
+      .split(/\s*,\s*/)
+      .filter((feature) => feature !== "");
+
+    const updatedInitialItsura = childData.initialItsura.filter(
+      (feature) => !otherFeatures.includes(feature)
+    );
+
+    const newInitialItsura = [...updatedInitialItsura, ...featureList];
+
+    setChildData((prevChildData) => ({
+      ...prevChildData,
+      initialItsura: newInitialItsura,
+    }));
+
+    setOtherFeatures(featureList);
   };
 
   return (
     <>
       <div className="mt-4 space-y-4">
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Pangalan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
+            name="pangalan"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
             id="pangalan"
+            onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Palayaw"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
+            name="palayaw"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
             id="palayaw"
+            onChange={handleChange}
           />
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
-          <input
-            type="text"
-            placeholder="Kasarian"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="kasarian"
-          />
-          <input
-            type="number"
-            placeholder="Edad"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="edad"
-          />
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
+          <span className="flex items-center w-1/2 mr-2">
+            <label className="text-2xl mr-4 flex">
+              <input
+                type="radio"
+                checked={childData?.kasarian == "Lalaki"}
+                name="kasarian"
+                value={"Lalaki"}
+                onChange={handleChange}
+              />
+              <p className="ml-2">Lalaki</p>
+            </label>
+            <label className="text-2xl mr-4 flex">
+              <input
+                type="radio"
+                name="kasarian"
+                checked={childData?.kasarian == "Babae"}
+                value={"Babae"}
+                onChange={handleChange}
+              />
+              <p className="ml-2">Babae</p>
+            </label>
+            <label className="text-2xl flex-grow flex items-center">
+              <input
+                type="radio"
+                name="kasarian"
+                checked={
+                  childData?.kasarian != "Babae" &&
+                  childData?.kasarian != "Lalaki"
+                }
+                onChange={handleOtherKasarian}
+              />
+              <p className="ml-2">Other: </p>
+              <input
+                ref={otherKasarianRef}
+                type="text"
+                onChange={handleOtherKasarian}
+                placeholder="Kasarian"
+                className="p-2 bg-inherit outline-none border-bb-violet border-b-2 text-2xl w-1/2"
+                name="kasarian-other"
+              />
+            </label>
+          </span>
+          <span className="w-1/2 mr-2">
+            <input
+              type="number"
+              min="1"
+              max="100"
+              placeholder="Edad"
+              className="p-2 border-bb-violet border-2 rounded-lg bg-inherit w-full outline-none text-2xl"
+              name="edad"
+              onChange={handleChange}
+            />
+          </span>
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="date"
             placeholder="Petsa ng Kapanganakan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="kapanganakan"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="birthday"
+            onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Lugar ng Kapanganakan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="kapanganakan"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="lugarNgKapanganakan"
+            onChange={handleChange}
           />
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Relihiyon"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="relihiyon"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="relihiyon"
+            onChange={handleChange}
           />
-          <input
-            type="text"
-            placeholder="Kasalukuyan/Naabot na Antas sa Paaralan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="antas"
-          />
+          <div className="w-1/2 mr-2">
+            <Select
+              className="flex items-center overflow-auto h-14 w-full border-2 border-bb-violet pr-2 pl-2 rounded-md transition-colors duration-300 hover:border-bb-purple"
+              optionClassName="text-bb-violet bg-bb-white text-2xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
+              optionList={antasList}
+              handleChange={handleChange}
+              listHeight=""
+            >
+              <h1 className="text-2xl flex-grow text-left">
+                {childData?.antas ?? "Naabot na Antas ng Paaralan"}
+              </h1>
+            </Select>
+          </div>
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Huling Paaralang Pinasukan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="pinasukan"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="hulingPaaralan"
+            onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Tirahan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="tirahan"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="tirahan"
+            onChange={handleChange}
           />
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Allergy"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="allergy"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="allergies"
+            onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Vaccine"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="vaccine"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="vaccines"
+            onChange={handleChange}
           />
         </div>
         <p style={{ fontSize: "24px" }}>
           <b>Inisyal na Itsurang Pisikal ng Bata:</b>
         </p>
         <div className="flex flex-col">
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="madumi-punit-damit" />
-            Madumi at punit na damit
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="sugat-katawan" />
-            May sugat/galis sa katawan
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="mapayat" />
-            Payat na pangangatawan
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="maduming-kuko" />
-            Maduming kuko
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="magulong-buhok" />
-            Magulong buhok
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="malaking-tiyan" />
-            Malaki ang tiyan
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="sirang-ngipin" />
-            May sirang ngipin
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="nakayapak" />
-            Nakayapak/walang tsinelas
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="masamang-amoy" />
-            May hindi magandang amoy
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
+          {featureList.map((feature) => (
+            <label
+              className="flex items-center mb-2"
+              style={{ fontSize: "18px" }}
+              key={feature}
+            >
+              <input
+                type="checkbox"
+                className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
+                name="initialItsura"
+                value={feature}
+                onChange={handleCheckbox}
+              />
+              {feature}
+            </label>
+          ))}
+          <span className="flex flex-col w-1/2">
+            <p>Iba pa: (Paghiwalayin ang mga itsura gamit ng comma)</p>
             <input
               type="text"
-              placeholder="Iba pa"
-              className="p-1 border-bb-violet border-2 rounded-lg w-1/16"
-              id="iba-pa-itsura"
+              placeholder="Iba pang mga itsura"
+              onBlur={handleOtherFeatures}
+              className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
             />
-          </label>
+          </span>
         </div>
         <p style={{ fontSize: "24px" }}>
           <b>Kategoryang Kinapapalooban:</b>
         </p>
-        <div className="flex flex-wrap space-x-4">
+        <div className="flex flex-wrap space-x-4 items-center">
           <label className="flex items-center" style={{ fontSize: "18px" }}>
             <input
-              type="checkbox"
+              type="radio"
               className="mr-2"
-              id="approached-voluntarily"
+              value={"Kusang Lumapit"}
+              checked={childData.kategorya.pangalan == "Kusang Lumapit"}
+              onChange={handleCategory}
             />
             Kusang Lumapit
           </label>
           <label className="flex items-center" style={{ fontSize: "18px" }}>
             <input
-              type="checkbox"
+              type="radio"
               className="mr-2"
-              id="referral"
-              onChange={isReferral}
+              value={"Naisama sa Survey"}
+              checked={childData.kategorya.pangalan == "Naisama sa Survey"}
+              onChange={handleCategory}
+            />
+            Naisama sa Survey
+          </label>
+          <label className="flex items-center" style={{ fontSize: "18px" }}>
+            <input
+              type="radio"
+              className="mr-2"
+              value={"Referral"}
+              checked={childData.kategorya.pangalan == "Referral"}
+              onChange={handleCategory}
             />
             Referral
           </label>
@@ -171,58 +326,19 @@ const PangunahingImpormasyon = () => {
               placeholder="NGO"
               style={{ fontSize: "18px" }}
               className="p-2 border-bb-violet border-2 rounded-lg w-full"
-              id="ngo"
+              name="ngo"
+              onChange={handleReferral}
             />
             <input
               type="text"
               placeholder="LGU"
               style={{ fontSize: "18px" }}
               className="p-2 border-bb-violet border-2 rounded-lg w-full"
-              id="lgu"
+              name="lgu"
+              onChange={handleReferral}
             />
           </>
         )}
-        <p style={{ fontSize: "24px" }}>
-          <b>Mga Dokumento/Requirements na Mayroon:</b>
-        </p>
-        <div className="flex flex-col">
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="report-card" />
-            School Report Card
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="baptismal" />
-            Baptismal
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="school-id" />
-            School I.D
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="birth-certificate" />
-            Birth Certificate
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="health-card" />
-            Health Card
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="malaking-tiyan" />
-            Malaki ang tiyan
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="vaccination-card" />
-            Vaccination Card
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input
-              type="text"
-              placeholder="Iba pa"
-              className="p-1 border-bb-violet border-2 rounded-lg w-1/16"
-              id="iba-pa-dokumento"
-            />
-          </label>
-        </div>
       </div>
     </>
   );

@@ -94,6 +94,10 @@ input[type="radio"]:checked {
   border-color: #ffe6e6; /* Change border color for checked state */
 }
 
+input {
+  outline: none;
+}
+
 .bridgeBuilderCheckbox:checked::after {
   content: "\2713"; /* Unicode for check mark */
   font-size: 16px; /* Size of the check mark */

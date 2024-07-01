@@ -1,113 +1,260 @@
-const Tatay = () => {
+import { useRef, useState } from "react";
+import Select from "@/components/ui/Select";
+
+const documentList = [
+  "National I.D",
+  "Barangay I.D",
+  "SSS",
+  "PhilHealth",
+  "HDMF",
+  "Birth Certificate",
+  "DSWD I.D",
+];
+
+const antasList = [
+  { value: "None", name: "antas" },
+  { value: "Elementary", name: "antas" },
+  { value: "High School", name: "antas" },
+  { value: "College", name: "antas" },
+  { value: "ALS", name: "antas" },
+];
+
+const Tatay = ({ childData, setChildData }) => {
+  const [otherDocuments, setOtherDocuments] = useState([]);
+  const otherKasarianRef = useRef(null);
+  // Handling textfield, number input, radio, and date input fields
+  const handleChange = (event) => {
+    setChildData({
+      ...childData,
+      tatay: {
+        ...childData.tatay,
+        [event.currentTarget.name]: event.currentTarget.value,
+      },
+    });
+  };
+
+  // Handling kasarian radio button to avoid conflict with other kasarian radio buttons
+  const handleKasarian = (event) => {
+    setChildData({
+      ...childData,
+      tatay: {
+        ...childData.tatay,
+        kasarian: event.currentTarget.value,
+      },
+    });
+  };
+
+  // Handling other kasarian input
+  const handleOtherKasarian = () => {
+    const kasarian = otherKasarianRef.current.value;
+    setChildData({ ...childData, tatay: { ...childData.tatay, kasarian } });
+  };
+
+  const handleCheckbox = (event) => {
+    const field = event.currentTarget.name;
+    const value = event.currentTarget.value;
+
+    setChildData({
+      ...childData,
+      tatay: {
+        ...childData.tatay,
+        [field]: event.currentTarget.checked
+          ? [...childData.tatay[field], value]
+          : childData.tatay[field].filter((data) => data != value),
+      },
+    });
+  };
+
+  const handleOtherDocuments = (event) => {
+    const value = event.currentTarget.value;
+    const documentList = value
+      .trim()
+      .split(/\s*,\s*/)
+      .filter((feature) => feature !== "");
+
+    const updatedDocuments = childData.tatay.dokumento.filter(
+      (document) => !otherDocuments.includes(document)
+    );
+
+    const newDocuments = [...updatedDocuments, ...documentList];
+
+    setChildData((prevChildData) => ({
+      ...prevChildData,
+      tatay: {
+        ...prevChildData.tatay,
+        dokumento: newDocuments,
+      },
+    }));
+
+    setOtherDocuments(documentList);
+  };
+
   return (
     <>
       <div className="mt-4 space-y-4">
         <p style={{ fontSize: "24px" }}>
           <b>Impormasyon ng Tatay:</b>
         </p>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Pangalan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="pangalan-tatay"
+            name="pangalan"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            id="pangalan"
+            onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Palayaw"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="palayaw-tatay"
+            name="palayaw"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            id="palayaw"
+            onChange={handleChange}
           />
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
-          <input
-            type="text"
-            placeholder="Kasarian"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="kasarian-tatay"
-          />
-          <input
-            type="number"
-            placeholder="Edad"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="edad-tatay"
-          />
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
+          <span className="flex items-center w-1/2 mr-2">
+            <label className="text-2xl mr-4 flex">
+              <input
+                type="radio"
+                name="tatay"
+                checked={childData?.tatay?.kasarian == "Lalaki"}
+                value={"Lalaki"}
+                onChange={handleKasarian}
+              />
+              <p className="ml-2">Lalaki</p>
+            </label>
+            <label className="text-2xl mr-4 flex">
+              <input
+                type="radio"
+                name="tatay"
+                checked={childData?.tatay?.kasarian == "Babae"}
+                value={"Babae"}
+                onChange={handleKasarian}
+              />
+              <p className="ml-2">Babae</p>
+            </label>
+            <label className="text-2xl flex-grow flex items-center">
+              <input
+                type="radio"
+                name="tatay"
+                checked={
+                  childData?.tatay?.kasarian != "Babae" &&
+                  childData?.tatay?.kasarian != "Lalaki"
+                }
+                onChange={handleOtherKasarian}
+              />
+              <p className="ml-2">Other: </p>
+              <input
+                ref={otherKasarianRef}
+                type="text"
+                onChange={handleOtherKasarian}
+                placeholder="Kasarian"
+                className="p-2 bg-inherit outline-none border-bb-violet border-b-2 text-2xl w-1/2"
+                name="kasarian-other"
+              />
+            </label>
+          </span>
+          <span className="w-1/2 mr-2">
+            <input
+              type="number"
+              min="1"
+              max="100"
+              placeholder="Edad"
+              className="p-2 border-bb-violet border-2 rounded-lg bg-inherit w-full outline-none text-2xl"
+              name="edad"
+              onChange={handleChange}
+            />
+          </span>
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="date"
             placeholder="Petsa ng Kapanganakan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="kapanganakan-tatay"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="birthday"
+            onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Lugar ng Kapanganakan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="kapanganakan-tatay"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="lugarNgKapanganakan"
+            onChange={handleChange}
           />
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Relihiyon"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="relihiyon-tatay"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="relihiyon"
+            onChange={handleChange}
           />
-          <input
-            type="text"
-            placeholder="Kasalukuyan/Naabot na Antas sa Paaralan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="antas-tatay"
-          />
+          <div className="w-1/2 mr-2">
+            <Select
+              className="flex items-center overflow-auto h-14 w-full border-2 border-bb-violet pr-2 pl-2 rounded-md transition-colors duration-300 hover:border-bb-purple"
+              optionClassName="text-bb-violet bg-bb-white text-2xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
+              optionList={antasList}
+              handleChange={handleChange}
+              listHeight=""
+            >
+              <h1 className="text-2xl flex-grow text-left">
+                {childData?.tatay?.antas ?? "Naabot na Antas ng Paaralan"}
+              </h1>
+            </Select>
+          </div>
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Huling Paaralang Pinasukan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="pinasukan-tatay"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="hulingPaaralan"
+            onChange={handleChange}
           />
           <input
             type="text"
-            placeholder="Kasalukuyang Tirahan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
-            id="tirahan-tatay"
+            placeholder="Tirahan"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            name="tirahan"
+            onChange={handleChange}
           />
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Probinsya"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
+            className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="probinsya-tatay"
           />
           <input
             type="text"
             placeholder="Trabaho"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
+            className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="trabaho-tatay"
           />
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Kita"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
+            className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="kita-tatay"
           />
           <input
             type="text"
             placeholder="Skill Training Attended"
-            className="p-2 border-bb-violet border-2 rounded-lg w-full"
+            className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="skill-training-tatay"
           />
         </div>
-        <div className="flex space-x-4" style={{ fontSize: "18px" }}>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
             type="text"
             placeholder="Skills"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2"
+            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
             id="skills-tatay"
           />
         </div>
@@ -115,42 +262,31 @@ const Tatay = () => {
           <b>Available documents/I.D:</b>
         </p>
         <div className="flex flex-col">
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="n-id-tatay" />
-            National I.D
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="b-id-tatay" />
-            Barangay I.D
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="sss-tatay" />
-            SSS
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="phil-health-tatay" />
-            PhilHealth
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="hdmf-tatay" />
-            HDMF
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="bc-tatay" />
-            Birth Certificate
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
-            <input type="checkbox" className="mr-2" id="dswd-tatay" />
-            DSWD I.D
-          </label>
-          <label className="flex items-center" style={{ fontSize: "18px" }}>
+          {documentList.map((problem) => (
+            <label
+              className="flex items-center mb-2"
+              style={{ fontSize: "18px" }}
+              key={problem}
+            >
+              <input
+                type="checkbox"
+                className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
+                name="dokumento"
+                value={problem}
+                onChange={handleCheckbox}
+              />
+              {problem}
+            </label>
+          ))}
+          <span className="flex flex-col w-1/2">
+            <p>Iba pa: (Paghiwalayin ang mga dokumento gamit ng comma)</p>
             <input
               type="text"
-              placeholder="Iba pa"
-              className="p-1 border-bb-violet border-2 rounded-lg w-1/16"
-              id="iba-pa-tatay"
+              placeholder="Iba pang mga dokumento"
+              onBlur={handleOtherDocuments}
+              className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
             />
-          </label>
+          </span>
         </div>
       </div>
     </>

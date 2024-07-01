@@ -35,7 +35,7 @@ const Accordion = forwardRef(
           onClick={() => setIsOpen(!isOpen)}
         >
           <div className="flex justify-between items-center">
-            <span>{title}</span>
+            <span className="text-ellipsis">{title}</span>
             <span
               className={`material-symbols-outlined transition-transform duration-200 ${
                 isOpen ? "rotate-0" : "rotate-180"

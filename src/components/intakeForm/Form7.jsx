@@ -1,4 +1,70 @@
-const IbangImpormasyon = () => {
+import { useState } from "react";
+
+const IbangImpormasyon = ({ childData, setChildData }) => {
+  const [illnesses, setIllnesses] = useState([]);
+  const [extracurriculars, setExtracurriculars] = useState([]);
+
+  // Handling textfield, number input, radio, and date input fields
+  const handleChange = (event) => {
+    setChildData({
+      ...childData,
+      [event.currentTarget.name]: event.currentTarget.value,
+    });
+  };
+
+  const handleCheckbox = (event) => {
+    const field = event.currentTarget.name;
+    setChildData({
+      ...childData,
+      [field]: event.currentTarget.checked ? true : false,
+    });
+  };
+
+  const handleIllnesses = (event) => {
+    const value = event.currentTarget.value;
+    const illnessList = value
+      .trim()
+      .split(/\s*,\s*/)
+      .filter((illness) => illness !== "");
+
+    const updatedFamilyIllnesses = childData.familyIllnesses.filter(
+      (illness) => !illnesses.includes(illness)
+    );
+
+    const newFamilyIllnesses = [...updatedFamilyIllnesses, ...illnessList];
+
+    setChildData((prevChildData) => ({
+      ...prevChildData,
+      familyIllnesses: newFamilyIllnesses,
+    }));
+
+    setIllnesses(illnessList);
+  };
+
+  const handleExtracurriculars = (event) => {
+    const value = event.currentTarget.value;
+    const extracurricularsList = value
+      .trim()
+      .split(/\s*,\s*/)
+      .filter((e) => e !== "");
+
+    const updatedExtracurriculars = childData.extracurriculars.filter(
+      (e) => !extracurriculars.includes(e)
+    );
+
+    const newExtracurriculars = [
+      ...updatedExtracurriculars,
+      ...extracurricularsList,
+    ];
+
+    setChildData((prevChildData) => ({
+      ...prevChildData,
+      extracurriculars: newExtracurriculars,
+    }));
+
+    setExtracurriculars(extracurricularsList);
+  };
+
   return (
     <>
       <p>Additional information.</p>
@@ -11,6 +77,8 @@ const IbangImpormasyon = () => {
             min="1"
             placeholder="Ilan ang nag-aaral sa pamilya?"
             className="p-2 border-bb-violet border-b-2 bg-inherit w-full outline-none text-2xl"
+            name="schoolCount"
+            onChange={handleChange}
           />
         </span>
 
@@ -23,6 +91,8 @@ const IbangImpormasyon = () => {
               min="1"
               placeholder="Ilan ang baon sa school?"
               className="p-2 border-bb-violet border-b-2 bg-inherit w-full outline-none text-2xl"
+              name="baon"
+              onChange={handleChange}
             />
           </span>
         </span>
@@ -35,6 +105,8 @@ const IbangImpormasyon = () => {
             type="text"
             placeholder="Saan ginagastos ang baon?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
+            name="baonExpense"
+            onChange={handleChange}
           />
         </span>
 
@@ -47,7 +119,7 @@ const IbangImpormasyon = () => {
             type="text"
             placeholder="Mga Sinasalihang Activity sa School?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            id="pangalan"
+            onChange={handleExtracurriculars}
           />
         </span>
       </div>
@@ -59,6 +131,8 @@ const IbangImpormasyon = () => {
             type="text"
             placeholder="Ginagamit na Family Planning method?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
+            name="familyPlanning"
+            onChange={handleChange}
           />
         </span>
 
@@ -68,7 +142,8 @@ const IbangImpormasyon = () => {
             type="text"
             placeholder="Saan Kumukuha ng malinis na tubig?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            id="pangalan"
+            name="waterSource"
+            onChange={handleChange}
           />
         </span>
       </div>
@@ -80,6 +155,8 @@ const IbangImpormasyon = () => {
             type="text"
             placeholder="Saan naglalaba ng damit?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
+            name="laundryPlace"
+            onChange={handleChange}
           />
         </span>
 
@@ -89,7 +166,8 @@ const IbangImpormasyon = () => {
             type="text"
             placeholder="Saan nag-CR?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            id="pangalan"
+            name="crPlace"
+            onChange={handleChange}
           />
         </span>
       </div>
@@ -103,6 +181,8 @@ const IbangImpormasyon = () => {
             max="3"
             placeholder="Ilang beses kumakain sa isang araw?"
             className="p-2 border-bb-violet border-b-2 bg-inherit w-full outline-none text-2xl"
+            name="eatPerDay"
+            onChange={handleChange}
           />
         </span>
 
@@ -114,6 +194,8 @@ const IbangImpormasyon = () => {
             max="3"
             placeholder="Ilang beses naliligo sa isang araw?"
             className="p-2 border-bb-violet border-b-2 bg-inherit w-full outline-none text-2xl"
+            name="showerPerDay"
+            onChange={handleChange}
           />
         </span>
       </div>
@@ -128,7 +210,7 @@ const IbangImpormasyon = () => {
             type="text"
             placeholder="Kadalasang sakit sa pamilya?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            id="pangalan"
+            onChange={handleIllnesses}
           />
         </span>
       </div>
@@ -137,7 +219,9 @@ const IbangImpormasyon = () => {
         <span className="flex items-center w-1/3 mr-8">
           <input
             type="checkbox"
+            name="eatBeforeSchool"
             className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
+            onChange={handleCheckbox}
           />
           <p className="text-xl">Kumakain bago pumasok sa school?</p>
         </span>
@@ -145,7 +229,9 @@ const IbangImpormasyon = () => {
         <span className="flex items-center w-1/3 mr-8">
           <input
             type="checkbox"
+            name="attendedALS"
             className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
+            onChange={handleCheckbox}
           />
           <p className="text-xl">Nag-attend ng Alternative Learning System?</p>
         </span>
@@ -153,7 +239,9 @@ const IbangImpormasyon = () => {
         <span className="flex items-center w-1/3 mr-8">
           <input
             type="checkbox"
+            name="healthCenterCheckup"
             className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
+            onChange={handleCheckbox}
           />
           <p className="text-xl">Nagpacheckup sa health center?</p>
         </span>
