@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ToggleButton } from "@/components/custom/ToggleButton";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
-import { MdEditNote, MdDeleteForever} from "react-icons/md";
+import { MdEditNote, MdDeleteForever, MdEditSquare } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
 import search from '@/assets/search.png';
 import filter from '@/assets/filter.png';
@@ -12,6 +12,7 @@ import UserCard from '@/components/custom/UserCard';
 import { Modal } from '@/components/custom/Modal';
 import { AddYearModal } from '@/components/custom/AddYearModal';
 import { GoalModal } from '@/components/custom/GoalModal';
+import { StatisticModal } from '@/components/custom/StatisticModal.jsx';
 import Appbar from '@/components/ui/Appbar';
 //import { Users } from '@/lib/placeholder/users';
 import welcome from '@/assets/welcome.mp3'
@@ -27,8 +28,10 @@ const Overview = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
+  const [isStatisticModalOpen, setIsStatisticModalOpen] = useState(false);
   const [yearToDelete, setYearToDelete] = useState(null);
   const [newYear, setNewYear] = useState('');
+  const [currentStatistic, setCurrentStatisticData] = useState({});
   const [years, setYears] = useState(['All']);
   const [activeStatistic, setActiveStatistic] = useState('General');
   const [activeUsers, setUsers] = useState([])
@@ -82,44 +85,70 @@ const Overview = () => {
     setActiveCategory(category);
   };
 
-  useEffect(() => {
-    const fetchYears = async () => {
-      try {
-        const response = await axios.get('/api/years');
-        if (response.status !== 200) {
-          throw new Error('Failed to fetch years');
-        }
-        const data = response.data; 
-        setYears([...data]); 
-      } catch (error) {
-        console.error('Failed to fetch years:', error);
+  const fetchYears = async () => {
+    try {
+      const response = await axios.get('/api/years');
+      if (response.status !== 200) {
+        throw new Error('Failed to fetch years');
       }
-    };
+      const data = response.data;
+      setYears([...data]);
+    } catch (error) {
+      console.error('Failed to fetch years:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchYears();
   }, []);
 
+  const fetchStatistics = async () => {
+    try {
+      const response = await axios.get(`/api/stats/${activeYear}`);
+      if (response.status !== 200) {
+        throw new Error('Failed to fetch statistics');
+      }
+      console.log('Fetched statistics:', response.data);
+      setStatisticsData(response.data);
+    } catch (error) {
+      console.error('Failed to fetch statistics:', error);
+      setStatisticsData({});
+    }
+  };
+  
   useEffect(() => {
     console.log('Fetching statistics for year:', activeYear);
-
-    const fetchStatistics = async () => {
-      try {
-        const response = await axios.get(`/api/stats/${activeYear}`);
-        if (response.status !== 200) {
-          throw new Error('Failed to fetch statistics');
-        }
-        console.log('Fetched statistics:', response.data);
-        setStatisticsData(response.data); 
-      } catch (error) {
-        console.error('Failed to fetch statistics:', error);
-        setStatisticsData({}); 
-      }
-    };
-
+  
     if (activeYear) {
       fetchStatistics();
     }
   }, [activeYear]);
+  
+  const confirmAddYear = async () => {
+    try {
+      const defaultGoals = {
+        General: [],
+        Goal1: [],
+        Goal2: [],
+        Goal3: []
+      };
+  
+      const response = await axios.post('/api/stats', {
+        year: newYear,
+        goals: defaultGoals
+      });
+  
+      if (response.status === 201) {
+        console.log('Year added successfully');
+        setIsAddModalOpen(false);
+        fetchYears()
+      } else {
+        console.error('Failed to add year:', response.data.error);
+      }
+    } catch (error) {
+      console.error('Error adding year:', error);
+    }
+  };
 
   const handleYearToggle = (year) => {
     setActiveYear(year);
@@ -134,23 +163,23 @@ const Overview = () => {
     setIsDeleteModalOpen(true);
   };
 
-  const confirmDeleteYear = () => {
-    setYears(years.filter(year => year !== yearToDelete));
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleAddClick = () => {
-    setIsAddModalOpen(true);
-  };
-
-  const confirmAddYear = () => {
-    if (newYear && !years.includes(newYear)) {
-      setYears([...years, newYear]);
+  const confirmDeleteYear = async () => {
+    try {
+      console.log('Deleting year:', yearToDelete); 
+      const response = await axios.delete(`/api/years/${yearToDelete}`);
+      if (response.status === 200) {
+        console.log('Year deleted successfully');
+        setYears(years.filter(year => year !== yearToDelete));
+        setIsDeleteModalOpen(false);
+        fetchYears();
+      } else {
+        throw new Error('Failed to delete year');
+      }
+    } catch (error) {
+      console.error('Error deleting year:', error);
     }
-    setIsAddModalOpen(false);
-    setNewYear('');
   };
-
+  
   const handleStatisticToggle = (statistic) => {
     setActiveStatistic(statistic);
   };
@@ -163,6 +192,31 @@ const Overview = () => {
     // Placeholder function for adding a goal
     console.log('Adding goal...');
     setIsGoalModalOpen(false); 
+  };
+
+  const setCurrentStatistic = (statistic, category) => {
+    setCurrentStatisticData({ ...statistic, category });
+  };
+
+  const handleStatisticUpdate = async (newLabel, newValue) => {
+    try {
+      const { label, category } = currentStatistic;
+
+      const response = await axios.put(`/api/stats/${activeYear}/goals/${category}/label/${label}`, {
+        newLabel: newLabel,
+        newValue: newValue,
+      });
+  
+      if (response.status === 200) {
+        console.log('Label updated successfully');
+        setIsStatisticModalOpen(false); 
+        fetchStatistics();
+      } else {
+        console.error('Failed to update label:', response.data.error);
+      }
+    } catch (error) {
+      console.error('Error updating label:', error);
+    }
   };
 
   if (showWelcomeMessage) {
@@ -178,7 +232,6 @@ const Overview = () => {
   return (
     <>
       <Appbar />
-
       {/* Main Content */}
       <div className="bg-white p-6 rounded-lg w-full"><h1 class="header">Overview</h1>
         <hr className="my-4 border-t-2 border-bb-violet" />
@@ -233,9 +286,9 @@ const Overview = () => {
                   <Button className="bg-pink-300 text-white" onClick={handleEditClick}>
                     <p className="text-white font-bold">Edit</p>
                   </Button>
-                  <Button className="bg-pink-300 text-white" onClick={handleAddClick}>
-                    <p className="text-white font-bold">Add</p>
-                  </Button>
+                  <Button className="bg-pink-300 text-white" onClick={() => setIsAddModalOpen(true)}>
+                  <p className="text-white font-bold">Add</p>
+                </Button>
                 </div>
               </PopoverContent>
             </Popover>
@@ -265,46 +318,61 @@ const Overview = () => {
           ))}
         </div>
 
-      {/* Statistic Toggle and Display */}
-      <div className="mb-2 text-lg font-bold text-bb-violet">Statistics:</div>
-      <div className="flex">
-        <div className="flex flex-col space-y-2">
-          {statisticsData && Object.keys(statisticsData.goals || {}).map(category => (
-            <ToggleButton
-              key={category}
-              category={category}
-              isActive={activeStatistic === category}
-              onClick={() => handleStatisticToggle(category)}
-              showIcon={false}
-            >
-              {category}
-            </ToggleButton>
-          ))}
+        {/* Statistic Toggle and Display */}
+        <div className="mb-2 text-lg font-bold text-bb-violet">Statistics:</div>
+        <div className="flex">
+          <div className="flex flex-col space-y-2">
+            {statisticsData && Object.keys(statisticsData.goals || {}).map(category => (
+              <ToggleButton
+                key={category}
+                category={category}
+                isActive={activeStatistic === category}
+                onClick={() => handleStatisticToggle(category)}
+                showIcon={false}
+              >
+                {category}
+              </ToggleButton>
+            ))}
+          </div>
+          <div className="flex-grow ml-4 mr-10 space-y-2">
+            {statisticsData.goals && statisticsData.goals[activeStatistic] && (
+              <div className="flex flex-col space-y-2">
+                {statisticsData.goals[activeStatistic].map((statistic, index) => (
+                  <div key={index} className="relative">
+                    <StatisticCard
+                      label={statistic.label}
+                      value={statistic.valueKey}
+                      fullWidth
+                    />
+                    {editMode && (
+                      <button
+                        className="absolute top-1 right-1 transform -translate-y-1/2 text-blue-500 p-2"
+                        onClick={() => {
+                          setCurrentStatistic(statistic, activeStatistic); 
+                          setIsStatisticModalOpen(true); 
+                        }}
+                        style={{ background: 'transparent' }}
+                      >
+                        <MdEditSquare 
+                          className="text-bb-violet" 
+                          style={{ fontSize: '24px' }} 
+                        />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {editMode && (
+                  <div className="flex items-center justify-center mt-4">
+                    <IoMdAddCircle
+                      className="cursor-pointer text-bb-violet text-4xl"
+                      onClick={handleGoalClick}
+                    />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-        <div className="flex-grow ml-4 mr-10 space-y-2">
-          {statisticsData.goals && statisticsData.goals[activeStatistic] && (
-            <div className="flex flex-col space-y-2">
-              {statisticsData.goals[activeStatistic].map((statistic, index) => (
-                <div key={index}>
-                  <StatisticCard
-                    label={statistic.label}
-                    value={statistic.valueKey}
-                    fullWidth
-                  />
-                </div>
-              ))}
-              {editMode && (
-                <div className="flex items-center justify-center mt-4">
-                  <IoMdAddCircle
-                    className="cursor-pointer text-bb-violet text-4xl"
-                    onClick={handleGoalClick}
-                  />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
 
         <hr className="my-4 border-t-2 border-bb-violet" />
 
@@ -396,14 +464,23 @@ const Overview = () => {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onConfirm={confirmAddYear}
-        message="Please enter the year to add:"
+        onChange={(year) => setNewYear(year)}
       />
-
+      
       {/* Add Goal Modal */}
       <GoalModal
         isOpen={isGoalModalOpen}
         onClose={() => setIsGoalModalOpen(false)}
         onConfirm={confirmAddGoal}
+      />
+
+      {/* Edit Statistic Modal */}
+      <StatisticModal
+        isOpen={isStatisticModalOpen}
+        onClose={() => setIsStatisticModalOpen(false)}
+        onConfirm={handleStatisticUpdate}
+        currentLabel={currentStatistic ? currentStatistic.label : ''}
+        currentValue={currentStatistic ? currentStatistic.valueKey : ''}
       />
     </>
   );
