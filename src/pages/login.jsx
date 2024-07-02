@@ -27,6 +27,13 @@ export default function Login() {
     } catch (error) {
       console.error('Error logging in', error.response.data);
       // Handle error (e.g., show error message)
+      if (error.response && error.response.status === 404) {
+        alert('User not found');
+      } else if (error.response && error.response.status === 401) {
+        alert('Invalid password');
+      } else {
+        alert('An error occurred. Please try again.');
+      }
     }
   };
 
