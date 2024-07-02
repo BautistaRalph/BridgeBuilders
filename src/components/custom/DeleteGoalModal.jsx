@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const DeleteGoalModal = ({ isOpen, onClose, onConfirm, message }) => {
   const handleConfirm = () => {
-    onConfirm(labelName);
+    onConfirm();
   };
 
   return (
