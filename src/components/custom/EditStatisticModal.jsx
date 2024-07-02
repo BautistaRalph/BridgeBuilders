@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const StatisticModal = ({ isOpen, onClose, onConfirm, currentLabel, currentValue }) => {
+const EditStatisticModal = ({ isOpen, onClose, onConfirm, currentLabel, currentValue }) => {
   const [newLabel, setNewLabel] = useState(currentLabel);
   const [newValue, setNewValue] = useState(currentValue);
 
@@ -51,4 +51,4 @@ const StatisticModal = ({ isOpen, onClose, onConfirm, currentLabel, currentValue
   );
 };
 
-export { StatisticModal };
+export { EditStatisticModal };

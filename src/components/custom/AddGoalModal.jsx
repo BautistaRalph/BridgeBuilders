@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-const GoalModal = ({ isOpen, onClose, onConfirm }) => {
+const AddGoalModal = ({ isOpen, onClose, onConfirm }) => {
   const [category, setCategory] = useState('');
   const [numberOfClients, setNumberOfClients] = useState('');
 
@@ -44,4 +44,5 @@ const GoalModal = ({ isOpen, onClose, onConfirm }) => {
   );
 };
 
-export { GoalModal };
+export { AddGoalModal };
+

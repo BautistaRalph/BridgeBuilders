@@ -394,6 +394,66 @@ apiRouter.post('/stats', async (req, res) => {
   }
 });
 
+// Add a label to a specific goal and year
+apiRouter.post('/stats/:year/goals/:category/label', async (req, res) => {
+  try {
+    const { year, category } = req.params;
+    const { label, valueKey } = req.body;
+
+    if (!label || valueKey === undefined) {
+      return res.status(400).json({ error: 'Label and valueKey are required' });
+    }
+
+    const stats = await Stats.findOne({ year });
+    if (!stats) {
+      return res.status(404).json({ error: 'Statistics for the year not found' });
+    }
+
+    const goalCategory = stats.goals[category];
+    if (!goalCategory) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    goalCategory.push({ label, valueKey });
+
+    await stats.save();
+    res.status(200).json({ message: 'Label added successfully' });
+  } catch (error) {
+    console.error('Error adding label:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// Delete a label from a specific goal and year
+apiRouter.delete('/stats/:year/goals/:category/label/:label', async (req, res) => {
+  try {
+    const { year, category, label } = req.params;
+
+    const stats = await Stats.findOne({ year });
+    if (!stats) {
+      return res.status(404).json({ error: 'Statistics for the year not found' });
+    }
+
+    const goalCategory = stats.goals[category];
+    if (!goalCategory) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    const labelToDeleteIndex = goalCategory.findIndex(item => item.label === label);
+    if (labelToDeleteIndex === -1) {
+      return res.status(404).json({ error: 'Label not found' });
+    }
+
+    goalCategory.splice(labelToDeleteIndex, 1);
+
+    await stats.save();
+    res.status(200).json({ message: 'Label deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting label:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.use("/api", apiRouter);
 
 app.listen(port, () => {

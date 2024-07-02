@@ -7,6 +7,7 @@ const Modal = React.forwardRef(({ isOpen, onClose, onConfirm, message }, ref) =>
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-md max-w-md w-full">
+        <h2 className="text-lg text-bb-violet font-bold mb-4">Delete Year</h2>
         <p className="mb-4 text-bb-violet">{message}</p>
         <div className="flex justify-end space-x-4">
           <Button onClick={onClose} className="mr-2 bg-bb-violet">

@@ -11,8 +11,9 @@ import filter from '@/assets/filter.png';
 import UserCard from '@/components/custom/UserCard';
 import { Modal } from '@/components/custom/Modal';
 import { AddYearModal } from '@/components/custom/AddYearModal';
-import { GoalModal } from '@/components/custom/GoalModal';
-import { StatisticModal } from '@/components/custom/StatisticModal.jsx';
+import { AddGoalModal } from '@/components/custom/AddGoalModal.jsx';
+import { EditStatisticModal } from '@/components/custom/EditStatisticModal.jsx';
+import { DeleteGoalModal } from '@/components/custom/DeleteGoalModal';
 import Appbar from '@/components/ui/Appbar';
 //import { Users } from '@/lib/placeholder/users';
 import welcome from '@/assets/welcome.mp3'
@@ -26,10 +27,12 @@ const Overview = () => {
   const [activeYear, setActiveYear] = useState('2018');
   const [editMode, setEditMode] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isDeleteGoalOpen, setIsDeleteGoalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isGoalModalOpen, setIsGoalModalOpen] = useState(false);
   const [isStatisticModalOpen, setIsStatisticModalOpen] = useState(false);
   const [yearToDelete, setYearToDelete] = useState(null);
+  const [labelToDelete, setLabelToDelete] = useState(null);
   const [newYear, setNewYear] = useState('');
   const [currentStatistic, setCurrentStatisticData] = useState({});
   const [years, setYears] = useState(['All']);
@@ -188,14 +191,49 @@ const Overview = () => {
     setIsGoalModalOpen(true);
   };
 
-  const confirmAddGoal = () => {
-    // Placeholder function for adding a goal
-    console.log('Adding goal...');
-    setIsGoalModalOpen(false); 
-  };
+  const addNewLabel = async (category, numberOfClients) => {
+    try {
+      const response = await axios.post(`/api/stats/${activeYear}/goals/${activeStatistic}/label`, {
+        label: category,
+        valueKey: numberOfClients
+      });
+  
+      console.log('API response:', response);
+  
+      if (response.status === 200) {
+        console.log('Label added successfully');
+        setIsGoalModalOpen(false);
+        fetchStatistics(); 
+      } else {
+        console.error('Failed to add label:', response.data.error);
+      }
+    } catch (error) {
+      console.error('Error adding label:', error);
+    }
+  };  
 
   const setCurrentStatistic = (statistic, category) => {
     setCurrentStatisticData({ ...statistic, category });
+  };
+
+  const handleDeleteLabel = (label) => {
+    setLabelToDelete(label);
+    setIsDeleteGoalOpen(true); 
+  };
+
+  const confirmDeleteLabel = async () => {
+    try {
+      const response = await axios.delete(`/api/stats/${activeYear}/goals/${activeStatistic}/label/${labelToDelete}`);
+      if (response.status === 200) {
+        console.log('Label deleted successfully');
+        setIsDeleteGoalOpen(false); 
+        fetchStatistics(); 
+      } else {
+        throw new Error('Failed to delete label');
+      }
+    } catch (error) {
+      console.error('Error deleting label:', error);
+    }
   };
 
   const handleStatisticUpdate = async (newLabel, newValue) => {
@@ -345,19 +383,34 @@ const Overview = () => {
                       fullWidth
                     />
                     {editMode && (
-                      <button
-                        className="absolute top-1 right-1 transform -translate-y-1/2 text-blue-500 p-2"
-                        onClick={() => {
-                          setCurrentStatistic(statistic, activeStatistic); 
-                          setIsStatisticModalOpen(true); 
-                        }}
-                        style={{ background: 'transparent' }}
-                      >
-                        <MdEditSquare 
-                          className="text-bb-violet" 
-                          style={{ fontSize: '24px' }} 
-                        />
-                      </button>
+                      <div className="absolute top-0 right-0 mt-1 mr-1 flex items-center space-x-2">
+                        <button
+                          className="text-blue-500 p-2"
+                          onClick={() => {
+                            setCurrentStatistic(statistic, activeStatistic); 
+                            setIsStatisticModalOpen(true); 
+                          }}
+                          style={{ background: 'transparent' }}
+                        >
+                          <MdEditSquare 
+                            className="text-bb-violet" 
+                            style={{ fontSize: '24px' }} 
+                          />
+                        </button>
+                        <button 
+                          className="text-red-500 p-2"
+                          onClick={() => {
+                            setLabelToDelete(statistic.label); 
+                            handleDeleteLabel(statistic.label); 
+                          }}
+                          style={{ background: 'transparent' }}
+                        >
+                          <MdDeleteForever 
+                            className="text-red-500" 
+                            style={{ fontSize: '24px' }} 
+                          />
+                        </button>
+                      </div>
                     )}
                   </div>
                 ))}
@@ -468,19 +521,27 @@ const Overview = () => {
       />
       
       {/* Add Goal Modal */}
-      <GoalModal
+      <AddGoalModal
         isOpen={isGoalModalOpen}
         onClose={() => setIsGoalModalOpen(false)}
-        onConfirm={confirmAddGoal}
+        onConfirm={addNewLabel} 
       />
 
       {/* Edit Statistic Modal */}
-      <StatisticModal
+      <EditStatisticModal
         isOpen={isStatisticModalOpen}
         onClose={() => setIsStatisticModalOpen(false)}
         onConfirm={handleStatisticUpdate}
         currentLabel={currentStatistic ? currentStatistic.label : ''}
         currentValue={currentStatistic ? currentStatistic.valueKey : ''}
+      />
+
+      {/* Delete Label Modal */}
+      <DeleteGoalModal
+        isOpen={isDeleteGoalOpen}
+        onClose={() => setIsDeleteGoalOpen(false)}
+        onConfirm={confirmDeleteLabel}
+        message={`Are you sure you want to delete the category ${labelToDelete}?`}
       />
     </>
   );
