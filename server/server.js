@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   userType: { type: String, required: true },
+  accountType: { type: String, required: true },
 });
 
 const User = mongoose.model('User', userSchema);
@@ -193,9 +194,9 @@ app.get("/", (req, res) => {
 //sign up endpoint
 app.post('/api/signup', async (req, res) => {
   try {
-    const { username, password, userType } = req.body;
-    if (!username || !password || !userType) {
-      return res.status(400).json({ error: 'Please provide username, password, and userType' });
+    const { username, password, userType, accountType } = req.body;  
+    if (!username || !password || !userType || !accountType) {  
+      return res.status(400).json({ error: 'Please provide username, password, userType, and accountType' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -203,6 +204,7 @@ app.post('/api/signup', async (req, res) => {
       username,
       password: hashedPassword,
       userType,
+      accountType, 
     });
 
     await user.save();

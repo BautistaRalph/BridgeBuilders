@@ -19,6 +19,7 @@ export default function SignUp() {
         username,
         password,
         userType,
+        accountType,
       });
       console.log(response.data);
       alert('User created successfully');
@@ -50,7 +51,7 @@ export default function SignUp() {
         <div className="mb-8 text-center">
           <img src={logo} alt="BridgeBuilder Foundation" className="w-50 h-50 mx-auto text-bb-violet" />
         </div>
-        {accountType === 'regularUser' ? (
+        {/*accountType === 'regularUser' ? (
           <>
             <div className="mb-6">
               <p className="text-lg text-gray-700 dark:text-gray-300 font-bold text-center">
@@ -63,7 +64,7 @@ export default function SignUp() {
               </p>
             </div>
           </>
-        ) : (
+        ) : */(
           <form onSubmit={handleSignUp}>
             <div className="mb-6">
               <Label htmlFor="username" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">
@@ -99,10 +100,24 @@ export default function SignUp() {
                 id="userType"
                 value={userType}
                 onChange={(e) => setUserType(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-700 dark:text-gray-300"
               >
                 <option value="Community" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">Community</option>
                 <option value="Home care" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">Home care</option>
+              </select>
+            </div>
+            <div className="mb-6">
+              <Label htmlFor="accountType" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">
+                Account Type
+              </Label>
+              <select
+                id="accountType"
+                value={accountType}
+                onChange={(e) => setAccountType(e.target.value)}
+                className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-700 dark:text-gray-300"
+              >
+                <option value="superUser" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">Super User</option>
+                <option value="regularUser" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">Regular User</option>
               </select>
             </div>
             <div className="mb-6">
