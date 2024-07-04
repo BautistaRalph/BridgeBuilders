@@ -9,6 +9,7 @@ const documentList = [
   "HDMF",
   "Birth Certificate",
   "DSWD I.D",
+  "",
 ];
 
 const antasList = [
