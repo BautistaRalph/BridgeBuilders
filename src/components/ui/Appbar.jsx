@@ -41,7 +41,7 @@ const Appbar = () => {
           </Tooltip>
 
           <Tooltip tooltipText={"Sign Out"} className=" mr-6 ml-6 ">
-            <a href="/logout">
+            <a href="/">
               <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                 logout
               </span>
