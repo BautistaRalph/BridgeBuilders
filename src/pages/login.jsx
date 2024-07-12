@@ -1,5 +1,5 @@
-import axios from "axios";
-import React, { useState } from 'react';
+import axios from '../axiosInstance.js'; 
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://localhost:3002/api/login', {
+      const response = await axios.post('/api/login', {
         username,
         password,
       });

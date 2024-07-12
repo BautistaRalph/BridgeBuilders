@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { ToggleButton } from "@/components/custom/ToggleButton";
 import { Button } from "@/components/ui/button";
@@ -29,7 +29,7 @@ const Archive = () => {
       <Appbar />
 
       {/* Main Content */}
-      <div className="bg-white p-6 rounded-lg w-full"><h1 class="header">Archive</h1>
+      <div className="bg-white p-6 rounded-lg w-full"><h1 className="header">Archive</h1>
         <hr className="my-4 border-t-2 border-bb-violet" />
         {/* Tabs */}
         <div className="mb-2 text-lg font-bold text-bb-violet">Categoy:</div>

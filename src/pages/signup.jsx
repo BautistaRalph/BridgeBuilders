@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import { useState } from "react";
+import axios from "../axiosInstance.js";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -7,34 +7,38 @@ import logo from "@/assets/logo.png";
 import bg from "@/assets/bb-bg-blurred.png";
 
 export default function SignUp() {
-  const [accountType, setAccountType] = useState('superUser'); 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('Community');
+  const [accountType, setAccountType] = useState("superUser");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [userType, setUserType] = useState("Community");
 
   const handleSignUp = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3002/api/signup', {
+      const response = await axios.post("/api/signup", {
         username,
         password,
         userType,
         accountType,
       });
       console.log(response.data);
-      alert('User created successfully');
+      alert("User created successfully");
     } catch (error) {
-      console.error('Error signing up:', error);
+      console.error("Error signing up:", error);
       if (error.response) {
-        console.error('Error response data:', error.response.data);
-        console.error('Error response status:', error.response.status);
-        console.error('Error response headers:', error.response.headers);
-        alert(`Error signing up: ${error.response.data.error || error.response.data.message}`);
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+        alert(
+          `Error signing up: ${
+            error.response.data.error || error.response.data.message
+          }`
+        );
       } else if (error.request) {
-        console.error('Error request data:', error.request);
-        alert('Error signing up: No response from server');
+        console.error("Error request data:", error.request);
+        alert("Error signing up: No response from server");
       } else {
-        console.error('Error message:', error.message);
+        console.error("Error message:", error.message);
         alert(`Error signing up: ${error.message}`);
       }
     }
@@ -49,9 +53,14 @@ export default function SignUp() {
       />
       <div className="relative w-full max-w-xl p-8 m-auto bg-pink-100 rounded-lg shadow-md">
         <div className="mb-8 text-center">
-          <img src={logo} alt="BridgeBuilder Foundation" className="w-50 h-50 mx-auto text-bb-violet" />
+          <img
+            src={logo}
+            alt="BridgeBuilder Foundation"
+            className="w-50 h-50 mx-auto text-bb-violet"
+          />
         </div>
-        {/*accountType === 'regularUser' ? (
+        {
+          /*accountType === 'regularUser' ? (
           <>
             <div className="mb-6">
               <p className="text-lg text-gray-700 dark:text-gray-300 font-bold text-center">
@@ -64,10 +73,12 @@ export default function SignUp() {
               </p>
             </div>
           </>
-        ) : */(
-          <form onSubmit={handleSignUp}>
+        ) : */ <form onSubmit={handleSignUp}>
             <div className="mb-6">
-              <Label htmlFor="username" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">
+              <Label
+                htmlFor="username"
+                className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+              >
                 Username
               </Label>
               <Input
@@ -80,7 +91,10 @@ export default function SignUp() {
               />
             </div>
             <div className="mb-6">
-              <Label htmlFor="password" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">
+              <Label
+                htmlFor="password"
+                className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+              >
                 Password
               </Label>
               <Input
@@ -93,7 +107,10 @@ export default function SignUp() {
               />
             </div>
             <div className="mb-6">
-              <Label htmlFor="userType" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">
+              <Label
+                htmlFor="userType"
+                className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+              >
                 Type
               </Label>
               <select
@@ -102,12 +119,25 @@ export default function SignUp() {
                 onChange={(e) => setUserType(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-700 dark:text-gray-300"
               >
-                <option value="Community" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">Community</option>
-                <option value="Home care" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">Home care</option>
+                <option
+                  value="Community"
+                  className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+                >
+                  Community
+                </option>
+                <option
+                  value="Home care"
+                  className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+                >
+                  Home care
+                </option>
               </select>
             </div>
             <div className="mb-6">
-              <Label htmlFor="accountType" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">
+              <Label
+                htmlFor="accountType"
+                className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+              >
                 Account Type
               </Label>
               <select
@@ -116,8 +146,18 @@ export default function SignUp() {
                 onChange={(e) => setAccountType(e.target.value)}
                 className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-700 dark:text-gray-300"
               >
-                <option value="superUser" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">Super User</option>
-                <option value="regularUser" className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500">Regular User</option>
+                <option
+                  value="superUser"
+                  className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+                >
+                  Super User
+                </option>
+                <option
+                  value="regularUser"
+                  className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+                >
+                  Regular User
+                </option>
               </select>
             </div>
             <div className="mb-6">
@@ -129,7 +169,7 @@ export default function SignUp() {
               </Button>
             </div>
           </form>
-        )}
+        }
       </div>
     </div>
   );
