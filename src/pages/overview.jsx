@@ -1,30 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import StatisticCard from '@/components/custom/StatisticCard';
+import { useState, useEffect } from "react";
+import StatisticCard from "@/components/custom/StatisticCard";
 import { Input } from "@/components/ui/input";
 import { ToggleButton } from "@/components/custom/ToggleButton";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
 import { MdEditNote, MdDeleteForever, MdEditSquare } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
-import search from '@/assets/search.png';
-import filter from '@/assets/filter.png';
-import UserCard from '@/components/custom/UserCard';
-import { Modal } from '@/components/custom/Modal';
-import { AddYearModal } from '@/components/custom/AddYearModal';
-import { AddGoalModal } from '@/components/custom/AddGoalModal.jsx';
-import { EditStatisticModal } from '@/components/custom/EditStatisticModal.jsx';
-import { DeleteGoalModal } from '@/components/custom/DeleteGoalModal';
-import Appbar from '@/components/ui/Appbar';
+import search from "@/assets/search.png";
+import filter from "@/assets/filter.png";
+import UserCard from "@/components/custom/UserCard";
+import { Modal } from "@/components/custom/Modal";
+import { AddYearModal } from "@/components/custom/AddYearModal";
+import { AddGoalModal } from "@/components/custom/AddGoalModal.jsx";
+import { EditStatisticModal } from "@/components/custom/EditStatisticModal.jsx";
+import { DeleteGoalModal } from "@/components/custom/DeleteGoalModal";
+import Appbar from "@/components/ui/Appbar";
 //import { Users } from '@/lib/placeholder/users';
-import welcome from '@/assets/welcome.mp3'
-import axios from '../axiosInstance.js'; 
+import welcome from "@/assets/welcome.mp3";
+import axios from "../axiosInstance.js";
 
 const Overview = () => {
-  const userType = 'superUser';
-  const username = 'John Doe';
+  const userType = "superUser";
+  const username = "John Doe";
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
-  const [activeCategory, setActiveCategory] = useState('');
-  const [activeYear, setActiveYear] = useState('2018');
+  const [activeCategory, setActiveCategory] = useState("");
+  const [activeYear, setActiveYear] = useState("2018");
   const [editMode, setEditMode] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteGoalOpen, setIsDeleteGoalOpen] = useState(false);
@@ -33,11 +37,11 @@ const Overview = () => {
   const [isStatisticModalOpen, setIsStatisticModalOpen] = useState(false);
   const [yearToDelete, setYearToDelete] = useState(null);
   const [labelToDelete, setLabelToDelete] = useState(null);
-  const [newYear, setNewYear] = useState('');
+  const [newYear, setNewYear] = useState("");
   const [currentStatistic, setCurrentStatisticData] = useState({});
-  const [years, setYears] = useState(['All']);
-  const [activeStatistic, setActiveStatistic] = useState('General');
-  const [activeUsers, setUsers] = useState([])
+  const [years, setYears] = useState(["All"]);
+  const [activeStatistic, setActiveStatistic] = useState("General");
+  const [activeUsers, setUsers] = useState([]);
   const [statisticsData, setStatisticsData] = useState({});
 
   //const activeUsers = Users.filter(user => user.status === "Active");
@@ -45,32 +49,33 @@ const Overview = () => {
   useEffect(() => {
     console.log("useEffect triggered");
 
-    const response = axios.get('/api/overview')
-    .then(vals => setUsers(vals.data))
-    .catch(err => console.log(err))
-  
-    if (userType === 'homeCare') {
-      setActiveCategory('Home Care');
-    } else if (userType === 'community') {
-      setActiveCategory('Community');
+    const response = axios
+      .get("/api/overview")
+      .then((vals) => setUsers(vals.data))
+      .catch((err) => console.log(err));
+
+    if (userType === "homeCare") {
+      setActiveCategory("Home Care");
+    } else if (userType === "community") {
+      setActiveCategory("Community");
     } else {
-      setActiveCategory('Home Care');
+      setActiveCategory("Home Care");
     }
-  
-    if (sessionStorage.getItem('fromLogin') === 'true') {
+
+    if (sessionStorage.getItem("fromLogin") === "true") {
       setShowWelcomeMessage(true);
-      sessionStorage.removeItem('fromLogin');
-  
+      sessionStorage.removeItem("fromLogin");
+
       const audio = new Audio(welcome);
       audio.play();
-      
+
       const timer = setTimeout(() => {
         console.log("Timer elapsed, hiding welcome message");
         setShowWelcomeMessage(false);
       }, 2000);
-  
+
       console.log("Timer set");
-  
+
       return () => {
         console.log("Clearing timer");
         clearTimeout(timer);
@@ -81,7 +86,6 @@ const Overview = () => {
       console.log("Timer elapsed, hiding welcome message");
       setShowWelcomeMessage(false);
     }, 2000);
-
   }, [userType]);
 
   const handleCategoryToggle = (category) => {
@@ -90,14 +94,14 @@ const Overview = () => {
 
   const fetchYears = async () => {
     try {
-      const response = await axios.get('/api/years');
+      const response = await axios.get("/api/years");
       if (response.status !== 200) {
-        throw new Error('Failed to fetch years');
+        throw new Error("Failed to fetch years");
       }
       const data = response.data;
       setYears([...data]);
     } catch (error) {
-      console.error('Failed to fetch years:', error);
+      console.error("Failed to fetch years:", error);
     }
   };
 
@@ -109,47 +113,47 @@ const Overview = () => {
     try {
       const response = await axios.get(`/api/stats/${activeYear}`);
       if (response.status !== 200) {
-        throw new Error('Failed to fetch statistics');
+        throw new Error("Failed to fetch statistics");
       }
-      console.log('Fetched statistics:', response.data);
+      console.log("Fetched statistics:", response.data);
       setStatisticsData(response.data);
     } catch (error) {
-      console.error('Failed to fetch statistics:', error);
+      console.error("Failed to fetch statistics:", error);
       setStatisticsData({});
     }
   };
-  
+
   useEffect(() => {
-    console.log('Fetching statistics for year:', activeYear);
-  
+    console.log("Fetching statistics for year:", activeYear);
+
     if (activeYear) {
       fetchStatistics();
     }
   }, [activeYear]);
-  
+
   const confirmAddYear = async () => {
     try {
       const defaultGoals = {
         General: [],
         Goal1: [],
         Goal2: [],
-        Goal3: []
+        Goal3: [],
       };
-  
-      const response = await axios.post('/api/stats', {
+
+      const response = await axios.post("/api/stats", {
         year: newYear,
-        goals: defaultGoals
+        goals: defaultGoals,
       });
-  
+
       if (response.status === 201) {
-        console.log('Year added successfully');
+        console.log("Year added successfully");
         setIsAddModalOpen(false);
-        fetchYears()
+        fetchYears();
       } else {
-        console.error('Failed to add year:', response.data.error);
+        console.error("Failed to add year:", response.data.error);
       }
     } catch (error) {
-      console.error('Error adding year:', error);
+      console.error("Error adding year:", error);
     }
   };
 
@@ -168,21 +172,21 @@ const Overview = () => {
 
   const confirmDeleteYear = async () => {
     try {
-      console.log('Deleting year:', yearToDelete); 
+      console.log("Deleting year:", yearToDelete);
       const response = await axios.delete(`/api/years/${yearToDelete}`);
       if (response.status === 200) {
-        console.log('Year deleted successfully');
-        setYears(years.filter(year => year !== yearToDelete));
+        console.log("Year deleted successfully");
+        setYears(years.filter((year) => year !== yearToDelete));
         setIsDeleteModalOpen(false);
         fetchYears();
       } else {
-        throw new Error('Failed to delete year');
+        throw new Error("Failed to delete year");
       }
     } catch (error) {
-      console.error('Error deleting year:', error);
+      console.error("Error deleting year:", error);
     }
   };
-  
+
   const handleStatisticToggle = (statistic) => {
     setActiveStatistic(statistic);
   };
@@ -193,24 +197,27 @@ const Overview = () => {
 
   const addNewLabel = async (category, numberOfClients) => {
     try {
-      const response = await axios.post(`/api/stats/${activeYear}/goals/${activeStatistic}/label`, {
-        label: category,
-        valueKey: numberOfClients
-      });
-  
-      console.log('API response:', response);
-  
+      const response = await axios.post(
+        `/api/stats/${activeYear}/goals/${activeStatistic}/label`,
+        {
+          label: category,
+          valueKey: numberOfClients,
+        }
+      );
+
+      console.log("API response:", response);
+
       if (response.status === 200) {
-        console.log('Label added successfully');
+        console.log("Label added successfully");
         setIsGoalModalOpen(false);
-        fetchStatistics(); 
+        fetchStatistics();
       } else {
-        console.error('Failed to add label:', response.data.error);
+        console.error("Failed to add label:", response.data.error);
       }
     } catch (error) {
-      console.error('Error adding label:', error);
+      console.error("Error adding label:", error);
     }
-  };  
+  };
 
   const setCurrentStatistic = (statistic, category) => {
     setCurrentStatisticData({ ...statistic, category });
@@ -218,21 +225,23 @@ const Overview = () => {
 
   const handleDeleteLabel = (label) => {
     setLabelToDelete(label);
-    setIsDeleteGoalOpen(true); 
+    setIsDeleteGoalOpen(true);
   };
 
   const confirmDeleteLabel = async () => {
     try {
-      const response = await axios.delete(`/api/stats/${activeYear}/goals/${activeStatistic}/label/${labelToDelete}`);
+      const response = await axios.delete(
+        `/api/stats/${activeYear}/goals/${activeStatistic}/label/${labelToDelete}`
+      );
       if (response.status === 200) {
-        console.log('Label deleted successfully');
-        setIsDeleteGoalOpen(false); 
-        fetchStatistics(); 
+        console.log("Label deleted successfully");
+        setIsDeleteGoalOpen(false);
+        fetchStatistics();
       } else {
-        throw new Error('Failed to delete label');
+        throw new Error("Failed to delete label");
       }
     } catch (error) {
-      console.error('Error deleting label:', error);
+      console.error("Error deleting label:", error);
     }
   };
 
@@ -240,20 +249,23 @@ const Overview = () => {
     try {
       const { label, category } = currentStatistic;
 
-      const response = await axios.put(`/api/stats/${activeYear}/goals/${category}/label/${label}`, {
-        newLabel: newLabel,
-        newValue: newValue,
-      });
-  
+      const response = await axios.put(
+        `/api/stats/${activeYear}/goals/${category}/label/${label}`,
+        {
+          newLabel: newLabel,
+          newValue: newValue,
+        }
+      );
+
       if (response.status === 200) {
-        console.log('Label updated successfully');
-        setIsStatisticModalOpen(false); 
+        console.log("Label updated successfully");
+        setIsStatisticModalOpen(false);
         fetchStatistics();
       } else {
-        console.error('Failed to update label:', response.data.error);
+        console.error("Failed to update label:", response.data.error);
       }
     } catch (error) {
-      console.error('Error updating label:', error);
+      console.error("Error updating label:", error);
     }
   };
 
@@ -271,48 +283,49 @@ const Overview = () => {
     <>
       <Appbar />
       {/* Main Content */}
-      <div className="bg-white p-6 rounded-lg w-full"><h1 class="header">Overview</h1>
+      <div className="bg-white p-6 rounded-lg w-full">
+        <h1 class="header">Overview</h1>
         <hr className="my-4 border-t-2 border-bb-violet" />
         {/* Tabs */}
         <div className="mb-2 text-lg font-bold text-bb-violet">Category:</div>
         <div className="flex space-x-4 mb-4">
-          {userType === 'superUser' && (
+          {userType === "superUser" && (
             <>
               <ToggleButton
                 category="Home Care"
-                isActive={activeCategory === 'Home Care'}
-                onClick={() => handleCategoryToggle('Home Care')}
+                isActive={activeCategory === "Home Care"}
+                onClick={() => handleCategoryToggle("Home Care")}
               >
                 Home Care
               </ToggleButton>
               <ToggleButton
                 category="Community"
-                isActive={activeCategory === 'Community'}
-                onClick={() => handleCategoryToggle('Community')}
+                isActive={activeCategory === "Community"}
+                onClick={() => handleCategoryToggle("Community")}
               >
                 Community
               </ToggleButton>
             </>
           )}
-          {userType === 'homeCare' && (
+          {userType === "homeCare" && (
             <ToggleButton
               category="Home Care"
               isActive={true}
-              onClick={() => handleCategoryToggle('Home Care')}
+              onClick={() => handleCategoryToggle("Home Care")}
             >
               Home Care
             </ToggleButton>
           )}
-          {userType === 'community' && (
+          {userType === "community" && (
             <ToggleButton
               category="Community"
               isActive={true}
-              onClick={() => handleCategoryToggle('Community')}
+              onClick={() => handleCategoryToggle("Community")}
             >
               Community
             </ToggleButton>
           )}
-          {userType === 'superUser' && (
+          {userType === "superUser" && (
             <Popover>
               <PopoverTrigger as="div" className="relative">
                 <Button className="bg-bb-violet text-white">
@@ -321,12 +334,18 @@ const Overview = () => {
               </PopoverTrigger>
               <PopoverContent className="p-4 bg-white shadow-md rounded">
                 <div className="flex items-center space-x-4">
-                  <Button className="bg-pink-300 text-white" onClick={handleEditClick}>
+                  <Button
+                    className="bg-pink-300 text-white"
+                    onClick={handleEditClick}
+                  >
                     <p className="text-white font-bold">Edit</p>
                   </Button>
-                  <Button className="bg-pink-300 text-white" onClick={() => setIsAddModalOpen(true)}>
-                  <p className="text-white font-bold">Add</p>
-                </Button>
+                  <Button
+                    className="bg-pink-300 text-white"
+                    onClick={() => setIsAddModalOpen(true)}
+                  >
+                    <p className="text-white font-bold">Add</p>
+                  </Button>
                 </div>
               </PopoverContent>
             </Popover>
@@ -344,12 +363,12 @@ const Overview = () => {
                 onClick={() => handleYearToggle(year)}
               />
               {editMode && (
-                <button 
+                <button
                   className="absolute top-1/2 right-1 transform -translate-x-1/2 -translate-y-1/2 text-red-500 p-2"
                   onClick={() => handleDeleteYear(year)}
-                  style={{ background: 'transparent' }}
+                  style={{ background: "transparent" }}
                 >
-                  <MdDeleteForever style={{ color: 'red', fontSize: '24px' }} />
+                  <MdDeleteForever style={{ color: "red", fontSize: "24px" }} />
                 </button>
               )}
             </div>
@@ -360,60 +379,63 @@ const Overview = () => {
         <div className="mb-2 text-lg font-bold text-bb-violet">Statistics:</div>
         <div className="flex">
           <div className="flex flex-col space-y-2">
-            {statisticsData && Object.keys(statisticsData.goals || {}).map(category => (
-              <ToggleButton
-                key={category}
-                category={category}
-                isActive={activeStatistic === category}
-                onClick={() => handleStatisticToggle(category)}
-                showIcon={false}
-              >
-                {category}
-              </ToggleButton>
-            ))}
+            {statisticsData &&
+              Object.keys(statisticsData.goals || {}).map((category) => (
+                <ToggleButton
+                  key={category}
+                  category={category}
+                  isActive={activeStatistic === category}
+                  onClick={() => handleStatisticToggle(category)}
+                  showIcon={false}
+                >
+                  {category}
+                </ToggleButton>
+              ))}
           </div>
           <div className="flex-grow ml-4 mr-10 space-y-2">
             {statisticsData.goals && statisticsData.goals[activeStatistic] && (
               <div className="flex flex-col space-y-2">
-                {statisticsData.goals[activeStatistic].map((statistic, index) => (
-                  <div key={index} className="relative">
-                    <StatisticCard
-                      label={statistic.label}
-                      value={statistic.valueKey}
-                      fullWidth
-                    />
-                    {editMode && (
-                      <div className="absolute top-0 right-0 mt-1 mr-1 flex items-center space-x-2">
-                        <button
-                          className="text-blue-500 p-2"
-                          onClick={() => {
-                            setCurrentStatistic(statistic, activeStatistic); 
-                            setIsStatisticModalOpen(true); 
-                          }}
-                          style={{ background: 'transparent' }}
-                        >
-                          <MdEditSquare 
-                            className="text-bb-violet" 
-                            style={{ fontSize: '24px' }} 
-                          />
-                        </button>
-                        <button 
-                          className="text-red-500 p-2"
-                          onClick={() => {
-                            setLabelToDelete(statistic.label); 
-                            handleDeleteLabel(statistic.label); 
-                          }}
-                          style={{ background: 'transparent' }}
-                        >
-                          <MdDeleteForever 
-                            className="text-red-500" 
-                            style={{ fontSize: '24px' }} 
-                          />
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                ))}
+                {statisticsData.goals[activeStatistic].map(
+                  (statistic, index) => (
+                    <div key={index} className="relative">
+                      <StatisticCard
+                        label={statistic.label}
+                        value={statistic.valueKey}
+                        fullWidth
+                      />
+                      {editMode && (
+                        <div className="absolute top-0 right-0 mt-1 mr-1 flex items-center space-x-2">
+                          <button
+                            className="text-blue-500 p-2"
+                            onClick={() => {
+                              setCurrentStatistic(statistic, activeStatistic);
+                              setIsStatisticModalOpen(true);
+                            }}
+                            style={{ background: "transparent" }}
+                          >
+                            <MdEditSquare
+                              className="text-bb-violet"
+                              style={{ fontSize: "24px" }}
+                            />
+                          </button>
+                          <button
+                            className="text-red-500 p-2"
+                            onClick={() => {
+                              setLabelToDelete(statistic.label);
+                              handleDeleteLabel(statistic.label);
+                            }}
+                            style={{ background: "transparent" }}
+                          >
+                            <MdDeleteForever
+                              className="text-red-500"
+                              style={{ fontSize: "24px" }}
+                            />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )
+                )}
                 {editMode && (
                   <div className="flex items-center justify-center mt-4">
                     <IoMdAddCircle
@@ -460,26 +482,62 @@ const Overview = () => {
               <div className="flex flex-col space-y-4">
                 {/* Age Range Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="ageRangeFilter" className="text-sm text-bb-violet">Age Range:</label>
-                  <select id="ageRangeFilter" className="mt-1 p-2 border border-gray-300 rounded text-bb-violet">
-                    <option value="5-10" className="text-bb-violet">5-10</option>
-                    <option value="10-17" className="text-bb-violet">10-17</option>
+                  <label
+                    htmlFor="ageRangeFilter"
+                    className="text-sm text-bb-violet"
+                  >
+                    Age Range:
+                  </label>
+                  <select
+                    id="ageRangeFilter"
+                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                  >
+                    <option value="5-10" className="text-bb-violet">
+                      5-10
+                    </option>
+                    <option value="10-17" className="text-bb-violet">
+                      10-17
+                    </option>
                   </select>
                 </div>
                 {/* Gender Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="genderFilter" className="text-sm text-bb-violet">Gender:</label>
-                  <select id="genderFilter" className="mt-1 p-2 border border-gray-300 rounded text-bb-violet">
-                    <option value="Male " className="text-bb-violet">Male</option>
-                    <option value="Female" className="text-bb-violet">Female</option>
+                  <label
+                    htmlFor="genderFilter"
+                    className="text-sm text-bb-violet"
+                  >
+                    Gender:
+                  </label>
+                  <select
+                    id="genderFilter"
+                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                  >
+                    <option value="Male " className="text-bb-violet">
+                      Male
+                    </option>
+                    <option value="Female" className="text-bb-violet">
+                      Female
+                    </option>
                   </select>
                 </div>
                 {/* Category Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="categoryFilter" className="text-sm text-bb-violet">Category:</label>
-                  <select id="categoryFilter" className="mt-1 p-2 border border-gray-300 rounded text-bb-violet">
-                    <option value="Home Care" className="text-bb-violet">Home Care</option>
-                    <option value="Community" className="text-bb-violet">Community</option>
+                  <label
+                    htmlFor="categoryFilter"
+                    className="text-sm text-bb-violet"
+                  >
+                    Category:
+                  </label>
+                  <select
+                    id="categoryFilter"
+                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                  >
+                    <option value="Home Care" className="text-bb-violet">
+                      Home Care
+                    </option>
+                    <option value="Community" className="text-bb-violet">
+                      Community
+                    </option>
                   </select>
                 </div>
               </div>
@@ -519,12 +577,12 @@ const Overview = () => {
         onConfirm={confirmAddYear}
         onChange={(year) => setNewYear(year)}
       />
-      
+
       {/* Add Goal Modal */}
       <AddGoalModal
         isOpen={isGoalModalOpen}
         onClose={() => setIsGoalModalOpen(false)}
-        onConfirm={addNewLabel} 
+        onConfirm={addNewLabel}
       />
 
       {/* Edit Statistic Modal */}
@@ -532,8 +590,8 @@ const Overview = () => {
         isOpen={isStatisticModalOpen}
         onClose={() => setIsStatisticModalOpen(false)}
         onConfirm={handleStatisticUpdate}
-        currentLabel={currentStatistic ? currentStatistic.label : ''}
-        currentValue={currentStatistic ? currentStatistic.valueKey : ''}
+        currentLabel={currentStatistic ? currentStatistic.label : ""}
+        currentValue={currentStatistic ? currentStatistic.valueKey : ""}
       />
 
       {/* Delete Label Modal */}

@@ -52,9 +52,7 @@ const Edit = () => {
   const handleSaveClick = async () => {
     console.log("handling save");
     try {
-      const response = await axios.post(`/api/editProfile/${caseNo}`, {
-        profileData,
-      });
+      await axios.post(`/api/editProfile/${caseNo}`, { profileData });
     } catch (error) {
       console.error("Error saving profile:", error);
     }
