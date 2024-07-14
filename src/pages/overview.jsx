@@ -19,9 +19,14 @@ import { AddGoalModal } from "@/components/custom/AddGoalModal.jsx";
 import { EditStatisticModal } from "@/components/custom/EditStatisticModal.jsx";
 import { DeleteGoalModal } from "@/components/custom/DeleteGoalModal";
 import Appbar from "@/components/ui/Appbar";
-//import { Users } from '@/lib/placeholder/users';
 import welcome from "@/assets/welcome.mp3";
 import axios from "../axiosInstance.js";
+
+const defaultFilters = {
+    status: 'Active',
+    ageRangeFilter: '',
+    genderFilter: '',
+};
 
 const Overview = () => {
   const userType = "superUser";
@@ -43,14 +48,14 @@ const Overview = () => {
   const [activeStatistic, setActiveStatistic] = useState("General");
   const [activeUsers, setUsers] = useState([]);
   const [statisticsData, setStatisticsData] = useState({});
-
-  //const activeUsers = Users.filter(user => user.status === "Active");
+  const [filters, setFilter] = useState(defaultFilters);
+  const [filterFlag, setFilterFlag] = useState(false);
 
   useEffect(() => {
     console.log("useEffect triggered");
 
     const response = axios
-      .get("/api/overview")
+      .get("/api/overview", { params: filters }) 
       .then((vals) => setUsers(vals.data))
       .catch((err) => console.log(err));
 
@@ -86,7 +91,7 @@ const Overview = () => {
       console.log("Timer elapsed, hiding welcome message");
       setShowWelcomeMessage(false);
     }, 2000);
-  }, [userType]);
+  }, [userType, filterFlag]);
 
   const handleCategoryToggle = (category) => {
     setActiveCategory(category);
@@ -267,6 +272,19 @@ const Overview = () => {
     } catch (error) {
       console.error("Error updating label:", error);
     }
+  };
+
+  const handleFilterChange = (event) => {
+    console.log('handling filter change');
+    setFilter({
+      ...filters,
+      [event.target.id]: event.target.value,
+    });
+  };
+
+  const handleFilter = () => {
+    console.log('applying filters');
+    setFilterFlag(prevFlag => !prevFlag);
   };
 
   if (showWelcomeMessage) {
@@ -491,7 +509,14 @@ const Overview = () => {
                   <select
                     id="ageRangeFilter"
                     className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                    onChange={handleFilterChange}
                   >
+                    <option value="" className="text-bb-violet">
+                      --Select--
+                    </option>
+                    <option value="" className="text-bb-violet">
+                      All
+                    </option>
                     <option value="5-10" className="text-bb-violet">
                       5-10
                     </option>
@@ -511,16 +536,23 @@ const Overview = () => {
                   <select
                     id="genderFilter"
                     className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                    onChange={handleFilterChange}
                   >
-                    <option value="Male " className="text-bb-violet">
-                      Male
+                    <option value="" className="text-bb-violet">
+                      --Select--
                     </option>
-                    <option value="Female" className="text-bb-violet">
-                      Female
+                    <option value="" className="text-bb-violet">
+                      All
+                    </option>
+                    <option value="Lalaki" className="text-bb-violet">
+                      Lalaki
+                    </option>
+                    <option value="Babae" className="text-bb-violet">
+                      Babae
                     </option>
                   </select>
                 </div>
-                {/* Category Filter */}
+                {/* Category Filter 
                 <div className="flex flex-col">
                   <label
                     htmlFor="categoryFilter"
@@ -539,7 +571,14 @@ const Overview = () => {
                       Community
                     </option>
                   </select>
-                </div>
+                </div>*/}
+                {/* Submit Button */}
+                <button
+                  className="bg-bb-violet text-white"
+                  onClick={handleFilter}
+                >
+                  Apply
+                </button>
               </div>
             </PopoverContent>
           </Popover>

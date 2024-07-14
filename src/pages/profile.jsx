@@ -3,12 +3,21 @@ import Goal from "@/components/ui/Goal";
 import Tooltip from "@/components/ui/Tooltip";
 import useProfile from "@/utils/hooks/useProfile";
 import { useParams } from 'react-router-dom';
+import axios from "../axiosInstance.js";
 
 const Profile = () => {
-  //const { profileData } = useProfile("Darryl Javier");
-
   const { caseNo } = useParams();
-  const { profileData } = useProfile(caseNo);
+  const { profileData, setProfileData } = useProfile(caseNo);
+
+  const handleArchiveClick = async () => {
+    console.log("handling archive");
+
+    try {
+      await axios.post(`/api/archiveProfile/${caseNo}`);
+    } catch (error) {
+      console.error("Error saving profile:", error);
+    }
+  };
 
   return (
     <>
@@ -98,7 +107,10 @@ const Profile = () => {
                 </a>
               </Tooltip>
               <Tooltip tooltipText={"Archive"} className=" mr-6 ml-6 ">
-                <a href="/archive">
+                <a
+                  href={`/profile/${profileData.caseNo}`}
+                  onClick={handleArchiveClick}
+                >
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     folder_open
                   </span>

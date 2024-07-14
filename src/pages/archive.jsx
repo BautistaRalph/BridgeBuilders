@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from "@/components/ui/input";
 import { ToggleButton } from "@/components/custom/ToggleButton";
 import { Button } from "@/components/ui/button";
@@ -7,14 +7,29 @@ import search from '@/assets/search.png';
 import filter from '@/assets/filter.png';
 import UserCard from '@/components/custom/UserCard';
 import Appbar from '@/components/ui/Appbar';
-import { Users } from '@/lib/placeholder/users';
+import axios from '../axiosInstance.js'; 
+
+const defaultFilters = {
+  status: 'Deleted',
+  ageRangeFilter: '',
+  genderFilter: '',
+};
 
 const Archive = () => {
   const [activeCategory, setActiveCategory] = useState('Home Care');
   const [activeYear, setActiveYear] = useState('All');
   const [years] = useState(['All', '2018', '2019', '2020', '2021', '2022', '2023', '2024']);
+  const [deletedUsers, setUsers] = useState([]);
+  const [filters, setFilter] = useState(defaultFilters);
+  const [filterFlag, setFilterFlag] = useState(false);
 
-  const deletedUsers = Users.filter(user => user.status === "Deleted");
+  useEffect(() => {
+    console.log("useEffect triggered");
+
+    const response = axios.get('/api/overview', { params: filters })
+    .then(vals => setUsers(vals.data))
+    .catch(err => console.log(err))
+  }, [filterFlag]);
 
   const handleCategoryToggle = (category) => {
     setActiveCategory(category);
@@ -22,6 +37,19 @@ const Archive = () => {
 
   const handleYearToggle = (year) => {
     setActiveYear(year);
+  };
+
+  const handleFilterChange = (event) => {
+    console.log('handling filter change');
+    setFilter({
+      ...filters,
+      [event.target.id]: event.target.value,
+    });
+  };
+
+  const handleFilter = () => {
+    console.log('applying filters');
+    setFilterFlag(prevFlag => !prevFlag);
   };
 
   return (
@@ -97,28 +125,65 @@ const Archive = () => {
               <div className="flex flex-col space-y-4">
                 {/* Age Range Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="ageRangeFilter" className="text-sm text-black">Age Range:</label>
-                  <select id="ageRangeFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
+                  <label 
+                    htmlFor="ageRangeFilter" 
+                    className="text-sm text-black"
+                  >
+                    Age Range:
+                  </label>
+                  <select
+                    id="ageRangeFilter" 
+                    className="mt-1 p-2 border border-gray-300 rounded text-black"
+                    onChange={handleFilterChange}
+                  >
+                    <option value="" className="text-bb-violet">--Select--</option>
+                    <option value="" className="text-bb-violet">All</option>
                     <option value="5-10">5-10</option>
                     <option value="10-17">10-17</option>
                   </select>
                 </div>
                 {/* Gender Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="genderFilter" className="text-sm text-black">Gender:</label>
-                  <select id="genderFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
+                  <label 
+                    htmlFor="genderFilter" 
+                    className="text-sm text-black"
+                  >
+                    Gender:
+                  </label>
+                  <select 
+                    id="genderFilter"
+                    className="mt-1 p-2 border border-gray-300 rounded text-black"
+                    onChange={handleFilterChange}
+                  >
+                    <option value="" className="text-bb-violet">
+                      --Select--
+                    </option>
+                    <option value="" className="text-bb-violet">
+                      All
+                    </option>
+                    <option value="Lalaki" className="text-bb-violet">
+                      Lalaki
+                    </option>
+                    <option value="Babae" className="text-bb-violet">
+                      Babae
+                    </option>
                   </select>
                 </div>
-                {/* Category Filter */}
+                {/* Category Filter 
                 <div className="flex flex-col">
                   <label htmlFor="categoryFilter" className="text-sm text-black">Category:</label>
                   <select id="categoryFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
                     <option value="Home Care">Home Care</option>
                     <option value="Community">Community</option>
                   </select>
-                </div>
+                </div> */}
+                {/* Submit Button */}
+                <button
+                  className="bg-bb-violet text-white"
+                  onClick={handleFilter}
+                >
+                  Apply
+                </button>
               </div>
             </PopoverContent>
           </Popover>
@@ -134,7 +199,7 @@ const Archive = () => {
               gender={user.kasarian}
               year={user.yearAdmitted}
               category={user.status}
-              profileLink={`/profile`}
+              profileLink={`/profile/${user.caseNo}`}
               avatar={user.picture}
             />
           ))}

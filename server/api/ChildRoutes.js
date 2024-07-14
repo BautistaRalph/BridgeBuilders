@@ -5,34 +5,49 @@ const apiRouter = express.Router();
 const userAccess = "superUser"; //temp
 
 //overview page
-apiRouter.get("/overview", async (req, res) => {
-  console.log("Getting children data...");
+apiRouter.get('/overview', async (req, res) => {
+  console.log('Getting children data...');
   var vals;
+  const { status, ageRangeFilter, genderFilter } = req.query;
+  let query = { status };
 
+  //user access
+  if (userAccess === 'homeCare') {
+    query.program = "Home Care";
+  } else if (userAccess === 'community') {
+    query.program = "Community Based Program";
+  }
+
+  //age range
+  if(ageRangeFilter) {
+    const [min, max] = ageRangeFilter.split('-').map(Number);
+    query.edad = { $gte: min, $lte: max };
+  }
+
+  //gender
+  if(genderFilter) {
+    query.kasarian = genderFilter;
+  }
+  
   try {
-    if (userAccess == "superUser") vals = await Child.find();
-    else if (userAccess == "homeCare")
-      vals = await Child.find({ program: "Home Care" });
-    else if (userAccess == "community")
-      vals = await Child.find({ program: "Community Based Program" });
-
+    vals = await Child.find(query);
     res.status(200).json(vals);
   } catch (error) {
     res.status(500).send("Error fetching children data");
   }
-});
+}); 
 
 //profile page
 apiRouter.get("/profile/:caseNo", async (req, res) => {
   console.log("Viewing case data...");
-  const cursor = await Child.find({ caseNo: parseInt(req.params.caseNo) });
+  var vals;
 
-  cursor
-    .toArray()
-    .then(function (vals) {
-      res.status(200).json(vals);
-    })
-    .catch(() => res.status(401).send("Error fetching case data"));
+  try {
+    vals = await Child.find({ caseNo: parseInt(req.params.caseNo) });
+    res.status(200).json(vals);
+  } catch (error) {
+    res.status(500).send("Error fetching children data");
+  }
 });
 
 //save edited profile changes
@@ -44,6 +59,25 @@ apiRouter.post("/editProfile/:caseNo", async (req, res) => {
 
   try {
     await Child.replaceOne({ caseNo: caseNo }, profileData);
+    res.status(200);
+  } catch (error) {
+    res.status(401).send("Error fetching case data");
+  }
+});
+
+//archive or unarchive profile
+apiRouter.post("/archiveProfile/:caseNo", async (req, res) => {
+  console.log("Editing case archive status...");
+  const caseNo = parseInt(req.params.caseNo);
+
+  const currentDocument = await Child.findOne({ caseNo: caseNo });
+  const newStatus = currentDocument.status === "Active" ? "Deleted" : "Active";
+
+  try {
+    await Child.updateOne(
+      { caseNo: caseNo },
+      { $set: { status: newStatus } }
+    );
     res.status(200);
   } catch (error) {
     res.status(401).send("Error fetching case data");
