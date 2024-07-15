@@ -82,6 +82,8 @@ apiRouter.post("/archiveProfile/:caseNo", async (req, res) => {
     res.status(200);
   } catch (error) {
     res.status(401).send("Error fetching case data");
+  }
+});
 
 //Category filtering
 apiRouter.get("/filter", async (req, res) => {
