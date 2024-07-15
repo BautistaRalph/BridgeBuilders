@@ -50,4 +50,30 @@ apiRouter.post("/editProfile/:caseNo", async (req, res) => {
   }
 });
 
+//Category filtering
+apiRouter.get("/filter", async (req, res) => {
+  console.log("Filtering children data based on program and year...");
+  const { program, year } = req.query;
+
+  console.log("Program:", program);
+  console.log("Year:", year);
+
+  let query = { program };
+
+  if (year) {
+    query.yearAdmitted = year;
+  }
+
+  console.log("Query:", query);
+
+  try {
+    const children = await Child.find(query);
+    console.log("Found children:", children); 
+    res.status(200).json(children);
+  } catch (error) {
+    console.error("Error filtering children data:", error);
+    res.status(500).send("Error filtering children data");
+  }
+});
+
 export default apiRouter;

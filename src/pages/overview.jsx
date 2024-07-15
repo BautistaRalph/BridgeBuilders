@@ -27,7 +27,7 @@ const Overview = () => {
   const userType = "superUser";
   const username = "John Doe";
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("");
+  const [activeCategory, setActiveCategory] = useState("Home Care");
   const [activeYear, setActiveYear] = useState("2018");
   const [editMode, setEditMode] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -43,8 +43,6 @@ const Overview = () => {
   const [activeStatistic, setActiveStatistic] = useState("General");
   const [activeUsers, setUsers] = useState([]);
   const [statisticsData, setStatisticsData] = useState({});
-
-  //const activeUsers = Users.filter(user => user.status === "Active");
 
   useEffect(() => {
     console.log("useEffect triggered");
@@ -88,10 +86,9 @@ const Overview = () => {
     }, 2000);
   }, [userType]);
 
-  const handleCategoryToggle = (category) => {
-    setActiveCategory(category);
-  };
+  //Fetch functions
 
+  //Fetch years
   const fetchYears = async () => {
     try {
       const response = await axios.get("/api/years");
@@ -109,6 +106,7 @@ const Overview = () => {
     fetchYears();
   }, []);
 
+  //Fetch statistics
   const fetchStatistics = async () => {
     try {
       const response = await axios.get(`/api/stats/${activeYear}`);
@@ -131,6 +129,9 @@ const Overview = () => {
     }
   }, [activeYear]);
 
+  //Add, delete, and update functions
+
+  //Add year
   const confirmAddYear = async () => {
     try {
       const defaultGoals = {
@@ -157,19 +158,7 @@ const Overview = () => {
     }
   };
 
-  const handleYearToggle = (year) => {
-    setActiveYear(year);
-  };
-
-  const handleEditClick = () => {
-    setEditMode(!editMode);
-  };
-
-  const handleDeleteYear = (year) => {
-    setYearToDelete(year);
-    setIsDeleteModalOpen(true);
-  };
-
+  //Delete year
   const confirmDeleteYear = async () => {
     try {
       console.log("Deleting year:", yearToDelete);
@@ -187,14 +176,7 @@ const Overview = () => {
     }
   };
 
-  const handleStatisticToggle = (statistic) => {
-    setActiveStatistic(statistic);
-  };
-
-  const handleGoalClick = () => {
-    setIsGoalModalOpen(true);
-  };
-
+  //Add statistic label
   const addNewLabel = async (category, numberOfClients) => {
     try {
       const response = await axios.post(
@@ -219,15 +201,7 @@ const Overview = () => {
     }
   };
 
-  const setCurrentStatistic = (statistic, category) => {
-    setCurrentStatisticData({ ...statistic, category });
-  };
-
-  const handleDeleteLabel = (label) => {
-    setLabelToDelete(label);
-    setIsDeleteGoalOpen(true);
-  };
-
+  //Delete statistic label
   const confirmDeleteLabel = async () => {
     try {
       const response = await axios.delete(
@@ -245,6 +219,7 @@ const Overview = () => {
     }
   };
 
+  //Update statistic label 
   const handleStatisticUpdate = async (newLabel, newValue) => {
     try {
       const { label, category } = currentStatistic;
@@ -269,6 +244,68 @@ const Overview = () => {
     }
   };
 
+  //Filter functions
+
+  useEffect(() => {
+    console.log("Fetching data for category:", activeCategory, "year:", activeYear);
+    fetchData();
+  }, [activeCategory, activeYear]);
+
+  const fetchData = async () => {
+    try {
+      console.log("Making API request...");
+      const response = await axios.get("/api/filter", {
+        params: {
+          program: activeCategory,
+          year: activeYear,
+        },
+      });
+      console.log("Received data:", response.data);
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  //Handler functions
+
+  const handleCategoryToggle = (category) => {
+    console.log("Category toggled:", category);
+    setActiveCategory(category);
+  };
+
+  const handleYearToggle = (year) => {
+    console.log("Year toggled:", year);
+    setActiveYear(year);
+  };
+
+  const handleEditClick = () => {
+    setEditMode(!editMode);
+  };
+
+  const handleStatisticToggle = (statistic) => {
+    setActiveStatistic(statistic);
+  };
+
+  const handleGoalClick = () => {
+    setIsGoalModalOpen(true);
+  };
+
+  const setCurrentStatistic = (statistic, category) => {
+    setCurrentStatisticData({ ...statistic, category });
+  };
+
+  const handleDeleteLabel = (label) => {
+    setLabelToDelete(label);
+    setIsDeleteGoalOpen(true);
+  };
+
+  const handleDeleteYear = (year) => {
+    setYearToDelete(year);
+    setIsDeleteModalOpen(true);
+  };
+
+  //Welcome message
   if (showWelcomeMessage) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-bb-violet">
@@ -294,14 +331,14 @@ const Overview = () => {
               <ToggleButton
                 category="Home Care"
                 isActive={activeCategory === "Home Care"}
-                onClick={() => handleCategoryToggle("Home Care")}
+                onClick={() => handleCategoryToggle("HC")}
               >
                 Home Care
               </ToggleButton>
               <ToggleButton
                 category="Community"
                 isActive={activeCategory === "Community"}
-                onClick={() => handleCategoryToggle("Community")}
+                onClick={() => handleCategoryToggle("CBP")}
               >
                 Community
               </ToggleButton>
@@ -311,7 +348,7 @@ const Overview = () => {
             <ToggleButton
               category="Home Care"
               isActive={true}
-              onClick={() => handleCategoryToggle("Home Care")}
+              onClick={() => handleCategoryToggle("HC")}
             >
               Home Care
             </ToggleButton>
@@ -320,7 +357,7 @@ const Overview = () => {
             <ToggleButton
               category="Community"
               isActive={true}
-              onClick={() => handleCategoryToggle("Community")}
+              onClick={() => handleCategoryToggle("CBP")}
             >
               Community
             </ToggleButton>

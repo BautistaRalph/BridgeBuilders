@@ -46,6 +46,7 @@ const ChildSchema = new mongoose.Schema(
         id: { type: String },
       },
     ],
+    yearAdmitted: {type: Number}
   },
   { versionKey: false }
 );
