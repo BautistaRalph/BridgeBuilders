@@ -310,7 +310,8 @@ const Overview = () => {
   const handleDeleteYear = (year) => {
     setYearToDelete(year);
     setIsDeleteModalOpen(true);
-
+  };
+  
   const handleFilterChange = (event) => {
     console.log('handling filter change');
     setFilter({
