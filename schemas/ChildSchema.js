@@ -50,6 +50,7 @@ const ChildSchema = new mongoose.Schema(
     goalsAchieved: [
       { type: String }
     ],
+    yearAdmitted: {type: Number}
   },
   { versionKey: false }
 );
