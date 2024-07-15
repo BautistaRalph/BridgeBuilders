@@ -65,7 +65,6 @@ apiRouter.post("/editProfile/:caseNo", async (req, res) => {
   }
 });
 
-
 //archive or unarchive profile
 apiRouter.post("/archiveProfile/:caseNo", async (req, res) => {
   console.log("Editing case archive status...");
@@ -85,15 +84,15 @@ apiRouter.post("/archiveProfile/:caseNo", async (req, res) => {
   }
 });
 
-//Category filtering
+//Category filtering - overview
 apiRouter.get("/filter", async (req, res) => {
-  console.log("Filtering children data based on program and year...");
+  console.log("Filtering children data based on program, year, and status...");
   const { program, year } = req.query;
 
   console.log("Program:", program);
   console.log("Year:", year);
 
-  let query = { program };
+  let query = { program, status: 'Active' }; 
 
   if (year) {
     query.yearAdmitted = year;
@@ -109,7 +108,6 @@ apiRouter.get("/filter", async (req, res) => {
     console.error("Error filtering children data:", error);
     res.status(500).send("Error filtering children data");
   }
-  
 });
 
 export default apiRouter;

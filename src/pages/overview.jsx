@@ -32,7 +32,7 @@ const Overview = () => {
   const userType = "superUser";
   const username = "John Doe";
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("Home Care");
+  const [activeCategory, setActiveCategory] = useState(null);
   const [activeYear, setActiveYear] = useState("2018");
   const [editMode, setEditMode] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -277,12 +277,10 @@ const Overview = () => {
   //Handler functions
 
   const handleCategoryToggle = (category) => {
-    console.log("Category toggled:", category);
     setActiveCategory(category);
   };
 
   const handleYearToggle = (year) => {
-    console.log("Year toggled:", year);
     setActiveYear(year);
   };
 
@@ -311,7 +309,7 @@ const Overview = () => {
     setYearToDelete(year);
     setIsDeleteModalOpen(true);
   };
-  
+
   const handleFilterChange = (event) => {
     console.log('handling filter change');
     setFilter({
@@ -349,14 +347,14 @@ const Overview = () => {
             <>
               <ToggleButton
                 category="Home Care"
-                isActive={activeCategory === "Home Care"}
+                isActive={activeCategory === "HC"}
                 onClick={() => handleCategoryToggle("HC")}
               >
                 Home Care
               </ToggleButton>
               <ToggleButton
                 category="Community"
-                isActive={activeCategory === "Community"}
+                isActive={activeCategory === "CBP"}
                 onClick={() => handleCategoryToggle("CBP")}
               >
                 Community

@@ -49,8 +49,7 @@ const ChildSchema = new mongoose.Schema(
     status: { type: String },
     goalsAchieved: [
       { type: String }
-    ],
-    yearAdmitted: {type: Number}
+    ]
   },
   { versionKey: false }
 );
