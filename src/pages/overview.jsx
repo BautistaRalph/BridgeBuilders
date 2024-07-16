@@ -310,7 +310,7 @@ const Overview = () => {
   if (showWelcomeMessage) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-bb-violet">
-        <div className="bg-white text-bb-violet text-2xl p-6 rounded-lg shadow-md">
+        <div className="bg-white text-bb-violet text-3xl p-8 rounded-lg shadow-md">
           Welcome, {username}
         </div>
       </div>
