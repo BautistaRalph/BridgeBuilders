@@ -23,9 +23,9 @@ import welcome from "@/assets/welcome.mp3";
 import axios from "../axiosInstance.js";
 
 const defaultFilters = {
-    status: 'Active',
-    ageRangeFilter: '',
-    genderFilter: '',
+  status: 'Active',   
+  edad: '',            
+  kasarian: ''      
 };
 
 const Overview = () => {
@@ -33,7 +33,7 @@ const Overview = () => {
   const username = "John Doe";
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
-  const [activeYear, setActiveYear] = useState("2018");
+  const [activeYear, setActiveYear] = useState(2018);
   const [editMode, setEditMode] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteGoalOpen, setIsDeleteGoalOpen] = useState(false);
@@ -48,24 +48,44 @@ const Overview = () => {
   const [activeStatistic, setActiveStatistic] = useState("General");
   const [activeUsers, setUsers] = useState([]);
   const [statisticsData, setStatisticsData] = useState({});
-  const [filters, setFilter] = useState(defaultFilters);
-  const [filterFlag, setFilterFlag] = useState(false); 
+  const [filters, setFilters] = useState(defaultFilters); 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const fetchData = async (searchQuery) => {
+    try {
+
+      let edadFilter = {};
+      if (filters.edad) {
+        const [minAge, maxAge] = filters.edad.split('-').map(Number);
+        edadFilter = {
+          minAge,
+          maxAge,
+        };
+      }
+
+      const response = await axios.get('/api/overview', {
+        params: {
+          program: activeCategory,
+          year: activeYear,
+          search: searchQuery,
+          edad: filters.edad,
+          kasarian: filters.kasarian,
+        },
+      });
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
-    console.log("useEffect triggered");
-
-    const response = axios
-      .get("/api/overview", { params: filters }) 
-      .then((vals) => setUsers(vals.data))
-      .catch((err) => console.log(err));
-
-    if (userType === "homeCare") {
-      setActiveCategory("Home Care");
+    if (userType === "superUser" || userType === "homeCare") {
+      setActiveCategory("HC");
     } else if (userType === "community") {
-      setActiveCategory("Community");
-    } else {
-      setActiveCategory("Home Care");
+      setActiveCategory("CBP");
     }
+
+    setActiveYear(2018);
 
     if (sessionStorage.getItem("fromLogin") === "true") {
       setShowWelcomeMessage(true);
@@ -75,35 +95,40 @@ const Overview = () => {
       audio.play();
 
       const timer = setTimeout(() => {
-        console.log("Timer elapsed, hiding welcome message");
         setShowWelcomeMessage(false);
       }, 2000);
 
-      console.log("Timer set");
-
       return () => {
-        console.log("Clearing timer");
         clearTimeout(timer);
       };
     }
 
     const timer = setTimeout(() => {
-      console.log("Timer elapsed, hiding welcome message");
       setShowWelcomeMessage(false);
     }, 2000);
-  }, [userType, filterFlag]);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [userType]);
+
+  useEffect(() => {
+    fetchYears();
+  }, []);
+
+  useEffect(() => {
+    fetchData(searchQuery); 
+  }, [activeCategory, activeYear, filters, searchQuery]);
 
   //Fetch functions
 
-  //Fetch years
   const fetchYears = async () => {
     try {
       const response = await axios.get("/api/years");
       if (response.status !== 200) {
         throw new Error("Failed to fetch years");
       }
-      const data = response.data;
-      setYears([...data]);
+      setYears([...response.data]);
     } catch (error) {
       console.error("Failed to fetch years:", error);
     }
@@ -113,14 +138,12 @@ const Overview = () => {
     fetchYears();
   }, []);
 
-  //Fetch statistics
   const fetchStatistics = async () => {
     try {
       const response = await axios.get(`/api/stats/${activeYear}`);
       if (response.status !== 200) {
         throw new Error("Failed to fetch statistics");
       }
-      console.log("Fetched statistics:", response.data);
       setStatisticsData(response.data);
     } catch (error) {
       console.error("Failed to fetch statistics:", error);
@@ -129,8 +152,6 @@ const Overview = () => {
   };
 
   useEffect(() => {
-    console.log("Fetching statistics for year:", activeYear);
-
     if (activeYear) {
       fetchStatistics();
     }
@@ -138,7 +159,6 @@ const Overview = () => {
 
   //Add, delete, and update functions
 
-  //Add year
   const confirmAddYear = async () => {
     try {
       const defaultGoals = {
@@ -154,9 +174,8 @@ const Overview = () => {
       });
 
       if (response.status === 201) {
-        console.log("Year added successfully");
-        setIsAddModalOpen(false);
         fetchYears();
+        setIsAddModalOpen(false);
       } else {
         console.error("Failed to add year:", response.data.error);
       }
@@ -165,13 +184,10 @@ const Overview = () => {
     }
   };
 
-  //Delete year
   const confirmDeleteYear = async () => {
     try {
-      console.log("Deleting year:", yearToDelete);
       const response = await axios.delete(`/api/years/${yearToDelete}`);
       if (response.status === 200) {
-        console.log("Year deleted successfully");
         setYears(years.filter((year) => year !== yearToDelete));
         setIsDeleteModalOpen(false);
         fetchYears();
@@ -183,7 +199,6 @@ const Overview = () => {
     }
   };
 
-  //Add statistic label
   const addNewLabel = async (category, numberOfClients) => {
     try {
       const response = await axios.post(
@@ -194,12 +209,9 @@ const Overview = () => {
         }
       );
 
-      console.log("API response:", response);
-
       if (response.status === 200) {
-        console.log("Label added successfully");
-        setIsGoalModalOpen(false);
         fetchStatistics();
+        setIsGoalModalOpen(false);
       } else {
         console.error("Failed to add label:", response.data.error);
       }
@@ -208,16 +220,14 @@ const Overview = () => {
     }
   };
 
-  //Delete statistic label
   const confirmDeleteLabel = async () => {
     try {
       const response = await axios.delete(
         `/api/stats/${activeYear}/goals/${activeStatistic}/label/${labelToDelete}`
       );
       if (response.status === 200) {
-        console.log("Label deleted successfully");
-        setIsDeleteGoalOpen(false);
         fetchStatistics();
+        setIsDeleteGoalOpen(false);
       } else {
         throw new Error("Failed to delete label");
       }
@@ -226,7 +236,6 @@ const Overview = () => {
     }
   };
 
-  //Update statistic label 
   const handleStatisticUpdate = async (newLabel, newValue) => {
     try {
       const { label, category } = currentStatistic;
@@ -234,43 +243,19 @@ const Overview = () => {
       const response = await axios.put(
         `/api/stats/${activeYear}/goals/${category}/label/${label}`,
         {
-          newLabel: newLabel,
-          newValue: newValue,
+          newLabel,
+          newValue,
         }
       );
 
       if (response.status === 200) {
-        console.log("Label updated successfully");
-        setIsStatisticModalOpen(false);
         fetchStatistics();
+        setIsStatisticModalOpen(false);
       } else {
         console.error("Failed to update label:", response.data.error);
       }
     } catch (error) {
       console.error("Error updating label:", error);
-    }
-  };
-
-  //Filter functions
-
-  useEffect(() => {
-    console.log("Fetching data for category:", activeCategory, "year:", activeYear);
-    fetchData();
-  }, [activeCategory, activeYear]);
-
-  const fetchData = async () => {
-    try {
-      console.log("Making API request...");
-      const response = await axios.get("/api/filter", {
-        params: {
-          program: activeCategory,
-          year: activeYear,
-        },
-      });
-      console.log("Received data:", response.data);
-      setUsers(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
     }
   };
 
@@ -311,16 +296,15 @@ const Overview = () => {
   };
 
   const handleFilterChange = (event) => {
-    console.log('handling filter change');
-    setFilter({
+    const { id, value } = event.target;
+    setFilters({
       ...filters,
-      [event.target.id]: event.target.value,
+      [id]: value,
     });
   };
 
-  const handleFilter = () => {
-    console.log('applying filters');
-    setFilterFlag(prevFlag => !prevFlag);
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value); 
   };
 
   if (showWelcomeMessage) {
@@ -511,8 +495,11 @@ const Overview = () => {
           <div className="relative flex items-center w-full">
             <Input
               type="text"
-              placeholder="Search clients"
-              className="w-full pl-10"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={handleSearch}
+              className="pl-10" 
+              style={{ paddingLeft: '2.5rem' }} 
             />
             <img
               src={search}
@@ -543,23 +530,19 @@ const Overview = () => {
                     Age Range:
                   </label>
                   <select
-                    id="ageRangeFilter"
-                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
-                    onChange={handleFilterChange}
-                  >
-                    <option value="" className="text-bb-violet">
-                      --Select--
-                    </option>
-                    <option value="" className="text-bb-violet">
-                      All
-                    </option>
-                    <option value="5-10" className="text-bb-violet">
-                      5-10
-                    </option>
-                    <option value="10-17" className="text-bb-violet">
-                      10-17
-                    </option>
-                  </select>
+                  id="edad"
+                  className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                  onChange={handleFilterChange}
+                  value={filters.edad}
+                >
+                  <option value="">--Select--</option>
+                  <option value="">All</option>
+                  <option value="5-10">5-10</option>
+                  <option value="11-17">11-17</option>
+                  <option value="18-24">18-24</option>
+                  <option value="25-39">25-39</option>
+                  <option value="40-59">40-59</option>
+                </select>
                 </div>
                 {/* Gender Filter */}
                 <div className="flex flex-col">
@@ -569,52 +552,19 @@ const Overview = () => {
                   >
                     Gender:
                   </label>
+
                   <select
-                    id="genderFilter"
-                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
-                    onChange={handleFilterChange}
-                  >
-                    <option value="" className="text-bb-violet">
-                      --Select--
-                    </option>
-                    <option value="" className="text-bb-violet">
-                      All
-                    </option>
-                    <option value="Lalaki" className="text-bb-violet">
-                      Lalaki
-                    </option>
-                    <option value="Babae" className="text-bb-violet">
-                      Babae
-                    </option>
-                  </select>
-                </div>
-                {/* Category Filter 
-                <div className="flex flex-col">
-                  <label
-                    htmlFor="categoryFilter"
-                    className="text-sm text-bb-violet"
-                  >
-                    Category:
-                  </label>
-                  <select
-                    id="categoryFilter"
-                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
-                  >
-                    <option value="Home Care" className="text-bb-violet">
-                      Home Care
-                    </option>
-                    <option value="Community" className="text-bb-violet">
-                      Community
-                    </option>
-                  </select>
-                </div>*/}
-                {/* Submit Button */}
-                <button
-                  className="bg-bb-violet text-white"
-                  onClick={handleFilter}
+                  id="kasarian"
+                  className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                  onChange={handleFilterChange}
+                  value={filters.kasarian}
                 >
-                  Apply
-                </button>
+                  <option value="">--Select--</option>
+                  <option value="">All</option>
+                  <option value="Lalaki">Lalaki</option>
+                  <option value="Babae">Babae</option>
+                </select>
+                </div>
               </div>
             </PopoverContent>
           </Popover>
