@@ -11,25 +11,57 @@ import axios from '../axiosInstance.js';
 
 const defaultFilters = {
   status: 'Deleted',
-  ageRangeFilter: '',
-  genderFilter: '',
+  edad: '', 
+  kasarian: ''
 };
 
 const Archive = () => {
-  const [activeCategory, setActiveCategory] = useState('Home Care');
-  const [activeYear, setActiveYear] = useState('All');
-  const [years] = useState(['All', '2018', '2019', '2020', '2021', '2022', '2023', '2024']);
-  const [deletedUsers, setUsers] = useState([]);
-  const [filters, setFilter] = useState(defaultFilters);
-  const [filterFlag, setFilterFlag] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("HC");
+  const [activeYear, setActiveYear] = useState(2018);
+  const [years, setYears] = useState(["All"]);
+  const [deletedUsers, setDeletedUsers] = useState([]);
+  const [filters, setFilters] = useState(defaultFilters); 
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    console.log("useEffect triggered");
+    fetchData();
+    fetchYears();
+  }, [activeCategory, activeYear, filters, searchQuery]);
 
-    const response = axios.get('/api/overview', { params: filters })
-    .then(vals => setUsers(vals.data))
-    .catch(err => console.log(err))
-  }, [filterFlag]);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('/api/archive', {
+        params: {
+          program: activeCategory,
+          year: activeYear,
+          search: searchQuery,
+          edad: filters.edad,
+          kasarian: filters.kasarian,
+        },
+      });
+      setDeletedUsers(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+
+  //Fetch functions
+
+  const fetchYears = async () => {
+    try {
+      const response = await axios.get("/api/years");
+      if (response.status !== 200) {
+        throw new Error("Failed to fetch years");
+      }
+      setYears([...response.data]);
+    } catch (error) {
+      console.error("Failed to fetch years:", error);
+    }
+  };
+
+
+  //Handler functions
 
   const handleCategoryToggle = (category) => {
     setActiveCategory(category);
@@ -40,39 +72,38 @@ const Archive = () => {
   };
 
   const handleFilterChange = (event) => {
-    console.log('handling filter change');
-    setFilter({
+    const { id, value } = event.target;
+    setFilters({
       ...filters,
-      [event.target.id]: event.target.value,
+      [id]: value,
     });
   };
-
-  const handleFilter = () => {
-    console.log('applying filters');
-    setFilterFlag(prevFlag => !prevFlag);
+  
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value); 
   };
 
   return (
     <>
       <Appbar />
-
-      {/* Main Content */}
-      <div className="bg-white p-6 rounded-lg w-full"><h1 className="header">Archive</h1>
+      <div className="bg-white p-6 rounded-lg w-full">
+        <h1 className="header">Archive</h1>
         <hr className="my-4 border-t-2 border-bb-violet" />
+
         {/* Tabs */}
-        <div className="mb-2 text-lg font-bold text-bb-violet">Categoy:</div>
+        <div className="mb-2 text-lg font-bold text-bb-violet">Category:</div>
         <div className="flex space-x-4 mb-4">
           <ToggleButton
             category="Home Care"
-            isActive={activeCategory === 'Home Care'}
-            onClick={() => handleCategoryToggle('Home Care')}
+            isActive={activeCategory === "HC"}
+            onClick={() => handleCategoryToggle("HC")}
           >
             Home Care
           </ToggleButton>
           <ToggleButton
             category="Community"
-            isActive={activeCategory === 'Community'}
-            onClick={() => handleCategoryToggle('Community')}
+            isActive={activeCategory === "CBP"}
+            onClick={() => handleCategoryToggle("CBP")}
           >
             Community
           </ToggleButton>
@@ -100,8 +131,11 @@ const Archive = () => {
           <div className="relative flex items-center w-full">
             <Input
               type="text"
-              placeholder="Search clients"
-              className="w-full pl-10"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={handleSearch}
+              className="pl-10" 
+              style={{ paddingLeft: '2.5rem' }} 
             />
             <img
               src={search}
@@ -125,65 +159,37 @@ const Archive = () => {
               <div className="flex flex-col space-y-4">
                 {/* Age Range Filter */}
                 <div className="flex flex-col">
-                  <label 
-                    htmlFor="ageRangeFilter" 
-                    className="text-sm text-black"
-                  >
-                    Age Range:
-                  </label>
+                  <label htmlFor="edad" className="text-sm text-bb-violet">Age Range:</label>
                   <select
-                    id="ageRangeFilter" 
-                    className="mt-1 p-2 border border-gray-300 rounded text-black"
+                    id="edad"
+                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
                     onChange={handleFilterChange}
+                    value={filters.edad}
                   >
-                    <option value="" className="text-bb-violet">--Select--</option>
-                    <option value="" className="text-bb-violet">All</option>
+                    <option value="">--Select--</option>
+                    <option value="">All</option>
                     <option value="5-10">5-10</option>
-                    <option value="10-17">10-17</option>
+                    <option value="11-17">11-17</option>
+                    <option value="18-24">18-24</option>
+                    <option value="25-39">25-39</option>
+                    <option value="40-59">40-59</option>
                   </select>
                 </div>
                 {/* Gender Filter */}
                 <div className="flex flex-col">
-                  <label 
-                    htmlFor="genderFilter" 
-                    className="text-sm text-black"
-                  >
-                    Gender:
-                  </label>
-                  <select 
-                    id="genderFilter"
-                    className="mt-1 p-2 border border-gray-300 rounded text-black"
+                  <label htmlFor="kasarian" className="text-sm text-bb-violet">Gender:</label>
+                  <select
+                    id="kasarian"
+                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
                     onChange={handleFilterChange}
+                    value={filters.kasarian}
                   >
-                    <option value="" className="text-bb-violet">
-                      --Select--
-                    </option>
-                    <option value="" className="text-bb-violet">
-                      All
-                    </option>
-                    <option value="Lalaki" className="text-bb-violet">
-                      Lalaki
-                    </option>
-                    <option value="Babae" className="text-bb-violet">
-                      Babae
-                    </option>
+                    <option value="">--Select--</option>
+                    <option value="">All</option>
+                    <option value="Lalaki">Lalaki</option>
+                    <option value="Babae">Babae</option>
                   </select>
                 </div>
-                {/* Category Filter 
-                <div className="flex flex-col">
-                  <label htmlFor="categoryFilter" className="text-sm text-black">Category:</label>
-                  <select id="categoryFilter" className="mt-1 p-2 border border-gray-300 rounded text-black">
-                    <option value="Home Care">Home Care</option>
-                    <option value="Community">Community</option>
-                  </select>
-                </div> */}
-                {/* Submit Button */}
-                <button
-                  className="bg-bb-violet text-white"
-                  onClick={handleFilter}
-                >
-                  Apply
-                </button>
               </div>
             </PopoverContent>
           </Popover>

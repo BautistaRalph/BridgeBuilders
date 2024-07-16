@@ -4,39 +4,6 @@ import express from "express";
 const apiRouter = express.Router();
 const userAccess = "superUser"; //temp
 
-//overview page
-apiRouter.get('/overview', async (req, res) => {
-  console.log('Getting children data...');
-  var vals;
-  const { status, ageRangeFilter, genderFilter } = req.query;
-  let query = { status };
-
-  //user access
-  if (userAccess === 'homeCare') {
-    query.program = "Home Care";
-  } else if (userAccess === 'community') {
-    query.program = "Community Based Program";
-  }
-
-  //age range
-  if(ageRangeFilter) {
-    const [min, max] = ageRangeFilter.split('-').map(Number);
-    query.edad = { $gte: min, $lte: max };
-  }
-
-  //gender
-  if(genderFilter) {
-    query.kasarian = genderFilter;
-  }
-  
-  try {
-    vals = await Child.find(query);
-    res.status(200).json(vals);
-  } catch (error) {
-    res.status(500).send("Error fetching children data");
-  }
-}); 
-
 //profile page
 apiRouter.get("/profile/:caseNo", async (req, res) => {
   console.log("Viewing case data...");
@@ -84,25 +51,63 @@ apiRouter.post("/archiveProfile/:caseNo", async (req, res) => {
   }
 });
 
-//Category filtering - overview
-apiRouter.get("/filter", async (req, res) => {
-  console.log("Filtering children data based on program, year, and status...");
-  const { program, year } = req.query;
+// Category filtering - overview
+apiRouter.get("/overview", async (req, res) => {
+  const { program, year, search, edad, kasarian } = req.query;
 
-  console.log("Program:", program);
-  console.log("Year:", year);
-
-  let query = { program, status: 'Active' }; 
+  let query = { program, status: 'Active' };
 
   if (year) {
     query.yearAdmitted = year;
   }
 
-  console.log("Query:", query);
+  if (search) {
+    query.pangalan = { $regex: search, $options: 'i' };
+  }
+
+  if (edad) {
+    const [minAge, maxAge] = edad.split('-').map(Number);
+    query.edad = { $gte: minAge, $lte: maxAge };
+  }
+
+  if (kasarian) {
+    query.kasarian = { $regex: kasarian, $options: 'i' };
+  }
 
   try {
     const children = await Child.find(query);
-    console.log("Found children:", children); 
+    res.status(200).json(children);
+  } catch (error) {
+    console.error("Error filtering children data:", error);
+    res.status(500).send("Error filtering children data");
+  }
+});
+
+// Category filtering - archive
+apiRouter.get("/archive", async (req, res) => {
+  const { program, year, search, edad, kasarian } = req.query;
+
+  let query = { program, status: 'Deleted' };
+
+  if (year) {
+    query.yearAdmitted = year;
+  }
+
+  if (search) {
+    query.pangalan = { $regex: search, $options: 'i' };
+  }
+
+  if (edad) {
+    const [minAge, maxAge] = edad.split('-').map(Number);
+    query.edad = { $gte: minAge, $lte: maxAge };
+  }
+
+  if (kasarian) {
+    query.kasarian = { $regex: kasarian, $options: 'i' };
+  }
+
+  try {
+    const children = await Child.find(query);
     res.status(200).json(children);
   } catch (error) {
     console.error("Error filtering children data:", error);
