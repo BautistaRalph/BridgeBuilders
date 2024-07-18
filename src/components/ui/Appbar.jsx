@@ -1,6 +1,11 @@
 import Tooltip from "./Tooltip";
 
 const Appbar = () => {
+  const logout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/';
+  }
+    
   return (
     <>
       <div className="flex align-center w-full h-28 bg-bb-white p-4 sticky top-0 z-10">
@@ -41,8 +46,11 @@ const Appbar = () => {
           </Tooltip>
 
           <Tooltip tooltipText={"Sign Out"} className=" mr-6 ml-6 ">
-            <a href="/">
-              <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
+            <a>
+              <span 
+                className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer"
+                onClick = {logout}
+              >
                 logout
               </span>
             </a>

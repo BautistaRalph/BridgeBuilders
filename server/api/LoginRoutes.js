@@ -69,4 +69,20 @@ apiRouter.post("/login", async (req, res) => {
   }
 });
 
+//Protected login route - FOR POSTMAN TESTING ONLY
+apiRouter.get("/protected", (req, res) => {
+  const token = req.headers['authorization'];
+  if (!token) {
+    return res.status(401).json({ message: "Access denied. No token provided." });
+  }
+
+  try {
+    const decoded = jwt.verify(token, "your_jwt_secret");
+    req.user = decoded;
+    res.status(200).json({ message: "Access granted", user: req.user });
+  } catch (error) {
+    res.status(400).json({ message: "Invalid token" });
+  }
+});
+
 export default apiRouter;
