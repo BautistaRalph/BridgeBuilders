@@ -18,6 +18,11 @@ export default function Login() {
         username,
         password,
       });
+
+      const { token } = response.data;
+
+      localStorage.setItem('token', token);
+
       console.log('Login successful', response.data);
       
       sessionStorage.setItem('fromLogin', 'true');
