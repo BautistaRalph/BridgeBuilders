@@ -21,8 +21,8 @@ export default function Login() {
 
       const { token } = response.data;
 
-      localStorage.setItem('token', token);
-
+      sessionStorage.setItem('token', token);
+      console.log("Token:", token); 
       console.log('Login successful', response.data);
       
       sessionStorage.setItem('fromLogin', 'true');
