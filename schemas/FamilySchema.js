@@ -12,7 +12,7 @@ const FamilySchema = new mongoose.Schema(
     ilanNagaaral: { type: Number },
     ilanBaon: { type: Number },
     saanGastosBaon: { type: String },
-    schoolActivity: { type: String },
+    schoolActivity: [{ type: String }],
     kainPasok: { type: Boolean }, //kumakain bago pumasok ng school
     alsAttend: { type: Boolean },
     //health

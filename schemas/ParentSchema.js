@@ -6,19 +6,19 @@ const ParentSchema = new mongoose.Schema(
     pangalan: { type: String },
     palayaw: { type: String },
     kasarian: { type: String }, //male or female
-    edad: { type: Number },
-    kaarawan: { type: Date }, //petsa ng kapanganakan
-    birthplace: { type: String }, //lugar ng kapanganakan
+    edad: { type: String },
+    birthday: { type: String }, //petsa ng kapanganakan
+    lugarNgKapanganakan: { type: String }, //lugar ng kapanganakan
     relihiyon: { type: String },
     edukasyon: { type: String }, //Kasalukuyan/Naabot na Antas ng Paaralan + list
-    paaralan: { type: String }, //huling paaralang pinasukan
+    hulingPaaralan: { type: String }, //huling paaralang pinasukan
     tirahan: { type: String }, //kasalukuyang tirahan (current address)
     probinsya: { type: String },
     trabaho: { type: String },
-    kita: { type: Number },
+    kita: { type: String },
     skillTraining: { type: String }, //skill training attended
     skills: { type: String },
-    //documents
+    dokumento:[{type:String}]
   },
   { versionKey: false }
 );

@@ -13,11 +13,11 @@ const documentList = [
 ];
 
 const antasList = [
-  { value: "None", name: "antas" },
-  { value: "Elementary", name: "antas" },
-  { value: "High School", name: "antas" },
-  { value: "College", name: "antas" },
-  { value: "ALS", name: "antas" },
+  { value: "None", name: "edukasyon" },
+  { value: "Elementary", name: "edukasyon" },
+  { value: "High School", name: "edukasyon" },
+  { value: "College", name: "edukasyon" },
+  { value: "ALS", name: "edukasyon" },
 ];
 
 const Nanay = ({ childData, setChildData }) => {
@@ -202,7 +202,7 @@ const Nanay = ({ childData, setChildData }) => {
               listHeight=""
             >
               <h1 className="text-2xl flex-grow text-left">
-                {childData?.nanay?.antas ?? "Naabot na Antas ng Paaralan"}
+                {childData?.nanay?.edukasyon ?? "Naabot na Antas ng Paaralan"}
               </h1>
             </Select>
           </div>
@@ -229,12 +229,16 @@ const Nanay = ({ childData, setChildData }) => {
             placeholder="Probinsya"
             className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="probinsya-tatay"
+            name="probinsya"
+            onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Trabaho"
             className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="trabaho-tatay"
+            name="trabaho"
+            onChange={handleChange}
           />
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
@@ -243,12 +247,16 @@ const Nanay = ({ childData, setChildData }) => {
             placeholder="Kita"
             className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="kita-tatay"
+            name="kita"
+            onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Skill Training Attended"
             className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="skill-training-tatay"
+            name="skillTraining"
+            onChange={handleChange}
           />
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
@@ -257,6 +265,8 @@ const Nanay = ({ childData, setChildData }) => {
             placeholder="Skills"
             className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
             id="skills-tatay"
+            name="skills"
+            onChange={handleChange}
           />
         </div>
         <p style={{ fontSize: "24px" }}>
