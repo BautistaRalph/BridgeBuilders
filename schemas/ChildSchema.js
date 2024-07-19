@@ -15,7 +15,9 @@ const ChildSchema = new mongoose.Schema(
     lugarNgKapanganakan: { type: String }, 
     hulingPaaralangPinasukan: { type: String }, //huling paaralang pinasukan
     tirahan: { type: String }, //area
-    allergy: { type: String },   
+    problema: [{ type: String }], 
+    allergy: [{ type: String }], 
+    dokumento:[{ type: String }],
     vaccine: [
       {
         name: { type: String },

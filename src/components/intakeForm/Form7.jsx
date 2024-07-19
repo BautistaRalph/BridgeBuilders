@@ -214,7 +214,8 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
           />
         </span>
       </div>
-
+      
+      
       <div className="w-full flex items-center">
         <span className="flex items-center w-1/3 mr-8">
           <input
@@ -244,6 +245,36 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             onChange={handleCheckbox}
           />
           <p className="text-xl">Nagpacheckup sa health center?</p>
+        </span>
+
+        <span className="flex items-center w-1/3 mr-8">
+          <input
+            type="checkbox"
+            name="ipon"
+            className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
+            onChange={handleCheckbox}
+          />
+          <p className="text-xl">May ipon?</p>
+        </span>
+
+        <span className="flex items-center w-1/3 mr-8">
+          <input
+            type="checkbox"
+            name="utang"
+            className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
+            onChange={handleCheckbox}
+          />
+          <p className="text-xl">May utang?</p>
+        </span>
+
+        <span className="flex items-center w-1/3 mr-8">
+          <input
+            type="checkbox"
+            name="dswd"
+            className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
+            onChange={handleCheckbox}
+          />
+          <p className="text-xl">DSWD?</p>
         </span>
       </div>
     </>

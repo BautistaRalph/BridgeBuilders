@@ -23,7 +23,7 @@ const EditStatisticModal = ({ isOpen, onClose, onConfirm, currentLabel, currentV
     <div className={`fixed inset-0 flex items-center justify-center z-50 ${isOpen ? 'block' : 'hidden'}`}>
       <div className="absolute inset-0 bg-gray-800 opacity-50"></div>
       <div className="bg-white rounded-lg p-6 z-10">
-        <h2 className="text-lg font-bold mb-4">Edit Label and Value</h2>
+        <h2 className="text-lg font-bold mb-4 text-bb-violet">Edit Label and Value</h2>
         <div className="flex flex-col space-y-4">
           <label htmlFor="newLabel" className="text-bb-violet"><b>Edit label name:</b></label>
           <Input
