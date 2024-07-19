@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 import bg from "@/assets/bb-bg-blurred.png";
+import { useNavigate } from 'react-router-dom'; 
 
 export default function SignUp() {
-  const [accountType, setAccountType] = useState("superUser");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("Community");
+
+  const navigate = useNavigate(); 
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -19,10 +21,10 @@ export default function SignUp() {
         username,
         password,
         userType,
-        accountType,
       });
       console.log(response.data);
       alert("User created successfully");
+      navigate('/admin'); 
     } catch (error) {
       console.error("Error signing up:", error);
       if (error.response) {
@@ -59,117 +61,81 @@ export default function SignUp() {
             className="w-50 h-50 mx-auto text-bb-violet"
           />
         </div>
-        {
-          /*accountType === 'regularUser' ? (
-          <>
-            <div className="mb-6">
-              <p className="text-lg text-gray-700 dark:text-gray-300 font-bold text-center">
-                Please contact your designated <span className="text-bb-violet">super user</span> to get an account.
-              </p>
-            </div>
-            <div className="text-center">
-              <p className="text-lg text-gray-600 dark:text-gray-400 font-bold">
-                Already have an account? <a href="/" className="text-purple-600 hover:text-bb-violet">Login</a>
-              </p>
-            </div>
-          </>
-        ) : */ <form onSubmit={handleSignUp}>
-            <div className="mb-6">
-              <Label
-                htmlFor="username"
+        <form onSubmit={handleSignUp}>
+          <div className="mb-6">
+            <Label
+              htmlFor="username"
+              className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+            >
+              Username
+            </Label>
+            <Input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded text-bb-violet" // Adjusted styles
+            />
+          </div>
+          <div className="mb-6">
+            <Label
+              htmlFor="password"
+              className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+            >
+              Password
+            </Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded text-bb-violet" 
+            />
+          </div>
+          <div className="mb-6">
+            <Label
+              htmlFor="userType"
+              className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
+            >
+              Type
+            </Label>
+            <select
+              id="userType"
+              value={userType}
+              onChange={(e) => setUserType(e.target.value)}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded text-bb-violet" 
+            >
+              <option
+                value="community"
                 className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
               >
-                Username
-              </Label>
-              <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="mt-1 block w-full"
-              />
-            </div>
-            <div className="mb-6">
-              <Label
-                htmlFor="password"
+                Community
+              </option>
+              <option
+                value="homeCare"
                 className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
               >
-                Password
-              </Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="mt-1 block w-full"
-              />
-            </div>
-            <div className="mb-6">
-              <Label
-                htmlFor="userType"
+                Home care
+              </option>
+              <option
+                value="superUser"
                 className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
               >
-                Type
-              </Label>
-              <select
-                id="userType"
-                value={userType}
-                onChange={(e) => setUserType(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-700 dark:text-gray-300"
-              >
-                <option
-                  value="Community"
-                  className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
-                >
-                  Community
-                </option>
-                <option
-                  value="Home care"
-                  className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
-                >
-                  Home care
-                </option>
-              </select>
-            </div>
-            <div className="mb-6">
-              <Label
-                htmlFor="accountType"
-                className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
-              >
-                Account Type
-              </Label>
-              <select
-                id="accountType"
-                value={accountType}
-                onChange={(e) => setAccountType(e.target.value)}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded text-gray-700 dark:text-gray-300"
-              >
-                <option
-                  value="superUser"
-                  className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
-                >
-                  Super User
-                </option>
-                <option
-                  value="regularUser"
-                  className="block mb-2 text-lg font-bold text-kanit text-bb-violet dark:text-purple-500"
-                >
-                  Regular User
-                </option>
-              </select>
-            </div>
-            <div className="mb-6">
-              <Button
-                type="submit"
-                className="w-1/2 h-12 px-3 mt-4 bg-bb-violet text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto"
-              >
-                Sign Up
-              </Button>
-            </div>
-          </form>
-        }
+                Super User
+              </option>
+            </select>
+          </div>
+          <div className="mb-6">
+            <Button
+              type="submit"
+              className="w-1/2 h-12 px-3 mt-4 bg-bb-violet text-white hover:bg-purple-700 transition duration-300 ease-in-out text-lg mx-auto"
+            >
+              Sign Up
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );

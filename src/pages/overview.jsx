@@ -21,6 +21,7 @@ import { DeleteGoalModal } from "@/components/custom/DeleteGoalModal";
 import Appbar from "@/components/ui/Appbar";
 import welcome from "@/assets/welcome.mp3";
 import axios from "../axiosInstance.js";
+import { jwtDecode } from "jwt-decode";
 
 const defaultFilters = {
   status: 'Active',   
@@ -29,8 +30,8 @@ const defaultFilters = {
 };
 
 const Overview = () => {
-  const userType = "superUser";
-  const username = "John Doe";
+  const [username, setUsername] = useState("");
+  const [userType, setUserType] = useState("");
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
   const [activeYear, setActiveYear] = useState(2018);
@@ -53,7 +54,12 @@ const Overview = () => {
 
   const fetchData = async (searchQuery) => {
     try {
-
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
       let edadFilter = {};
       if (filters.edad) {
         const [minAge, maxAge] = filters.edad.split('-').map(Number);
@@ -62,8 +68,11 @@ const Overview = () => {
           maxAge,
         };
       }
-
+  
       const response = await axios.get('/api/overview', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         params: {
           program: activeCategory,
           year: activeYear,
@@ -79,6 +88,51 @@ const Overview = () => {
   };
 
   useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const token = sessionStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+  
+        const response = await axios.get('http://localhost:3002/api/current-user', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (response.status === 200) {
+          const user = response.data;
+          setUsername(user.username);
+          setUserType(user.userType);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user info:', error);
+      }
+    };
+  
+    fetchUserInfo();
+  }, []);
+
+  useEffect(() => {
+
+    const token = sessionStorage.getItem('token');
+    console.log("Token:", token); 
+
+    if (token) {
+      try {
+        const decodedToken = jwtDecode(token);
+        const username = decodedToken.username;
+        const userType = decodedToken.userType;
+        
+        console.log("Decoded Username:", username);
+        console.log("Decoded UserType:", userType);
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    }
+
     if (userType === "superUser" || userType === "homeCare") {
       setActiveCategory("HC");
     } else if (userType === "community") {
@@ -124,7 +178,17 @@ const Overview = () => {
 
   const fetchYears = async () => {
     try {
-      const response = await axios.get("/api/years");
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
+      const response = await axios.get("/api/years", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status !== 200) {
         throw new Error("Failed to fetch years");
       }
@@ -133,14 +197,20 @@ const Overview = () => {
       console.error("Failed to fetch years:", error);
     }
   };
-
-  useEffect(() => {
-    fetchYears();
-  }, []);
-
+  
   const fetchStatistics = async () => {
     try {
-      const response = await axios.get(`/api/stats/${activeYear}`);
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
+      const response = await axios.get(`/api/stats/${activeYear}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status !== 200) {
         throw new Error("Failed to fetch statistics");
       }
@@ -161,18 +231,28 @@ const Overview = () => {
 
   const confirmAddYear = async () => {
     try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
       const defaultGoals = {
         General: [],
         Goal1: [],
         Goal2: [],
         Goal3: [],
       };
-
+  
       const response = await axios.post("/api/stats", {
         year: newYear,
         goals: defaultGoals,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
-
+  
       if (response.status === 201) {
         fetchYears();
         setIsAddModalOpen(false);
@@ -183,10 +263,20 @@ const Overview = () => {
       console.error("Error adding year:", error);
     }
   };
-
+  
   const confirmDeleteYear = async () => {
     try {
-      const response = await axios.delete(`/api/years/${yearToDelete}`);
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
+      const response = await axios.delete(`/api/years/${yearToDelete}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       if (response.status === 200) {
         setYears(years.filter((year) => year !== yearToDelete));
         setIsDeleteModalOpen(false);
@@ -198,17 +288,28 @@ const Overview = () => {
       console.error("Error deleting year:", error);
     }
   };
-
+  
   const addNewLabel = async (category, numberOfClients) => {
     try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
       const response = await axios.post(
         `/api/stats/${activeYear}/goals/${activeStatistic}/label`,
         {
           label: category,
           valueKey: numberOfClients,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-
+  
       if (response.status === 200) {
         fetchStatistics();
         setIsGoalModalOpen(false);
@@ -219,11 +320,22 @@ const Overview = () => {
       console.error("Error adding label:", error);
     }
   };
-
+  
   const confirmDeleteLabel = async () => {
     try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
       const response = await axios.delete(
-        `/api/stats/${activeYear}/goals/${activeStatistic}/label/${labelToDelete}`
+        `/api/stats/${activeYear}/goals/${activeStatistic}/label/${labelToDelete}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       if (response.status === 200) {
         fetchStatistics();
@@ -235,19 +347,30 @@ const Overview = () => {
       console.error("Error deleting label:", error);
     }
   };
-
+  
   const handleStatisticUpdate = async (newLabel, newValue) => {
     try {
+      const token = sessionStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+  
       const { label, category } = currentStatistic;
-
+  
       const response = await axios.put(
         `/api/stats/${activeYear}/goals/${category}/label/${label}`,
         {
           newLabel,
           newValue,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-
+  
       if (response.status === 200) {
         fetchStatistics();
         setIsStatisticModalOpen(false);
