@@ -6,10 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 import bg from "@/assets/bb-bg-blurred.png";
+import { Notification } from '@/components/ui/Notification';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -40,6 +43,16 @@ export default function Login() {
         alert('An error occurred. Please try again.');
       }
     }
+  };
+
+  const handleSignUpClick = (event) => {
+    event.preventDefault();
+    setNotificationMessage("Please contact the super user to get an account");
+    setShowNotification(true);
+  };
+
+  const handleNotificationClose = () => {
+    setShowNotification(false);
   };
 
   return (
@@ -98,11 +111,21 @@ export default function Login() {
         <div className="text-center">
           <p className="text-lg text-gray-600 dark:text-gray-400 font-bold">
             Don&apos;t have an account?{" "}
-            <a href="/signup" className="text-purple-600 hover:text-bb-violet">
+            <a
+              href="#"
+              onClick={handleSignUpClick}
+              className="text-purple-600 hover:text-bb-violet"
+            >
               Sign up
             </a>
           </p>
         </div>
+        {showNotification && (
+          <Notification
+            message={notificationMessage}
+            onClose={handleNotificationClose}
+          />
+        )}
       </div>
     </div>
   );
