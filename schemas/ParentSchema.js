@@ -10,15 +10,15 @@ const ParentSchema = new mongoose.Schema(
     birthday: { type: String }, //petsa ng kapanganakan
     lugarNgKapanganakan: { type: String }, //lugar ng kapanganakan
     relihiyon: { type: String },
-    edukasyon: { type: String }, //Kasalukuyan/Naabot na Antas ng Paaralan + list
-    hulingPaaralan: { type: String }, //huling paaralang pinasukan
+    antasNgPaaralan: { type: String }, //Kasalukuyan/Naabot na Antas ng Paaralan + list
+    hulingPaaralangPinasukan: { type: String }, //huling paaralang pinasukan
     tirahan: { type: String }, //kasalukuyang tirahan (current address)
     probinsya: { type: String },
     trabaho: { type: String },
     kita: { type: String },
     skillTraining: { type: String }, //skill training attended
     skills: { type: String },
-    dokumento:[{type:String}]
+    dokumento: [{ type: String }],
   },
   { versionKey: false }
 );

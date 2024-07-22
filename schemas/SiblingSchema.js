@@ -7,7 +7,7 @@ const SiblingSchema = new mongoose.Schema(
     kasarian: { type: String }, //male or female
     edad: { type: Number },
     kagayangSibil: { type: String }, //list e.g. married, single, divorced, widowed
-    edukasyon: { type: String }, //antas ng edukasyon + list
+    antasNgPaaralan: { type: String }, //antas ng edukasyon + list
     trabaho: { type: String },
     kita: { type: Number },
     //with birth certificate, boolean or file upload

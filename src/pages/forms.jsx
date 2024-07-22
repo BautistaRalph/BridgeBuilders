@@ -6,48 +6,48 @@ import Kapatid from "@/components/intakeForm/Form5";
 import Dokumento from "@/components/intakeForm/Form6";
 import IbangImpormasyon from "@/components/intakeForm/Form7";
 import Appbar from "@/components/ui/Appbar";
-import { PanelTop } from "lucide-react";
 import { useState } from "react";
 import { Waypoint } from "react-waypoint";
 import axios from "../axiosInstance.js";
+import childSchema from "../../schemas/FormValidationSchema.js";
+import FormError from "@/components/ui/FormError.jsx";
+import * as Yup from "yup";
+
 const initialUser = {
-  caseNo: 1,
   pangalan: "",
-  program: "",
+  program: "Home Care",
   palayaw: "",
-  edad: "",
+  edad: null,
   kasarian: "",
   birthday: "",
-  yearAdmitted: "",
   relihiyon: "",
-  antas: "",
+  antasNgPaaralan: "None",
   lugarNgKapanganakan: "",
   problema: [],
-  hulingPaaralan: "",
+  hulingPaaralangPinasukan: "",
   tirahan: "",
-  allergies: [],
-  vaccines: [],
+  allergy: [],
+  vaccine: [],
   kategorya: {
     pangalan: "",
     ngo: "",
     lgu: "",
   },
-  initialItsura: [],
-  problema: [],
+  initialNaItsura: [],
   nanay: {
     pangalan: "",
     palayaw: "",
     kasarian: "",
-    edad: "",
+    edad: null,
     birthday: "",
     lugarNgKapanganakan: "",
-    relihiyon:"",
-    edukasyon: "",
-    hulingPaaralan: "",
+    relihiyon: "",
+    antasNgPaaralan: "None",
+    hulingPaaralangPinasukan: "",
     tirahan: "",
     probinsya: "",
     trabaho: "",
-    kita: "",
+    kita: null,
     skillTraining: "",
     skills: "",
     dokumento: [],
@@ -56,41 +56,39 @@ const initialUser = {
     pangalan: "",
     palayaw: "",
     kasarian: "",
-    edad: "",
+    edad: null,
     birthday: "",
     lugarNgKapanganakan: "",
-    relihiyon:"",
-    edukasyon: "",
-    hulingPaaralan: "",
+    relihiyon: "",
+    antasNgPaaralan: "None",
+    hulingPaaralangPinasukan: "",
     tirahan: "",
     probinsya: "",
     trabaho: "",
-    kita: "",
+    kita: null,
     skillTraining: "",
     skills: "",
     dokumento: [],
   },
   kapatid: [],
   dokumento: [],
-  formIntake: "",
-  schoolCount: 0,
-  baon: 0,
-  baonExpense: "",
-  extracurriculars: "",
-  familyIllnesses: [],
-  familyPlanning: "",
-  waterSource: "",
-  laundryPlace: "",
-  crPlace: "",
-  eatPerDay: 0,
-  showerPerDay: 0,
+  ilanNagaaral: null,
+  ilanBaon: null,
+  saanGastosBaon: "",
+  schoolActivity: [],
+  sakit: [],
+  familyPlanningMethod: "",
+  saanTubig: "",
+  saanLaba: "",
+  saanCR: "",
+  ilanKain: null,
+  ilanLigo: null,
   ipon: false,
-  utang:false,
-  dswd:false,
-  eatBeforeSchool: false,
-  attendedALS: false,
-  healthCenterCheckup: false,
-  goalsAchieved: ["Tutorial", "Assignment Help", "WASH", "Health Assistance"],
+  utang: false,
+  dswd: false,
+  kainPasok: false,
+  alsAttend: false,
+  checkup: false,
 };
 
 const sections = [
@@ -106,6 +104,8 @@ const sections = [
 const Forms = () => {
   const [childData, setChildData] = useState(initialUser);
   const [sectionActive, setSectionActive] = useState("s1");
+  const [error, setError] = useState({ open: false, errors: [] });
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const navigateSection = (event) => {
     const targetDiv = event.currentTarget.id.split("-")[0];
@@ -115,33 +115,33 @@ const Forms = () => {
     }
   };
 
-  const handleParent = async (parent) =>{
-    try{
-      console.log("this is parent :",parent);
-      const id =  1;
-      const parents = parent;
-      const response = await axios.post("/api/intakeParent",{
-        id: id, // EDIT
-        pangalan: parents.pangalan,
-        palayaw: parents.palayaw,
-        kasarian: parents.kasarian,
-        edad: parents.edad,
-        birthday: parents.birthday,
-        lugarNgKapanganakan: parents.lugarNgKapanganakan,
-        relihiyon: parents.relihiyon,
-        edukasyon: parents.edukasyon,
-        hulingPaaralan: parents.hulingPaaralan,
-        tirahan:parents.tirahan,
-        probinsya:parents.probinsya,
-        trabaho: parents.trabaho,
-        kita: parents.kita,
-        skillTraining: parents.skillTraining,
-        skills: parents.skills,
-        dokumento : parents.dokumento
+  const handleErrorClose = () => {
+    setError({ ...error, open: false });
+  };
+
+  const handleParent = async (parent) => {
+    try {
+      const response = await axios.post("/api/intakeParent", {
+        pangalan: parent.pangalan,
+        palayaw: parent.palayaw,
+        kasarian: parent.kasarian,
+        edad: parent.edad,
+        birthday: parent.birthday,
+        lugarNgKapanganakan: parent.lugarNgKapanganakan,
+        relihiyon: parent.relihiyon,
+        antasNgPaaralan: parent.antasNgPaaralan,
+        hulingPaaralangPinasukan: parent.hulingPaaralangPinasukan,
+        tirahan: parent.tirahan,
+        probinsya: parent.probinsya,
+        trabaho: parent.trabaho,
+        kita: parent.kita,
+        skillTraining: parent.skillTraining,
+        skills: parent.skills,
+        dokumento: parent.dokumento,
       });
       console.log(response.data);
       alert("Parent created successfully");
-    }catch(error){
+    } catch (error) {
       console.error("Error signing up:", error);
       if (error.response) {
         console.error("Error response data:", error.response.data);
@@ -160,29 +160,26 @@ const Forms = () => {
         alert(`Error adding parent: ${error.message}`);
       }
     }
-  }; 
+  };
 
   const handlePangunahingImpormasyon = async (child) => {
-    try{
-      
-      const id =  1;
-      const childInfo = { 
+    try {
+      const childInfo = {
         program: child.program, // program input status missing
         date: new Date().toLocaleDateString(),
-        caseNo: child.caseNo, // no input for case number yet
         pangalan: child.pangalan,
         edad: child.edad,
         birthday: child.birthday,
         relihiyon: child.relihiyon,
-        antasNgPaaralan: child.antas,
+        antasNgPaaralan: child.antasNgPaaralan,
         palayaw: child.palayaw,
         kasarian: child.kasarian,
         problema: child.problema,
-        lugarNgKapanganakan: child.lugarNgKapanganakan, 
-        hulingPaaralangPinasukan: child.hulingPaaralan,
-        tirahan: child.tirahan, 
-        allergy: child.allergies,   
-        vaccine: child.vaccines,
+        lugarNgKapanganakan: child.lugarNgKapanganakan,
+        hulingPaaralangPinasukan: child.hulingPaaralangPinasukan,
+        tirahan: child.tirahan,
+        allergy: child.allergy,
+        vaccine: child.vaccine,
         initialNaItsura: child.initialItsura,
         kategorya: child.kategorya,
         dokumento: child.dokumento,
@@ -194,18 +191,18 @@ const Forms = () => {
         ],
         kapatid: child.kapatid, // not sure how to implement the id array, kindly change accordingly
         yearAdmitted: new Date().getFullYear(),
-        picture: null, // initially 
+        picture: null, // initially
         status: "", //unknown value
-        goalsAchieved: child.goalsAchieved};
+      };
 
-        console.log("this is child info :",childInfo);
+      console.log("this is child info :", childInfo);
 
-      const response = await axios.post("/api/intakeChild",{
-        childInfo
+      const response = await axios.post("/api/intakeChild", {
+        childInfo,
       });
       console.log(response.data);
       alert("Child created successfully");
-    }catch(error){
+    } catch (error) {
       console.error("Error Child created:", error);
       if (error.response) {
         console.error("Error response data:", error.response.data);
@@ -227,9 +224,7 @@ const Forms = () => {
   };
 
   const handleIbangImpormasyon = async (family) => {
-    try{
-      
-      const id =  1;
+    try {
       const familyInfo = {
         bata: [
           {
@@ -237,43 +232,35 @@ const Forms = () => {
           },
         ],
         //education
-        ilanNagaaral: family.schoolCount,
-        ilanBaon: family.baon,
-        saanGastosBaon: family.baonExpense,
-        schoolActivity: family.extracurriculars,
-        kainPasok: family.eatBeforeSchool, 
-        alsAttend: family.attendedALS,
+        ilanNagaaral: family.ilanNagaaral,
+        ilanBaon: family.ilanBaon,
+        saanGastosBaon: family.saanGastosBaon,
+        schoolActivity: family.schoolActivity,
+        kainPasok: family.kainPasok,
+        alsAttend: family.alsAttend,
         //health
-        checkup: family.healthCenterCheckup,
-        familyPlanningMethod: family.familyPlanning,
-        saanTubig: family.waterSource,
-        saanLaba: family.laundryPlace,
-        saanCR: family.crPlace,
-        sakit: family.familyIllnesses,
-        ilanKain: family.eatPerDay, 
-        ilanLigo: family.showerPerDay,
+        checkup: family.checkup,
+        familyPlanningMethod: family.familyPlanningMethod,
+        saanTubig: family.saanTubig,
+        saanLaba: family.saanLaba,
+        saanCR: family.saanCR,
+        sakit: family.sakit,
+        ilanKain: family.ilanKain,
+        ilanLigo: family.ilanLigo,
         //socio-economic
         ipon: family.ipon,
-        utang: family.utang, 
+        utang: family.utang,
         dswd: family.dswd,
-        gastosKita: [
-          {
-            //multiple input
-            name: "", // missing
-          },
-        ],
-        tirahan: family.tirahan, //list of options
-        reason:"",
       };
 
-        console.log("this is family info :",familyInfo);
+      console.log("this is family info :", familyInfo);
 
-      const response = await axios.post("/api/intakeFamilyInfo",{
-        otherInfo
+      const response = await axios.post("/api/intakeFamilyInfo", {
+        familyInfo,
       });
       console.log(response.data);
       alert("family info created successfully");
-    }catch(error){
+    } catch (error) {
       console.error("Error family info:", error);
       if (error.response) {
         console.error("Error response data:", error.response.data);
@@ -295,16 +282,23 @@ const Forms = () => {
   };
 
   const handleIntakeForm = async () => {
-    if(true){ // check for invalid inputs handling not yet implemented
-      handlePangunahingImpormasyon(childData);
-      handleParent(childData.nanay);
-      handleParent(childData.tatay);
-      handleIbangImpormasyon(childData);
-    }else{
-
-    }
+    setSubmitDisabled(true);
+    childSchema
+      .validate(childData, { abortEarly: false })
+      .then(() => {
+        console.log("Form is valid");
+      })
+      .catch((err) => {
+        if (err instanceof Yup.ValidationError) {
+          handleErrorClose();
+          const newErrors = err.inner.map((error) => error.message);
+          setTimeout(() => {
+            setSubmitDisabled(false);
+            setError({ open: true, errors: newErrors });
+          }, 600);
+        }
+      });
   };
-  console.log(childData);
 
   return (
     <>
@@ -328,12 +322,32 @@ const Forms = () => {
             </div>
           ))}
 
-          <button className="flex items-center justify-center p-4 bg-bb-violet text-bb-white w-full rounded-lg transition-colors duration-200 hover:bg-bb-white hover:text-bb-violet"
-            onClick={handleIntakeForm}>
-            <span className="material-symbols-outlined text-3xl mr-2">
-              save_as
-            </span>
-            <h1 className="text-2xl">Save</h1>
+          <button
+            className={`flex items-center justify-center p-4 ${
+              submitDisabled
+                ? "bg-bb-light-purple text-bb-violet"
+                : "bg-bb-violet text-bb-white"
+            } w-full rounded-lg transition-colors duration-200 ${
+              !submitDisabled && "hover:bg-bb-white hover:text-bb-violet"
+            }`}
+            onClick={handleIntakeForm}
+            disabled={submitDisabled}
+          >
+            {submitDisabled ? (
+              <span className="flex items-center">
+                <h1 className="text-2xl">Saving...</h1>
+                <span className="material-symbols-outlined animate-spin">
+                  progress_activity
+                </span>
+              </span>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-3xl mr-2">
+                  save_as
+                </span>
+                <h1 className="text-2xl">Save</h1>
+              </>
+            )}
           </button>
         </div>
 
@@ -393,6 +407,11 @@ const Forms = () => {
           ))}
         </div>
       </div>
+      <FormError
+        isOpen={error.open}
+        errors={error.errors}
+        handleClose={handleErrorClose}
+      />
     </>
   );
 };

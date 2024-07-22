@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const ChildSchema = new mongoose.Schema(
-  { 
+  {
     program: { type: String }, //HC or CBP
     date: { type: Date },
     caseNo: { type: Number }, //unique id
@@ -12,30 +12,18 @@ const ChildSchema = new mongoose.Schema(
     antasNgPaaralan: { type: String }, //Kasalukuyan/Naabot na Antas ng Paaralan + list
     palayaw: { type: String },
     kasarian: { type: String },
-    lugarNgKapanganakan: { type: String }, 
+    lugarNgKapanganakan: { type: String },
     hulingPaaralangPinasukan: { type: String }, //huling paaralang pinasukan
     tirahan: { type: String }, //area
-    problema: [{ type: String }], 
-    allergy: [{ type: String }], 
-    dokumento:[{ type: String }],
+    problema: [{ type: String }],
+    allergy: [{ type: String }],
+    dokumento: [{ type: String }],
     vaccine: [
       {
         name: { type: String },
       },
     ],
-    initialNaItsura: [
-      {
-        madumiPunit: { type: Boolean },
-        payat: { type: Boolean },
-        maguloBuhok: { type: Boolean },
-        siraNgipin: { type: Boolean },
-        amoy: { type: Boolean },
-        sugat: { type: Boolean },
-        madumiKuko: { type: Boolean },
-        yapak: { type: Boolean },
-        iba: { type: Boolean },
-      },
-    ],
+    initialNaItsura: [{ type: String }],
     kategorya: { type: String }, //kategoryang kinapapalooban
     magulang: [
       {
@@ -43,15 +31,11 @@ const ChildSchema = new mongoose.Schema(
         tatay: { type: String },
       },
     ],
-    kapatid: [
-      { id: { type: String }, },
-    ],
+    kapatid: [{ id: { type: String } }],
     yearAdmitted: { type: Number },
     picture: { type: String },
     status: { type: String },
-    goalsAchieved: [
-      { type: String }
-    ]
+    goalsAchieved: [{ type: String }],
   },
   { versionKey: false }
 );

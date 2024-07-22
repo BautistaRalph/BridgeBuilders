@@ -1,4 +1,4 @@
-import { forwardRef, useRef } from "react";
+import { forwardRef, Fragment, useRef } from "react";
 import { cn } from "@/lib/utils";
 
 const Select = forwardRef(
@@ -56,7 +56,7 @@ const Select = forwardRef(
           className={`hidden absolute bg-bb-white w-full ${listHeight} shadow-lg z-10 flex-col overflow-auto`}
         >
           {optionList.map((option) => (
-            <>
+            <Fragment key={option.value}>
               <button
                 className={cn("w-full p-4 text-left", optionClassName)}
                 value={option.value}
@@ -65,7 +65,7 @@ const Select = forwardRef(
               >
                 {option.value}
               </button>
-            </>
+            </Fragment>
           ))}
         </div>
       </div>

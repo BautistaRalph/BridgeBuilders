@@ -3,11 +3,11 @@ import Select from "@/components/ui/Select";
 import { useState } from "react";
 
 const antasList = [
-  { value: "None", name: "edukasyon" },
-  { value: "Elementary", name: "edukasyon" },
-  { value: "High School", name: "edukasyon" },
-  { value: "College", name: "edukasyon" },
-  { value: "ALS", name: "edukasyon" },
+  { value: "None", name: "antasNgPaaralan" },
+  { value: "Elementary", name: "antasNgPaaralan" },
+  { value: "High School", name: "antasNgPaaralan" },
+  { value: "College", name: "antasNgPaaralan" },
+  { value: "ALS", name: "antasNgPaaralan" },
 ];
 
 const Kapatid = ({ childData, setChildData }) => {
@@ -72,10 +72,10 @@ const Kapatid = ({ childData, setChildData }) => {
           pangalan: "",
           palayaw: "",
           kasarian: "",
-          edad: "",
+          edad: 0,
           trabaho: "",
-          kita: "",
-          antas: null,
+          kita: 0,
+          antasNgPaaralan: "None",
           dokumento: [],
         },
       ],
@@ -220,11 +220,16 @@ const Kapatid = ({ childData, setChildData }) => {
               <Select
                 className="flex items-center overflow-auto h-14 w-full border-2 border-bb-purple pr-4 pl-4 rounded-md transition-colors duration-300 hover:border-bb-violet mt-4"
                 optionClassName="text-bb-violet bg-bb-white text-3xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
-                optionList={antasList} //buggy, not showing list of options
+                optionList={antasList.map((antas) => {
+                  return {
+                    ...antas,
+                    name: `antasNgPaaralan-${kapatid.kapatidIndex}`,
+                  };
+                })}
                 handleChange={handleChange}
               >
                 <h1 className="text-2xl xl:text-4xl flex-grow text-left">
-                  {kapatid.edukasyon ?? "Naabot na Antas ng Paaralan"}
+                  {kapatid.antasNgPaaralan ?? "Naabot na Antas ng Paaralan"}
                 </h1>
               </Select>
             </div>
