@@ -12,6 +12,7 @@ import axios from "../axiosInstance.js";
 import childSchema from "../../schemas/FormValidationSchema.js";
 import FormError from "@/components/ui/FormError.jsx";
 import * as Yup from "yup";
+import Status from "@/components/ui/Status.jsx";
 
 const initialUser = {
   pangalan: "",
@@ -105,6 +106,11 @@ const Forms = () => {
   const [childData, setChildData] = useState(initialUser);
   const [sectionActive, setSectionActive] = useState("s1");
   const [error, setError] = useState({ open: false, errors: [] });
+  const [status, setStatus] = useState({
+    open: false,
+    message: "",
+    type: "info",
+  });
   const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const navigateSection = (event) => {
@@ -113,6 +119,14 @@ const Forms = () => {
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  const handleStatusOpen = (message, type) => {
+    setStatus({ open: true, message, type });
+  };
+
+  const handleStatusClose = () => {
+    setStatus({ open: false, message: "" });
   };
 
   const handleErrorClose = () => {
@@ -140,7 +154,6 @@ const Forms = () => {
         skills: childData.nanay.skills,
         dokumento: childData.nanay.dokumento,
       });
-      alert("Nanay created successfully");
 
       await axios.post("/api/intakeParent", {
         pangalan: childData.tatay.pangalan,
@@ -160,26 +173,29 @@ const Forms = () => {
         skills: childData.tatay.skills,
         dokumento: childData.tatay.dokumento,
       });
-
-      alert("Tatay created successfully");
+      return true;
     } catch (error) {
-      console.error("Error signing up:", error);
       if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-        alert(
+        handleStatusOpen(
           `Error adding parent: ${
             error.response.data.error || error.response.data.message
-          }`
+          }`,
+          "error"
         );
       } else if (error.request) {
-        console.error("Error request data:", error.request);
-        alert("Error adding parent: No response from server");
+        handleStatusOpen(
+          "Error adding parent: No response from server",
+          "error"
+        );
       } else {
-        console.error("Error message:", error.message);
-        alert(`Error adding parent: ${error.message}`);
+        handleStatusOpen(`Error adding parent: ${error.message}`, "error");
       }
+
+      setTimeout(() => {
+        handleStatusClose();
+      }, 1000);
+
+      return false;
     }
   };
 
@@ -197,25 +213,29 @@ const Forms = () => {
           kita: childData.kapatid[i].kita,
           //with birth certificate, boolean or file upload
         });
-        alert("Kapatid created successfully");
+        return true;
       } catch (error) {
-        console.error("Error signing up:", error);
         if (error.response) {
-          console.error("Error response data:", error.response.data);
-          console.error("Error response status:", error.response.status);
-          console.error("Error response headers:", error.response.headers);
-          alert(
-            `Error adding parent: ${
+          handleStatusOpen(
+            `Error adding kapatid: ${
               error.response.data.error || error.response.data.message
-            }`
+            }`,
+            "error"
           );
         } else if (error.request) {
-          console.error("Error request data:", error.request);
-          alert("Error adding parent: No response from server");
+          handleStatusOpen(
+            "Error adding kapatid: No response from server",
+            "error"
+          );
         } else {
-          console.error("Error message:", error.message);
-          alert(`Error adding parent: ${error.message}`);
+          handleStatusOpen(`Error adding kapatid: ${error.message}`, "error");
         }
+
+        setTimeout(() => {
+          handleStatusClose();
+        }, 1000);
+
+        return false;
       }
     }
   };
@@ -249,25 +269,29 @@ const Forms = () => {
       };
 
       await axios.post("/api/intakeChild", { childInfo });
-      alert("Child created successfully");
+      return true;
     } catch (error) {
-      console.error("Error Child created:", error);
       if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-        alert(
+        handleStatusOpen(
           `Error adding child: ${
             error.response.data.error || error.response.data.message
-          }`
+          }`,
+          "error"
         );
       } else if (error.request) {
-        console.error("Error request data:", error.request);
-        alert("Error adding child: No response from server");
+        handleStatusOpen(
+          "Error adding child: No response from server",
+          "error"
+        );
       } else {
-        console.error("Error message:", error.message);
-        alert(`Error adding child: ${error.message}`);
+        handleStatusOpen(`Error adding child: ${error.message}`, "error");
       }
+
+      setTimeout(() => {
+        handleStatusClose();
+      }, 1000);
+
+      return false;
     }
   };
 
@@ -299,45 +323,60 @@ const Forms = () => {
       };
 
       await axios.post("/api/intakeFamilyInfo", { familyInfo });
-      alert("family info created successfully");
+      return true;
     } catch (error) {
-      console.error("Error family info:", error);
       if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-        alert(
+        handleStatusOpen(
           `Error adding family info: ${
             error.response.data.error || error.response.data.message
-          }`
+          }`,
+          "error"
         );
       } else if (error.request) {
-        console.error("Error request data:", error.request);
-        alert("Error adding family info: No response from server");
+        handleStatusOpen(
+          "Error adding family info: No response from server",
+          "error"
+        );
       } else {
-        console.error("Error message:", error.message);
-        alert(`Error adding family info: ${error.message}`);
+        handleStatusOpen(`Error adding family info: ${error.message}`, "error");
       }
+
+      setTimeout(() => {
+        handleStatusClose();
+      }, 1000);
+
+      return false;
     }
   };
 
   const handleIntakeForm = async () => {
     setSubmitDisabled(true);
+    handleErrorClose();
+    handleStatusOpen("Saving...", "info");
     childSchema
       .validate(childData, { abortEarly: false })
       .then(() => {
-        console.log("Form is valid");
-        handleSubmitChildInformation();
-        handleSubmitParentInformation();
-        handleSubmitKapatidInformation();
-        handleSubmitFamilyInformation();
-        setSubmitDisabled(false);
+        const submitChildSuccess = handleSubmitChildInformation();
+        const submitParentSuccess = handleSubmitParentInformation();
+        const submitKapatiduccess = handleSubmitKapatidInformation();
+        const submitFamilyInfoSuccess = handleSubmitFamilyInformation();
+        if (
+          submitChildSuccess &&
+          submitParentSuccess &&
+          submitKapatiduccess &&
+          submitFamilyInfoSuccess
+        ) {
+          setSubmitDisabled(false);
+          handleStatusOpen("Child Creation Sucessful!", "success");
+          window.location.href = "/overview";
+        }
       })
       .catch((err) => {
         if (err instanceof Yup.ValidationError) {
           handleErrorClose();
           const newErrors = err.inner.map((error) => error.message);
           setTimeout(() => {
+            handleStatusClose();
             setSubmitDisabled(false);
             setError({ open: true, errors: newErrors });
           }, 600);
@@ -456,6 +495,13 @@ const Forms = () => {
         isOpen={error.open}
         errors={error.errors}
         handleClose={handleErrorClose}
+      />
+
+      <Status
+        isOpen={status.open}
+        message={status.message}
+        handleClose={handleStatusClose}
+        type={status.type}
       />
     </>
   );
