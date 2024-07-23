@@ -76,7 +76,6 @@ const Kapatid = ({ childData, setChildData }) => {
           trabaho: "",
           kita: 0,
           antasNgPaaralan: "None",
-          dokumento: [],
         },
       ],
     });

@@ -239,7 +239,7 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
               listHeight=""
             >
               <h1 className="text-2xl flex-grow text-left">
-                {childData?.antas ?? "Naabot na Antas ng Paaralan"}
+                {childData?.antasNgPaaralan ?? "Naabot na Antas ng Paaralan"}
               </h1>
             </Select>
           </div>

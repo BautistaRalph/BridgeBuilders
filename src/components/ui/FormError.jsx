@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
 const ErrorSection = ({ section, errors }) => {
   const sectionErrors = errors
@@ -10,9 +10,9 @@ const ErrorSection = ({ section, errors }) => {
       <p className="text-2xl">{section}</p>
       <div className="bg-bb-white w-full h-0.5"></div>
       {sectionErrors.map((err) => (
-        <>
+        <Fragment key={err}>
           <p className="text-xl mt-2 mb-2 text-red-300">{err}</p>
-        </>
+        </Fragment>
       ))}
     </>
   );
@@ -43,13 +43,13 @@ const FormError = ({ isOpen, errors, handleClose }) => {
     if (errors.length > 0) {
       setErrorSections(errorSecs);
     }
-  }, [errors, errorSections]);
+  }, [errors]);
 
   return (
     <>
       <div
         className={`fixed w-1/4 h-1/3 bottom-16 right-16 z-20 ${
-          isOpen ? "opacity-100" : "opacity-0"
+          isOpen ? "opacity-100 block" : "opacity-0 hidden"
         } transition-opacity duration-500 bg-bb-violet shadow-lg rounded-sm overflow-auto`}
       >
         <span className="flex items-center justify-center mb-1 sticky top-0 bg-bb-white text-bb-violet p-2">

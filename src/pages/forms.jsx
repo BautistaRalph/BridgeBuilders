@@ -119,28 +119,49 @@ const Forms = () => {
     setError({ ...error, open: false });
   };
 
-  const handleParent = async (parent) => {
+  // Creating parents
+  const handleSubmitParentInformation = async () => {
     try {
-      const response = await axios.post("/api/intakeParent", {
-        pangalan: parent.pangalan,
-        palayaw: parent.palayaw,
-        kasarian: parent.kasarian,
-        edad: parent.edad,
-        birthday: parent.birthday,
-        lugarNgKapanganakan: parent.lugarNgKapanganakan,
-        relihiyon: parent.relihiyon,
-        antasNgPaaralan: parent.antasNgPaaralan,
-        hulingPaaralangPinasukan: parent.hulingPaaralangPinasukan,
-        tirahan: parent.tirahan,
-        probinsya: parent.probinsya,
-        trabaho: parent.trabaho,
-        kita: parent.kita,
-        skillTraining: parent.skillTraining,
-        skills: parent.skills,
-        dokumento: parent.dokumento,
+      await axios.post("/api/intakeParent", {
+        pangalan: childData.nanay.pangalan,
+        palayaw: childData.nanay.palayaw,
+        kasarian: childData.nanay.kasarian,
+        edad: childData.nanay.edad,
+        birthday: childData.nanay.birthday,
+        lugarNgKapanganakan: childData.nanay.lugarNgKapanganakan,
+        relihiyon: childData.nanay.relihiyon,
+        antasNgPaaralan: childData.nanay.antasNgPaaralan,
+        hulingPaaralangPinasukan: childData.nanay.hulingPaaralangPinasukan,
+        tirahan: childData.nanay.tirahan,
+        probinsya: childData.nanay.probinsya,
+        trabaho: childData.nanay.trabaho,
+        kita: childData.nanay.kita,
+        skillTraining: childData.nanay.skillTraining,
+        skills: childData.nanay.skills,
+        dokumento: childData.nanay.dokumento,
       });
-      console.log(response.data);
-      alert("Parent created successfully");
+      alert("Nanay created successfully");
+
+      await axios.post("/api/intakeParent", {
+        pangalan: childData.tatay.pangalan,
+        palayaw: childData.tatay.palayaw,
+        kasarian: childData.tatay.kasarian,
+        edad: childData.tatay.edad,
+        birthday: childData.tatay.birthday,
+        lugarNgKapanganakan: childData.tatay.lugarNgKapanganakan,
+        relihiyon: childData.tatay.relihiyon,
+        antasNgPaaralan: childData.tatay.antasNgPaaralan,
+        hulingPaaralangPinasukan: childData.tatay.hulingPaaralangPinasukan,
+        tirahan: childData.tatay.tirahan,
+        probinsya: childData.tatay.probinsya,
+        trabaho: childData.tatay.trabaho,
+        kita: childData.tatay.kita,
+        skillTraining: childData.tatay.skillTraining,
+        skills: childData.tatay.skills,
+        dokumento: childData.tatay.dokumento,
+      });
+
+      alert("Tatay created successfully");
     } catch (error) {
       console.error("Error signing up:", error);
       if (error.response) {
@@ -162,45 +183,72 @@ const Forms = () => {
     }
   };
 
-  const handlePangunahingImpormasyon = async (child) => {
+  // Creating siblings
+  const handleSubmitKapatidInformation = async () => {
+    for (let i = 0; i < childData.kapatid.length; ++i) {
+      try {
+        await axios.post("/api/intakeSibling", {
+          kapatidIndex: childData.kapatid[i].kapatidIndex,
+          pangalan: childData.kapatid[i].pangalan,
+          kasarian: childData.kapatid[i].kasarian, //male or female
+          edad: childData.kapatid[i].edad,
+          antasNgPaaralan: childData.kapatid[i].antasNgPaaralan, //antas ng edukasyon + list
+          trabaho: childData.kapatid[i].trabaho,
+          kita: childData.kapatid[i].kita,
+          //with birth certificate, boolean or file upload
+        });
+        alert("Kapatid created successfully");
+      } catch (error) {
+        console.error("Error signing up:", error);
+        if (error.response) {
+          console.error("Error response data:", error.response.data);
+          console.error("Error response status:", error.response.status);
+          console.error("Error response headers:", error.response.headers);
+          alert(
+            `Error adding parent: ${
+              error.response.data.error || error.response.data.message
+            }`
+          );
+        } else if (error.request) {
+          console.error("Error request data:", error.request);
+          alert("Error adding parent: No response from server");
+        } else {
+          console.error("Error message:", error.message);
+          alert(`Error adding parent: ${error.message}`);
+        }
+      }
+    }
+  };
+
+  // Creating child
+  const handleSubmitChildInformation = async () => {
     try {
       const childInfo = {
-        program: child.program, // program input status missing
-        date: new Date().toLocaleDateString(),
-        pangalan: child.pangalan,
-        edad: child.edad,
-        birthday: child.birthday,
-        relihiyon: child.relihiyon,
-        antasNgPaaralan: child.antasNgPaaralan,
-        palayaw: child.palayaw,
-        kasarian: child.kasarian,
-        problema: child.problema,
-        lugarNgKapanganakan: child.lugarNgKapanganakan,
-        hulingPaaralangPinasukan: child.hulingPaaralangPinasukan,
-        tirahan: child.tirahan,
-        allergy: child.allergy,
-        vaccine: child.vaccine,
-        initialNaItsura: child.initialItsura,
-        kategorya: child.kategorya,
-        dokumento: child.dokumento,
-        magulang: [
-          {
-            nanay: child.nanay.pangalan,
-            tatay: child.tatay.pangalan,
-          },
-        ],
-        kapatid: child.kapatid, // not sure how to implement the id array, kindly change accordingly
-        yearAdmitted: new Date().getFullYear(),
-        picture: null, // initially
-        status: "", //unknown value
+        program: childData.program, // program input status missing
+        pangalan: childData.pangalan,
+        edad: childData.edad,
+        birthday: childData.birthday,
+        relihiyon: childData.relihiyon,
+        antasNgPaaralan: childData.antasNgPaaralan,
+        palayaw: childData.palayaw,
+        kasarian: childData.kasarian,
+        problema: childData.problema,
+        lugarNgKapanganakan: childData.lugarNgKapanganakan,
+        hulingPaaralangPinasukan: childData.hulingPaaralangPinasukan,
+        tirahan: childData.tirahan,
+        allergy: childData.allergy,
+        vaccine: childData.vaccine,
+        initialNaItsura: childData.initialNaItsura,
+        kategorya: childData.kategorya,
+        dokumento: childData.dokumento,
+        nanay: childData.nanay.pangalan,
+        tatay: childData.tatay.pangalan,
+        kapatid: childData.kapatid
+          ? childData.kapatid.map((k) => k.pangalan)
+          : [],
       };
 
-      console.log("this is child info :", childInfo);
-
-      const response = await axios.post("/api/intakeChild", {
-        childInfo,
-      });
-      console.log(response.data);
+      await axios.post("/api/intakeChild", { childInfo });
       alert("Child created successfully");
     } catch (error) {
       console.error("Error Child created:", error);
@@ -223,42 +271,34 @@ const Forms = () => {
     }
   };
 
-  const handleIbangImpormasyon = async (family) => {
+  // Creating family
+  const handleSubmitFamilyInformation = async () => {
     try {
       const familyInfo = {
-        bata: [
-          {
-            caseNo: family.caseNo,
-          },
-        ],
+        bata: childData.pangalan,
         //education
-        ilanNagaaral: family.ilanNagaaral,
-        ilanBaon: family.ilanBaon,
-        saanGastosBaon: family.saanGastosBaon,
-        schoolActivity: family.schoolActivity,
-        kainPasok: family.kainPasok,
-        alsAttend: family.alsAttend,
+        ilanNagaaral: childData.ilanNagaaral,
+        ilanBaon: childData.ilanBaon,
+        saanGastosBaon: childData.saanGastosBaon,
+        schoolActivity: childData.schoolActivity,
+        kainPasok: childData.kainPasok,
+        alsAttend: childData.alsAttend,
         //health
-        checkup: family.checkup,
-        familyPlanningMethod: family.familyPlanningMethod,
-        saanTubig: family.saanTubig,
-        saanLaba: family.saanLaba,
-        saanCR: family.saanCR,
-        sakit: family.sakit,
-        ilanKain: family.ilanKain,
-        ilanLigo: family.ilanLigo,
+        checkup: childData.checkup,
+        familyPlanningMethod: childData.familyPlanningMethod,
+        saanTubig: childData.saanTubig,
+        saanLaba: childData.saanLaba,
+        saanCR: childData.saanCR,
+        sakit: childData.sakit,
+        ilanKain: childData.ilanKain,
+        ilanLigo: childData.ilanLigo,
         //socio-economic
-        ipon: family.ipon,
-        utang: family.utang,
-        dswd: family.dswd,
+        ipon: childData.ipon,
+        utang: childData.utang,
+        dswd: childData.dswd,
       };
 
-      console.log("this is family info :", familyInfo);
-
-      const response = await axios.post("/api/intakeFamilyInfo", {
-        familyInfo,
-      });
-      console.log(response.data);
+      await axios.post("/api/intakeFamilyInfo", { familyInfo });
       alert("family info created successfully");
     } catch (error) {
       console.error("Error family info:", error);
@@ -287,6 +327,11 @@ const Forms = () => {
       .validate(childData, { abortEarly: false })
       .then(() => {
         console.log("Form is valid");
+        handleSubmitChildInformation();
+        handleSubmitParentInformation();
+        handleSubmitKapatidInformation();
+        handleSubmitFamilyInformation();
+        setSubmitDisabled(false);
       })
       .catch((err) => {
         if (err instanceof Yup.ValidationError) {

@@ -244,7 +244,7 @@ const Nanay = ({ childData, setChildData }) => {
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
-            type="text"
+            type="number"
             placeholder="Kita"
             className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="kita-tatay"

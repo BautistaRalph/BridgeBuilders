@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const ChildSchema = new mongoose.Schema(
   {
     program: { type: String }, //HC or CBP
-    date: { type: Date },
+    date: { type: Date, default: Date.now },
     caseNo: { type: Number }, //unique id
     pangalan: { type: String },
     edad: { type: Number },
@@ -16,25 +16,26 @@ const ChildSchema = new mongoose.Schema(
     hulingPaaralangPinasukan: { type: String }, //huling paaralang pinasukan
     tirahan: { type: String }, //area
     problema: [{ type: String }],
-    allergy: [{ type: String }],
+    allergy: { type: String },
     dokumento: [{ type: String }],
-    vaccine: [
-      {
-        name: { type: String },
-      },
-    ],
+    vaccine: { type: String },
     initialNaItsura: [{ type: String }],
-    kategorya: { type: String }, //kategoryang kinapapalooban
-    magulang: [
-      {
-        nanay: { type: String },
-        tatay: { type: String },
+    kategorya: {
+      pangalan: { type: String },
+      ngo: { type: String },
+      lgu: { type: String },
+    }, //kategoryang kinapapalooban
+    nanay: { type: String },
+    tatay: { type: String },
+    kapatid: [{ type: String }],
+    yearAdmitted: {
+      type: Number,
+      default: function () {
+        return new Date().getFullYear();
       },
-    ],
-    kapatid: [{ id: { type: String } }],
-    yearAdmitted: { type: Number },
-    picture: { type: String },
-    status: { type: String },
+    },
+    picture: { type: String, default: "" },
+    status: { type: String, default: "Active" },
     goalsAchieved: [{ type: String }],
   },
   { versionKey: false }

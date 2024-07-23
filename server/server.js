@@ -6,6 +6,9 @@ import connectDB from "./dbConnect.js";
 import loginRoutes from "./api/LoginRoutes.js";
 import childRoutes from "./api/ChildRoutes.js";
 import statsRoutes from "./api/StatRoutes.js";
+import parentRoutes from "./api/ParentRoutes.js";
+import kapatidRoutes from "./api/SiblingRoutes.js";
+import familyRoutes from "./api/FamilyRoutes.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -33,6 +36,9 @@ app.get("/", (_req, res) => {
 // Separate the routes to different files for easier management and debugging
 app.use("/api", loginRoutes);
 app.use("/api", childRoutes);
+app.use("/api", parentRoutes);
+app.use("/api", kapatidRoutes);
+app.use("/api", familyRoutes);
 app.use("/api", statsRoutes);
 
 app.listen(port, () => {
