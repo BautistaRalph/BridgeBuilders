@@ -12,10 +12,16 @@ const Profile = () => {
   const handleArchiveClick = async () => {
     console.log("handling archive");
 
-    try {
-      await axios.post(`/api/archiveProfile/${caseNo}`);
-    } catch (error) {
-      console.error("Error saving profile:", error);
+    const confirmArchive = window.confirm("Are you sure you want to archive this profile?");
+
+    if (confirmArchive) {
+      try {
+        await axios.post(`/api/archiveProfile/${caseNo}`);
+      } catch (error) {
+        console.error("Error saving profile:", error);
+      }
+    } else {
+        console.log("Archive cancelled");
     }
   };
 
