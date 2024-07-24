@@ -8,6 +8,10 @@ import bg from "@/assets/bb-bg-blurred.png";
 import { useNavigate } from 'react-router-dom'; 
 
 export default function SignUp() {
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("Community");
