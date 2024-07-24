@@ -6,6 +6,10 @@ import { useParams } from 'react-router-dom';
 import axios from "../axiosInstance.js";
 
 const Profile = () => {
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
   const { caseNo } = useParams();
   const { profileData, setProfileData } = useProfile(caseNo);
 
