@@ -27,7 +27,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
       .split(/\s*,\s*/)
       .filter((illness) => illness !== "");
 
-    const updatedFamilyIllnesses = childData.familyIllnesses.filter(
+    const updatedFamilyIllnesses = childData.sakit.filter(
       (illness) => !illnesses.includes(illness)
     );
 
@@ -35,7 +35,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
 
     setChildData((prevChildData) => ({
       ...prevChildData,
-      familyIllnesses: newFamilyIllnesses,
+      sakit: newFamilyIllnesses,
     }));
 
     setIllnesses(illnessList);
@@ -48,7 +48,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
       .split(/\s*,\s*/)
       .filter((e) => e !== "");
 
-    const updatedExtracurriculars = childData.extracurriculars.filter(
+    const updatedExtracurriculars = childData.schoolActivity.filter(
       (e) => !extracurriculars.includes(e)
     );
 
@@ -59,7 +59,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
 
     setChildData((prevChildData) => ({
       ...prevChildData,
-      extracurriculars: newExtracurriculars,
+      schoolActivity: newExtracurriculars,
     }));
 
     setExtracurriculars(extracurricularsList);
@@ -77,7 +77,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             min="1"
             placeholder="Ilan ang nag-aaral sa pamilya?"
             className="p-2 border-bb-violet border-b-2 bg-inherit w-full outline-none text-2xl"
-            name="schoolCount"
+            name="ilanNagaaral"
             onChange={handleChange}
           />
         </span>
@@ -91,7 +91,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
               min="1"
               placeholder="Ilan ang baon sa school?"
               className="p-2 border-bb-violet border-b-2 bg-inherit w-full outline-none text-2xl"
-              name="baon"
+              name="ilanBaon"
               onChange={handleChange}
             />
           </span>
@@ -105,7 +105,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             type="text"
             placeholder="Saan ginagastos ang baon?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            name="baonExpense"
+            name="saanGastosBaon"
             onChange={handleChange}
           />
         </span>
@@ -131,7 +131,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             type="text"
             placeholder="Ginagamit na Family Planning method?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            name="familyPlanning"
+            name="familyPlanningMethod"
             onChange={handleChange}
           />
         </span>
@@ -142,7 +142,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             type="text"
             placeholder="Saan Kumukuha ng malinis na tubig?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            name="waterSource"
+            name="saanTubig"
             onChange={handleChange}
           />
         </span>
@@ -155,7 +155,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             type="text"
             placeholder="Saan naglalaba ng damit?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            name="laundryPlace"
+            name="saanLaba"
             onChange={handleChange}
           />
         </span>
@@ -166,7 +166,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             type="text"
             placeholder="Saan nag-CR?"
             className="p-2 border-bb-violet border-b-2 text-2xl outline-none"
-            name="crPlace"
+            name="saanCR"
             onChange={handleChange}
           />
         </span>
@@ -181,7 +181,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             max="3"
             placeholder="Ilang beses kumakain sa isang araw?"
             className="p-2 border-bb-violet border-b-2 bg-inherit w-full outline-none text-2xl"
-            name="eatPerDay"
+            name="ilanKain"
             onChange={handleChange}
           />
         </span>
@@ -194,7 +194,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
             max="3"
             placeholder="Ilang beses naliligo sa isang araw?"
             className="p-2 border-bb-violet border-b-2 bg-inherit w-full outline-none text-2xl"
-            name="showerPerDay"
+            name="ilanLigo"
             onChange={handleChange}
           />
         </span>
@@ -214,13 +214,12 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
           />
         </span>
       </div>
-      
-      
+
       <div className="w-full flex items-center">
         <span className="flex items-center w-1/3 mr-8">
           <input
             type="checkbox"
-            name="eatBeforeSchool"
+            name="kainPasok"
             className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
             onChange={handleCheckbox}
           />
@@ -230,7 +229,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
         <span className="flex items-center w-1/3 mr-8">
           <input
             type="checkbox"
-            name="attendedALS"
+            name="alsAttend"
             className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
             onChange={handleCheckbox}
           />
@@ -240,7 +239,7 @@ const IbangImpormasyon = ({ childData, setChildData }) => {
         <span className="flex items-center w-1/3 mr-8">
           <input
             type="checkbox"
-            name="healthCenterCheckup"
+            name="checkup"
             className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
             onChange={handleCheckbox}
           />

@@ -2,12 +2,7 @@ import mongoose from "mongoose";
 
 const FamilySchema = new mongoose.Schema(
   {
-    bata: [
-      {
-        // relevant children case numbers
-        caseNo: { type: Number },
-      },
-    ],
+    bata: { type: String },
     //education
     ilanNagaaral: { type: Number },
     ilanBaon: { type: Number },
@@ -17,30 +12,17 @@ const FamilySchema = new mongoose.Schema(
     alsAttend: { type: Boolean },
     //health
     checkup: { type: Boolean },
-    familyPlanningMethod: { type: Boolean },
+    familyPlanningMethod: { type: String },
     saanTubig: { type: String },
     saanLaba: { type: String },
     saanCR: { type: String },
-    sakit: [
-      {
-        //kadalasang sakit ng pamilya, multiple input bar
-        name: { type: String },
-      },
-    ],
+    sakit: [{ type: String }],
     ilanKain: { type: Number }, //ilang beses kumakain sa isang araw
     ilanLigo: { type: Number }, //ilang beses naliligo sa isang araw
     //socio-economic
     ipon: { type: Boolean },
     utang: { type: Boolean },
     dswd: { type: Boolean },
-    gastosKita: [
-      {
-        //multiple input
-        name: { type: String },
-      },
-    ],
-    tirahan: { type: String }, //list of options
-    reason: { type: String },
   },
   { versionKey: false }
 );

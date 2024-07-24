@@ -2,11 +2,16 @@ import { useRef, useState } from "react";
 import Select from "@/components/ui/Select";
 
 const antasList = [
-  { value: "None", name: "antas" },
-  { value: "Elementary", name: "antas" },
-  { value: "High School", name: "antas" },
-  { value: "College", name: "antas" },
-  { value: "ALS", name: "antas" },
+  { value: "None", name: "antasNgPaaralan" },
+  { value: "Elementary", name: "antasNgPaaralan" },
+  { value: "High School", name: "antasNgPaaralan" },
+  { value: "College", name: "antasNgPaaralan" },
+  { value: "ALS", name: "antasNgPaaralan" },
+];
+
+const programList = [
+  { value: "Home Care", name: "program" },
+  { value: "Community Based Program", name: "program" },
 ];
 
 const featureList = [
@@ -94,7 +99,7 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
       .split(/\s*,\s*/)
       .filter((feature) => feature !== "");
 
-    const updatedInitialItsura = childData.initialItsura.filter(
+    const updatedInitialItsura = childData.initialNaItsura.filter(
       (feature) => !otherFeatures.includes(feature)
     );
 
@@ -102,7 +107,7 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
 
     setChildData((prevChildData) => ({
       ...prevChildData,
-      initialItsura: newInitialItsura,
+      initialNaItsura: newInitialItsura,
     }));
 
     setOtherFeatures(featureList);
@@ -128,6 +133,22 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
             id="palayaw"
             onChange={handleChange}
           />
+        </div>
+
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
+          <div className="w-full mr-2">
+            <Select
+              className="flex items-center overflow-auto h-14 w-full border-2 border-bb-violet pr-2 pl-2 rounded-md transition-colors duration-300 hover:border-bb-purple"
+              optionClassName="text-bb-violet bg-bb-white text-2xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
+              optionList={programList}
+              handleChange={handleChange}
+              listHeight=""
+            >
+              <h1 className="text-2xl flex-grow text-left">
+                {childData?.program ?? "Program"}
+              </h1>
+            </Select>
+          </div>
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <span className="flex items-center w-1/2 mr-2">
@@ -214,10 +235,11 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
               optionClassName="text-bb-violet bg-bb-white text-2xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
               optionList={antasList}
               handleChange={handleChange}
+              name="antasNgPaaralan"
               listHeight=""
             >
               <h1 className="text-2xl flex-grow text-left">
-                {childData?.antas ?? "Naabot na Antas ng Paaralan"}
+                {childData?.antasNgPaaralan ?? "Naabot na Antas ng Paaralan"}
               </h1>
             </Select>
           </div>
@@ -227,7 +249,7 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
             type="text"
             placeholder="Huling Paaralang Pinasukan"
             className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="hulingPaaralan"
+            name="hulingPaaralangPinasukan"
             onChange={handleChange}
           />
           <input
@@ -243,14 +265,14 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
             type="text"
             placeholder="Allergy"
             className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="allergies"
+            name="allergy"
             onChange={handleChange}
           />
           <input
             type="text"
             placeholder="Vaccine"
             className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="vaccines"
+            name="vaccine"
             onChange={handleChange}
           />
         </div>
@@ -267,7 +289,7 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
               <input
                 type="checkbox"
                 className="w-8 h-8 mr-4 border-bb-violet border-4 appearance-none outline-none cursor-pointer transition-colors checked:bg-bb-light-purple bridgeBuilderCheckbox relative"
-                name="initialItsura"
+                name="initialNaItsura"
                 value={feature}
                 onChange={handleCheckbox}
               />

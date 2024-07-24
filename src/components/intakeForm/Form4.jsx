@@ -12,11 +12,11 @@ const documentList = [
 ];
 
 const antasList = [
-  { value: "None", name: "edukasyon" },
-  { value: "Elementary", name: "edukasyon" },
-  { value: "High School", name: "edukasyon" },
-  { value: "College", name: "edukasyon" },
-  { value: "ALS", name: "edukasyon" },
+  { value: "None", name: "antasNgPaaralan" },
+  { value: "Elementary", name: "antasNgPaaralan" },
+  { value: "High School", name: "antasNgPaaralan" },
+  { value: "College", name: "antasNgPaaralan" },
+  { value: "ALS", name: "antasNgPaaralan" },
 ];
 
 const Tatay = ({ childData, setChildData }) => {
@@ -201,7 +201,8 @@ const Tatay = ({ childData, setChildData }) => {
               listHeight=""
             >
               <h1 className="text-2xl flex-grow text-left">
-                {childData?.tatay?.edukasyon ?? "Naabot na Antas ng Paaralan"}
+                {childData?.tatay?.antasNgPaaralan ??
+                  "Naabot na Antas ng Paaralan"}
               </h1>
             </Select>
           </div>
@@ -211,7 +212,7 @@ const Tatay = ({ childData, setChildData }) => {
             type="text"
             placeholder="Huling Paaralang Pinasukan"
             className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="hulingPaaralan"
+            name="hulingPaaralangPinasukan"
             onChange={handleChange}
           />
           <input
@@ -242,7 +243,7 @@ const Tatay = ({ childData, setChildData }) => {
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <input
-            type="text"
+            type="number"
             placeholder="Kita"
             className="p-2 border-bb-violet border-2 rounded-lg w-full mr-2"
             id="kita-tatay"

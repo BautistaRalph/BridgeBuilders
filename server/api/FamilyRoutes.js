@@ -1,20 +1,22 @@
-import { parentSchemaServer } from "../../schemas/FormValidationSchema.js";
-import Parent from "../../schemas/ParentSchema.js";
+import { familySchemaServer } from "../../schemas/FormValidationSchema.js";
+import Family from "../../schemas/FamilySchema.js";
 import * as Yup from "yup";
 import express from "express";
 
 const apiRouter = express.Router();
 
-apiRouter.post("/intakeParent", async (req, res) => {
+apiRouter.post("/intakeFamilyInfo", async (req, res) => {
   try {
-    const parentData = req.body;
+    const familyData = req.body.familyInfo;
 
     // Validate the request body
-    await parentSchemaServer.validate(parentData, { abortEarly: false });
+    await familySchemaServer.validate(familyData, { abortEarly: false });
     /* const postImgURL = await imageUploader(req.files[0]); */
-    await Parent.create(parentData);
+    await Family.create(familyData);
 
-    res.status(200).json({ message: "Created parent successfully" });
+    res
+      .status(200)
+      .json({ message: "Created family information successfully" });
   } catch (error) {
     console.log("THERES ACTUALLY AN ERROR 0_0", error.message);
     if (error instanceof Yup.ValidationError) {

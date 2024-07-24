@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const ChildSchema = new mongoose.Schema(
-  { 
+  {
     program: { type: String }, //HC or CBP
-    date: { type: Date },
+    date: { type: Date, default: Date.now },
     caseNo: { type: Number }, //unique id
     pangalan: { type: String },
     edad: { type: Number },
@@ -12,46 +12,31 @@ const ChildSchema = new mongoose.Schema(
     antasNgPaaralan: { type: String }, //Kasalukuyan/Naabot na Antas ng Paaralan + list
     palayaw: { type: String },
     kasarian: { type: String },
-    lugarNgKapanganakan: { type: String }, 
+    lugarNgKapanganakan: { type: String },
     hulingPaaralangPinasukan: { type: String }, //huling paaralang pinasukan
     tirahan: { type: String }, //area
-    problema: [{ type: String }], 
-    allergy: [{ type: String }], 
-    dokumento:[{ type: String }],
-    vaccine: [
-      {
-        name: { type: String },
+    problema: [{ type: String }],
+    allergy: { type: String },
+    dokumento: [{ type: String }],
+    vaccine: { type: String },
+    initialNaItsura: [{ type: String }],
+    kategorya: {
+      pangalan: { type: String },
+      ngo: { type: String },
+      lgu: { type: String },
+    }, //kategoryang kinapapalooban
+    nanay: { type: String },
+    tatay: { type: String },
+    kapatid: [{ type: String }],
+    yearAdmitted: {
+      type: Number,
+      default: function () {
+        return new Date().getFullYear();
       },
-    ],
-    initialNaItsura: [
-      {
-        madumiPunit: { type: Boolean },
-        payat: { type: Boolean },
-        maguloBuhok: { type: Boolean },
-        siraNgipin: { type: Boolean },
-        amoy: { type: Boolean },
-        sugat: { type: Boolean },
-        madumiKuko: { type: Boolean },
-        yapak: { type: Boolean },
-        iba: { type: Boolean },
-      },
-    ],
-    kategorya: { type: String }, //kategoryang kinapapalooban
-    magulang: [
-      {
-        nanay: { type: String },
-        tatay: { type: String },
-      },
-    ],
-    kapatid: [
-      { id: { type: String }, },
-    ],
-    yearAdmitted: { type: Number },
-    picture: { type: String },
-    status: { type: String },
-    goalsAchieved: [
-      { type: String }
-    ]
+    },
+    picture: { type: String, default: "" },
+    status: { type: String, default: "Active" },
+    goalsAchieved: [{ type: String }],
   },
   { versionKey: false }
 );

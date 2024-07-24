@@ -6,48 +6,49 @@ import Kapatid from "@/components/intakeForm/Form5";
 import Dokumento from "@/components/intakeForm/Form6";
 import IbangImpormasyon from "@/components/intakeForm/Form7";
 import Appbar from "@/components/ui/Appbar";
-import { PanelTop } from "lucide-react";
 import { useState } from "react";
 import { Waypoint } from "react-waypoint";
 import axios from "../axiosInstance.js";
+import childSchema from "../../schemas/FormValidationSchema.js";
+import FormError from "@/components/ui/FormError.jsx";
+import * as Yup from "yup";
+import Status from "@/components/ui/Status.jsx";
+
 const initialUser = {
-  caseNo: 1,
   pangalan: "",
-  program: "",
+  program: "Home Care",
   palayaw: "",
-  edad: "",
+  edad: null,
   kasarian: "",
   birthday: "",
-  yearAdmitted: "",
   relihiyon: "",
-  antas: "",
+  antasNgPaaralan: "None",
   lugarNgKapanganakan: "",
   problema: [],
-  hulingPaaralan: "",
+  hulingPaaralangPinasukan: "",
   tirahan: "",
-  allergies: [],
-  vaccines: [],
+  allergy: [],
+  vaccine: [],
   kategorya: {
     pangalan: "",
     ngo: "",
     lgu: "",
   },
-  initialItsura: [],
-  problema: [],
+  initialNaItsura: [],
   nanay: {
     pangalan: "",
     palayaw: "",
     kasarian: "",
-    edad: "",
+    edad: null,
     birthday: "",
     lugarNgKapanganakan: "",
-    relihiyon:"",
-    edukasyon: "",
-    hulingPaaralan: "",
+    relihiyon: "",
+    antasNgPaaralan: "None",
+    hulingPaaralangPinasukan: "",
     tirahan: "",
     probinsya: "",
     trabaho: "",
-    kita: "",
+    kita: null,
     skillTraining: "",
     skills: "",
     dokumento: [],
@@ -56,41 +57,39 @@ const initialUser = {
     pangalan: "",
     palayaw: "",
     kasarian: "",
-    edad: "",
+    edad: null,
     birthday: "",
     lugarNgKapanganakan: "",
-    relihiyon:"",
-    edukasyon: "",
-    hulingPaaralan: "",
+    relihiyon: "",
+    antasNgPaaralan: "None",
+    hulingPaaralangPinasukan: "",
     tirahan: "",
     probinsya: "",
     trabaho: "",
-    kita: "",
+    kita: null,
     skillTraining: "",
     skills: "",
     dokumento: [],
   },
   kapatid: [],
   dokumento: [],
-  formIntake: "",
-  schoolCount: 0,
-  baon: 0,
-  baonExpense: "",
-  extracurriculars: "",
-  familyIllnesses: [],
-  familyPlanning: "",
-  waterSource: "",
-  laundryPlace: "",
-  crPlace: "",
-  eatPerDay: 0,
-  showerPerDay: 0,
+  ilanNagaaral: null,
+  ilanBaon: null,
+  saanGastosBaon: "",
+  schoolActivity: [],
+  sakit: [],
+  familyPlanningMethod: "",
+  saanTubig: "",
+  saanLaba: "",
+  saanCR: "",
+  ilanKain: null,
+  ilanLigo: null,
   ipon: false,
-  utang:false,
-  dswd:false,
-  eatBeforeSchool: false,
-  attendedALS: false,
-  healthCenterCheckup: false,
-  goalsAchieved: ["Tutorial", "Assignment Help", "WASH", "Health Assistance"],
+  utang: false,
+  dswd: false,
+  kainPasok: false,
+  alsAttend: false,
+  checkup: false,
 };
 
 const sections = [
@@ -106,6 +105,13 @@ const sections = [
 const Forms = () => {
   const [childData, setChildData] = useState(initialUser);
   const [sectionActive, setSectionActive] = useState("s1");
+  const [error, setError] = useState({ open: false, errors: [] });
+  const [status, setStatus] = useState({
+    open: false,
+    message: "",
+    type: "info",
+  });
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const navigateSection = (event) => {
     const targetDiv = event.currentTarget.id.split("-")[0];
@@ -115,196 +121,268 @@ const Forms = () => {
     }
   };
 
-  const handleParent = async (parent) =>{
-    try{
-      console.log("this is parent :",parent);
-      const id =  1;
-      const parents = parent;
-      const response = await axios.post("/api/intakeParent",{
-        id: id, // EDIT
-        pangalan: parents.pangalan,
-        palayaw: parents.palayaw,
-        kasarian: parents.kasarian,
-        edad: parents.edad,
-        birthday: parents.birthday,
-        lugarNgKapanganakan: parents.lugarNgKapanganakan,
-        relihiyon: parents.relihiyon,
-        edukasyon: parents.edukasyon,
-        hulingPaaralan: parents.hulingPaaralan,
-        tirahan:parents.tirahan,
-        probinsya:parents.probinsya,
-        trabaho: parents.trabaho,
-        kita: parents.kita,
-        skillTraining: parents.skillTraining,
-        skills: parents.skills,
-        dokumento : parents.dokumento
+  const handleStatusOpen = (message, type) => {
+    setStatus({ open: true, message, type });
+  };
+
+  const handleStatusClose = () => {
+    setStatus({ open: false, message: "" });
+  };
+
+  const handleErrorClose = () => {
+    setError({ ...error, open: false });
+  };
+
+  // Creating parents
+  const handleSubmitParentInformation = async () => {
+    try {
+      await axios.post("/api/intakeParent", {
+        pangalan: childData.nanay.pangalan,
+        palayaw: childData.nanay.palayaw,
+        kasarian: childData.nanay.kasarian,
+        edad: childData.nanay.edad,
+        birthday: childData.nanay.birthday,
+        lugarNgKapanganakan: childData.nanay.lugarNgKapanganakan,
+        relihiyon: childData.nanay.relihiyon,
+        antasNgPaaralan: childData.nanay.antasNgPaaralan,
+        hulingPaaralangPinasukan: childData.nanay.hulingPaaralangPinasukan,
+        tirahan: childData.nanay.tirahan,
+        probinsya: childData.nanay.probinsya,
+        trabaho: childData.nanay.trabaho,
+        kita: childData.nanay.kita,
+        skillTraining: childData.nanay.skillTraining,
+        skills: childData.nanay.skills,
+        dokumento: childData.nanay.dokumento,
       });
-      console.log(response.data);
-      alert("Parent created successfully");
-    }catch(error){
-      console.error("Error signing up:", error);
+
+      await axios.post("/api/intakeParent", {
+        pangalan: childData.tatay.pangalan,
+        palayaw: childData.tatay.palayaw,
+        kasarian: childData.tatay.kasarian,
+        edad: childData.tatay.edad,
+        birthday: childData.tatay.birthday,
+        lugarNgKapanganakan: childData.tatay.lugarNgKapanganakan,
+        relihiyon: childData.tatay.relihiyon,
+        antasNgPaaralan: childData.tatay.antasNgPaaralan,
+        hulingPaaralangPinasukan: childData.tatay.hulingPaaralangPinasukan,
+        tirahan: childData.tatay.tirahan,
+        probinsya: childData.tatay.probinsya,
+        trabaho: childData.tatay.trabaho,
+        kita: childData.tatay.kita,
+        skillTraining: childData.tatay.skillTraining,
+        skills: childData.tatay.skills,
+        dokumento: childData.tatay.dokumento,
+      });
+      return true;
+    } catch (error) {
       if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-        alert(
+        handleStatusOpen(
           `Error adding parent: ${
             error.response.data.error || error.response.data.message
-          }`
+          }`,
+          "error"
         );
       } else if (error.request) {
-        console.error("Error request data:", error.request);
-        alert("Error adding parent: No response from server");
+        handleStatusOpen(
+          "Error adding parent: No response from server",
+          "error"
+        );
       } else {
-        console.error("Error message:", error.message);
-        alert(`Error adding parent: ${error.message}`);
+        handleStatusOpen(`Error adding parent: ${error.message}`, "error");
       }
+
+      setTimeout(() => {
+        handleStatusClose();
+      }, 1000);
+
+      return false;
     }
-  }; 
+  };
 
-  const handlePangunahingImpormasyon = async (child) => {
-    try{
-      
-      const id =  1;
-      const childInfo = { 
-        program: child.program, // program input status missing
-        date: new Date().toLocaleDateString(),
-        caseNo: child.caseNo, // no input for case number yet
-        pangalan: child.pangalan,
-        edad: child.edad,
-        birthday: child.birthday,
-        relihiyon: child.relihiyon,
-        antasNgPaaralan: child.antas,
-        palayaw: child.palayaw,
-        kasarian: child.kasarian,
-        problema: child.problema,
-        lugarNgKapanganakan: child.lugarNgKapanganakan, 
-        hulingPaaralangPinasukan: child.hulingPaaralan,
-        tirahan: child.tirahan, 
-        allergy: child.allergies,   
-        vaccine: child.vaccines,
-        initialNaItsura: child.initialItsura,
-        kategorya: child.kategorya,
-        dokumento: child.dokumento,
-        magulang: [
-          {
-            nanay: child.nanay.pangalan,
-            tatay: child.tatay.pangalan,
-          },
-        ],
-        kapatid: child.kapatid, // not sure how to implement the id array, kindly change accordingly
-        yearAdmitted: new Date().getFullYear(),
-        picture: null, // initially 
-        status: "", //unknown value
-        goalsAchieved: child.goalsAchieved};
+  // Creating siblings
+  const handleSubmitKapatidInformation = async () => {
+    for (let i = 0; i < childData.kapatid.length; ++i) {
+      try {
+        await axios.post("/api/intakeSibling", {
+          kapatidIndex: childData.kapatid[i].kapatidIndex,
+          pangalan: childData.kapatid[i].pangalan,
+          kasarian: childData.kapatid[i].kasarian, //male or female
+          edad: childData.kapatid[i].edad,
+          antasNgPaaralan: childData.kapatid[i].antasNgPaaralan, //antas ng edukasyon + list
+          trabaho: childData.kapatid[i].trabaho,
+          kita: childData.kapatid[i].kita,
+          //with birth certificate, boolean or file upload
+        });
+        return true;
+      } catch (error) {
+        if (error.response) {
+          handleStatusOpen(
+            `Error adding kapatid: ${
+              error.response.data.error || error.response.data.message
+            }`,
+            "error"
+          );
+        } else if (error.request) {
+          handleStatusOpen(
+            "Error adding kapatid: No response from server",
+            "error"
+          );
+        } else {
+          handleStatusOpen(`Error adding kapatid: ${error.message}`, "error");
+        }
 
-        console.log("this is child info :",childInfo);
+        setTimeout(() => {
+          handleStatusClose();
+        }, 1000);
 
-      const response = await axios.post("/api/intakeChild",{
-        childInfo
-      });
-      console.log(response.data);
-      alert("Child created successfully");
-    }catch(error){
-      console.error("Error Child created:", error);
-      if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-        alert(
-          `Error adding child: ${
-            error.response.data.error || error.response.data.message
-          }`
-        );
-      } else if (error.request) {
-        console.error("Error request data:", error.request);
-        alert("Error adding child: No response from server");
-      } else {
-        console.error("Error message:", error.message);
-        alert(`Error adding child: ${error.message}`);
+        return false;
       }
     }
   };
 
-  const handleIbangImpormasyon = async (family) => {
-    try{
-      
-      const id =  1;
-      const familyInfo = {
-        bata: [
-          {
-            caseNo: family.caseNo,
-          },
-        ],
-        //education
-        ilanNagaaral: family.schoolCount,
-        ilanBaon: family.baon,
-        saanGastosBaon: family.baonExpense,
-        schoolActivity: family.extracurriculars,
-        kainPasok: family.eatBeforeSchool, 
-        alsAttend: family.attendedALS,
-        //health
-        checkup: family.healthCenterCheckup,
-        familyPlanningMethod: family.familyPlanning,
-        saanTubig: family.waterSource,
-        saanLaba: family.laundryPlace,
-        saanCR: family.crPlace,
-        sakit: family.familyIllnesses,
-        ilanKain: family.eatPerDay, 
-        ilanLigo: family.showerPerDay,
-        //socio-economic
-        ipon: family.ipon,
-        utang: family.utang, 
-        dswd: family.dswd,
-        gastosKita: [
-          {
-            //multiple input
-            name: "", // missing
-          },
-        ],
-        tirahan: family.tirahan, //list of options
-        reason:"",
+  // Creating child
+  const handleSubmitChildInformation = async () => {
+    try {
+      const childInfo = {
+        program: childData.program, // program input status missing
+        pangalan: childData.pangalan,
+        edad: childData.edad,
+        birthday: childData.birthday,
+        relihiyon: childData.relihiyon,
+        antasNgPaaralan: childData.antasNgPaaralan,
+        palayaw: childData.palayaw,
+        kasarian: childData.kasarian,
+        problema: childData.problema,
+        lugarNgKapanganakan: childData.lugarNgKapanganakan,
+        hulingPaaralangPinasukan: childData.hulingPaaralangPinasukan,
+        tirahan: childData.tirahan,
+        allergy: childData.allergy,
+        vaccine: childData.vaccine,
+        initialNaItsura: childData.initialNaItsura,
+        kategorya: childData.kategorya,
+        dokumento: childData.dokumento,
+        nanay: childData.nanay.pangalan,
+        tatay: childData.tatay.pangalan,
+        kapatid: childData.kapatid
+          ? childData.kapatid.map((k) => k.pangalan)
+          : [],
       };
 
-        console.log("this is family info :",familyInfo);
-
-      const response = await axios.post("/api/intakeFamilyInfo",{
-        otherInfo
-      });
-      console.log(response.data);
-      alert("family info created successfully");
-    }catch(error){
-      console.error("Error family info:", error);
+      await axios.post("/api/intakeChild", { childInfo });
+      return true;
+    } catch (error) {
       if (error.response) {
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-        alert(
-          `Error adding family info: ${
+        handleStatusOpen(
+          `Error adding child: ${
             error.response.data.error || error.response.data.message
-          }`
+          }`,
+          "error"
         );
       } else if (error.request) {
-        console.error("Error request data:", error.request);
-        alert("Error adding family info: No response from server");
+        handleStatusOpen(
+          "Error adding child: No response from server",
+          "error"
+        );
       } else {
-        console.error("Error message:", error.message);
-        alert(`Error adding family info: ${error.message}`);
+        handleStatusOpen(`Error adding child: ${error.message}`, "error");
       }
+
+      setTimeout(() => {
+        handleStatusClose();
+      }, 1000);
+
+      return false;
+    }
+  };
+
+  // Creating family
+  const handleSubmitFamilyInformation = async () => {
+    try {
+      const familyInfo = {
+        bata: childData.pangalan,
+        //education
+        ilanNagaaral: childData.ilanNagaaral,
+        ilanBaon: childData.ilanBaon,
+        saanGastosBaon: childData.saanGastosBaon,
+        schoolActivity: childData.schoolActivity,
+        kainPasok: childData.kainPasok,
+        alsAttend: childData.alsAttend,
+        //health
+        checkup: childData.checkup,
+        familyPlanningMethod: childData.familyPlanningMethod,
+        saanTubig: childData.saanTubig,
+        saanLaba: childData.saanLaba,
+        saanCR: childData.saanCR,
+        sakit: childData.sakit,
+        ilanKain: childData.ilanKain,
+        ilanLigo: childData.ilanLigo,
+        //socio-economic
+        ipon: childData.ipon,
+        utang: childData.utang,
+        dswd: childData.dswd,
+      };
+
+      await axios.post("/api/intakeFamilyInfo", { familyInfo });
+      return true;
+    } catch (error) {
+      if (error.response) {
+        handleStatusOpen(
+          `Error adding family info: ${
+            error.response.data.error || error.response.data.message
+          }`,
+          "error"
+        );
+      } else if (error.request) {
+        handleStatusOpen(
+          "Error adding family info: No response from server",
+          "error"
+        );
+      } else {
+        handleStatusOpen(`Error adding family info: ${error.message}`, "error");
+      }
+
+      setTimeout(() => {
+        handleStatusClose();
+      }, 1000);
+
+      return false;
     }
   };
 
   const handleIntakeForm = async () => {
-    if(true){ // check for invalid inputs handling not yet implemented
-      handlePangunahingImpormasyon(childData);
-      handleParent(childData.nanay);
-      handleParent(childData.tatay);
-      handleIbangImpormasyon(childData);
-    }else{
-
-    }
+    setSubmitDisabled(true);
+    handleErrorClose();
+    handleStatusOpen("Saving...", "info");
+    childSchema
+      .validate(childData, { abortEarly: false })
+      .then(() => {
+        const submitChildSuccess = handleSubmitChildInformation();
+        const submitParentSuccess = handleSubmitParentInformation();
+        const submitKapatiduccess = handleSubmitKapatidInformation();
+        const submitFamilyInfoSuccess = handleSubmitFamilyInformation();
+        if (
+          submitChildSuccess &&
+          submitParentSuccess &&
+          submitKapatiduccess &&
+          submitFamilyInfoSuccess
+        ) {
+          setSubmitDisabled(false);
+          handleStatusOpen("Child Creation Sucessful!", "success");
+          window.location.href = "/overview";
+        }
+      })
+      .catch((err) => {
+        if (err instanceof Yup.ValidationError) {
+          handleErrorClose();
+          const newErrors = err.inner.map((error) => error.message);
+          setTimeout(() => {
+            handleStatusClose();
+            setSubmitDisabled(false);
+            setError({ open: true, errors: newErrors });
+          }, 600);
+        }
+      });
   };
-  console.log(childData);
 
   return (
     <>
@@ -328,12 +406,32 @@ const Forms = () => {
             </div>
           ))}
 
-          <button className="flex items-center justify-center p-4 bg-bb-violet text-bb-white w-full rounded-lg transition-colors duration-200 hover:bg-bb-white hover:text-bb-violet"
-            onClick={handleIntakeForm}>
-            <span className="material-symbols-outlined text-3xl mr-2">
-              save_as
-            </span>
-            <h1 className="text-2xl">Save</h1>
+          <button
+            className={`flex items-center justify-center p-4 ${
+              submitDisabled
+                ? "bg-bb-light-purple text-bb-violet"
+                : "bg-bb-violet text-bb-white"
+            } w-full rounded-lg transition-colors duration-200 ${
+              !submitDisabled && "hover:bg-bb-white hover:text-bb-violet"
+            }`}
+            onClick={handleIntakeForm}
+            disabled={submitDisabled}
+          >
+            {submitDisabled ? (
+              <span className="flex items-center">
+                <h1 className="text-2xl">Saving...</h1>
+                <span className="material-symbols-outlined animate-spin">
+                  progress_activity
+                </span>
+              </span>
+            ) : (
+              <>
+                <span className="material-symbols-outlined text-3xl mr-2">
+                  save_as
+                </span>
+                <h1 className="text-2xl">Save</h1>
+              </>
+            )}
           </button>
         </div>
 
@@ -393,6 +491,18 @@ const Forms = () => {
           ))}
         </div>
       </div>
+      <FormError
+        isOpen={error.open}
+        errors={error.errors}
+        handleClose={handleErrorClose}
+      />
+
+      <Status
+        isOpen={status.open}
+        message={status.message}
+        handleClose={handleStatusClose}
+        type={status.type}
+      />
     </>
   );
 };
