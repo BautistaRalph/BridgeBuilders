@@ -20,6 +20,11 @@ const Edit = () => {
   const { profileData, setProfileData } = useProfile(caseNo);
   const { image, handleImageChange } = useMedia();
 
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
   console.log(JSON.stringify(profileData, null, 2));
 
   const handlePictureClick = () => {
