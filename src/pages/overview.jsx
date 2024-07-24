@@ -24,9 +24,9 @@ import axios from "../axiosInstance.js";
 import { jwtDecode } from "jwt-decode";
 
 const defaultFilters = {
-  status: 'Active',   
-  edad: '',            
-  kasarian: ''      
+  status: "Active",
+  edad: "",
+  kasarian: "",
 };
 
 const Overview = () => {
@@ -49,27 +49,27 @@ const Overview = () => {
   const [activeStatistic, setActiveStatistic] = useState("General");
   const [activeUsers, setUsers] = useState([]);
   const [statisticsData, setStatisticsData] = useState({});
-  const [filters, setFilters] = useState(defaultFilters); 
+  const [filters, setFilters] = useState(defaultFilters);
   const [searchQuery, setSearchQuery] = useState("");
 
   const fetchData = async (searchQuery) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        console.error('No token found');
+        console.error("No token found");
         return;
       }
-  
+
       let edadFilter = {};
       if (filters.edad) {
-        const [minAge, maxAge] = filters.edad.split('-').map(Number);
+        const [minAge, maxAge] = filters.edad.split("-").map(Number);
         edadFilter = {
           minAge,
           maxAge,
         };
       }
-  
-      const response = await axios.get('/api/overview', {
+
+      const response = await axios.get("/api/overview", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -83,49 +83,51 @@ const Overview = () => {
       });
       setUsers(response.data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     }
   };
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const token = sessionStorage.getItem('token');
+        const token = sessionStorage.getItem("token");
         if (!token) {
-          console.error('No token found');
+          console.error("No token found");
           return;
         }
-  
-        const response = await axios.get('http://localhost:3002/api/current-user', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-  
+
+        const response = await axios.get(
+          "http://localhost:3002/api/current-user",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
         if (response.status === 200) {
           const user = response.data;
           setUsername(user.username);
           setUserType(user.userType);
         }
       } catch (error) {
-        console.error('Failed to fetch user info:', error);
+        console.error("Failed to fetch user info:", error);
       }
     };
-  
+
     fetchUserInfo();
   }, []);
 
   useEffect(() => {
-
-    const token = sessionStorage.getItem('token');
-    console.log("Token:", token); 
+    const token = sessionStorage.getItem("token");
+    console.log("Token:", token);
 
     if (token) {
       try {
         const decodedToken = jwtDecode(token);
         const username = decodedToken.username;
         const userType = decodedToken.userType;
-        
+
         console.log("Decoded Username:", username);
         console.log("Decoded UserType:", userType);
       } catch (error) {
@@ -171,19 +173,19 @@ const Overview = () => {
   }, []);
 
   useEffect(() => {
-    fetchData(searchQuery); 
+    fetchData(searchQuery);
   }, [activeCategory, activeYear, filters, searchQuery]);
 
   //Fetch functions
 
   const fetchYears = async () => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        console.error('No token found');
+        console.error("No token found");
         return;
       }
-  
+
       const response = await axios.get("/api/years", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -197,15 +199,15 @@ const Overview = () => {
       console.error("Failed to fetch years:", error);
     }
   };
-  
+
   const fetchStatistics = async () => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        console.error('No token found');
+        console.error("No token found");
         return;
       }
-  
+
       const response = await axios.get(`/api/stats/${activeYear}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -231,28 +233,32 @@ const Overview = () => {
 
   const confirmAddYear = async () => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        console.error('No token found');
+        console.error("No token found");
         return;
       }
-  
+
       const defaultGoals = {
         General: [],
         Goal1: [],
         Goal2: [],
         Goal3: [],
       };
-  
-      const response = await axios.post("/api/stats", {
-        year: newYear,
-        goals: defaultGoals,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+
+      const response = await axios.post(
+        "/api/stats",
+        {
+          year: newYear,
+          goals: defaultGoals,
         },
-      });
-  
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       if (response.status === 201) {
         fetchYears();
         setIsAddModalOpen(false);
@@ -263,15 +269,15 @@ const Overview = () => {
       console.error("Error adding year:", error);
     }
   };
-  
+
   const confirmDeleteYear = async () => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        console.error('No token found');
+        console.error("No token found");
         return;
       }
-  
+
       const response = await axios.delete(`/api/years/${yearToDelete}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -288,15 +294,15 @@ const Overview = () => {
       console.error("Error deleting year:", error);
     }
   };
-  
+
   const addNewLabel = async (category, numberOfClients) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        console.error('No token found');
+        console.error("No token found");
         return;
       }
-  
+
       const response = await axios.post(
         `/api/stats/${activeYear}/goals/${activeStatistic}/label`,
         {
@@ -309,7 +315,7 @@ const Overview = () => {
           },
         }
       );
-  
+
       if (response.status === 200) {
         fetchStatistics();
         setIsGoalModalOpen(false);
@@ -320,15 +326,15 @@ const Overview = () => {
       console.error("Error adding label:", error);
     }
   };
-  
+
   const confirmDeleteLabel = async () => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        console.error('No token found');
+        console.error("No token found");
         return;
       }
-  
+
       const response = await axios.delete(
         `/api/stats/${activeYear}/goals/${activeStatistic}/label/${labelToDelete}`,
         {
@@ -347,17 +353,17 @@ const Overview = () => {
       console.error("Error deleting label:", error);
     }
   };
-  
+
   const handleStatisticUpdate = async (newLabel, newValue) => {
     try {
-      const token = sessionStorage.getItem('token');
+      const token = sessionStorage.getItem("token");
       if (!token) {
-        console.error('No token found');
+        console.error("No token found");
         return;
       }
-  
+
       const { label, category } = currentStatistic;
-  
+
       const response = await axios.put(
         `/api/stats/${activeYear}/goals/${category}/label/${label}`,
         {
@@ -370,7 +376,7 @@ const Overview = () => {
           },
         }
       );
-  
+
       if (response.status === 200) {
         fetchStatistics();
         setIsStatisticModalOpen(false);
@@ -427,7 +433,7 @@ const Overview = () => {
   };
 
   const handleSearch = (event) => {
-    setSearchQuery(event.target.value); 
+    setSearchQuery(event.target.value);
   };
 
   if (showWelcomeMessage) {
@@ -445,7 +451,7 @@ const Overview = () => {
       <Appbar />
       {/* Main Content */}
       <div className="bg-white p-6 rounded-lg w-full">
-        <h1 class="header">Overview</h1>
+        <h1 className="header">Overview</h1>
         <hr className="my-4 border-t-2 border-bb-violet" />
         {/* Tabs */}
         <div className="mb-2 text-lg font-bold text-bb-violet">Category:</div>
@@ -621,8 +627,8 @@ const Overview = () => {
               placeholder="Search..."
               value={searchQuery}
               onChange={handleSearch}
-              className="pl-10" 
-              style={{ paddingLeft: '2.5rem' }} 
+              className="pl-10"
+              style={{ paddingLeft: "2.5rem" }}
             />
             <img
               src={search}
@@ -653,19 +659,19 @@ const Overview = () => {
                     Age Range:
                   </label>
                   <select
-                  id="edad"
-                  className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
-                  onChange={handleFilterChange}
-                  value={filters.edad}
-                >
-                  <option value="">--Select--</option>
-                  <option value="">All</option>
-                  <option value="5-10">5-10</option>
-                  <option value="11-17">11-17</option>
-                  <option value="18-24">18-24</option>
-                  <option value="25-39">25-39</option>
-                  <option value="40-59">40-59</option>
-                </select>
+                    id="edad"
+                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                    onChange={handleFilterChange}
+                    value={filters.edad}
+                  >
+                    <option value="">--Select--</option>
+                    <option value="">All</option>
+                    <option value="5-10">5-10</option>
+                    <option value="11-17">11-17</option>
+                    <option value="18-24">18-24</option>
+                    <option value="25-39">25-39</option>
+                    <option value="40-59">40-59</option>
+                  </select>
                 </div>
                 {/* Gender Filter */}
                 <div className="flex flex-col">
@@ -677,16 +683,16 @@ const Overview = () => {
                   </label>
 
                   <select
-                  id="kasarian"
-                  className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
-                  onChange={handleFilterChange}
-                  value={filters.kasarian}
-                >
-                  <option value="">--Select--</option>
-                  <option value="">All</option>
-                  <option value="Lalaki">Lalaki</option>
-                  <option value="Babae">Babae</option>
-                </select>
+                    id="kasarian"
+                    className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
+                    onChange={handleFilterChange}
+                    value={filters.kasarian}
+                  >
+                    <option value="">--Select--</option>
+                    <option value="">All</option>
+                    <option value="Lalaki">Lalaki</option>
+                    <option value="Babae">Babae</option>
+                  </select>
                 </div>
               </div>
             </PopoverContent>
@@ -703,7 +709,7 @@ const Overview = () => {
               gender={user.kasarian}
               year={user.yearAdmitted}
               category={user.program}
-              profileLink={`/profile/${user.caseNo}`}
+              profileLink={`/profile/${user._id}`}
               avatar={user.picture}
             />
           ))}

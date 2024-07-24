@@ -2,17 +2,19 @@ import Appbar from "@/components/ui/Appbar";
 import Goal from "@/components/ui/Goal";
 import Tooltip from "@/components/ui/Tooltip";
 import useProfile from "@/utils/hooks/useProfile";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import axios from "../axiosInstance.js";
 
 const Profile = () => {
   const { caseNo } = useParams();
-  const { profileData, setProfileData } = useProfile(caseNo);
+  const { profileData } = useProfile(caseNo);
 
   const handleArchiveClick = async () => {
     console.log("handling archive");
 
-    const confirmArchive = window.confirm("Are you sure you want to archive this profile?");
+    const confirmArchive = window.confirm(
+      "Are you sure you want to archive this profile?"
+    );
 
     if (confirmArchive) {
       try {
@@ -21,7 +23,7 @@ const Profile = () => {
         console.error("Error saving profile:", error);
       }
     } else {
-        console.log("Archive cancelled");
+      console.log("Archive cancelled");
     }
   };
 
@@ -106,17 +108,14 @@ const Profile = () => {
                 {profileData.pangalan}
               </h1>
               <Tooltip tooltipText={"Edit"} className=" mr-6 ml-6 ">
-                <a href={`/edit/${profileData.caseNo}`}>
+                <a href={`/edit/${caseNo}`}>
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     edit
                   </span>
                 </a>
               </Tooltip>
               <Tooltip tooltipText={"Archive"} className=" mr-6 ml-6 ">
-                <a
-                  href={`/profile/${profileData.caseNo}`}
-                  onClick={handleArchiveClick}
-                >
+                <a href={`/profile/${caseNo}`} onClick={handleArchiveClick}>
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     folder_open
                   </span>

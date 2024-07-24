@@ -2,11 +2,14 @@ import Appbar from "@/components/ui/Appbar";
 import Select from "@/components/ui/Select";
 import Goal from "@/components/ui/Goal";
 import Tooltip from "@/components/ui/Tooltip";
-import useMedia from "@/utils/hooks/useMedia";
 import useProfile from "@/utils/hooks/useProfile";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../axiosInstance.js";
+import Status from "@/components/ui/Status.jsx";
+import FormError from "@/components/ui/FormError.jsx";
+import { editChildSchema } from "../../schemas/FormValidationSchema.js";
+import * as Yup from "yup";
 
 const programOptions = [
   { value: "Community Based Program", name: "program" },
@@ -17,13 +20,23 @@ const Edit = () => {
   const pictureRef = useRef(null);
   const { caseNo } = useParams();
   //const { profileData, setProfileData } = useProfile("Darryl Javier");
-  const { profileData, setProfileData } = useProfile(caseNo);
-  const { image, handleImageChange } = useMedia();
+  const { profileData, setProfileData, error, loading } = useProfile(caseNo);
 
-  console.log(JSON.stringify(profileData, null, 2));
+  const [image, setImage] = useState(profileData.picture);
+  const [formError, setFormError] = useState({ open: false, errors: [] });
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+  const [status, setStatus] = useState({
+    open: false,
+    message: "",
+    type: "info",
+  });
 
   const handlePictureClick = () => {
     pictureRef.current.click();
+  };
+
+  const handleErrorClose = () => {
+    setFormError({ ...formError, open: false });
   };
 
   const handleChange = (event) => {
@@ -31,6 +44,14 @@ const Edit = () => {
       ...profileData,
       [event.target.name]: event.target.value,
     });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileData({ ...profileData, picture: file });
+      setImage(URL.createObjectURL(file));
+    }
   };
 
   const handleGoalChange = (event) => {
@@ -50,13 +71,97 @@ const Edit = () => {
   };
 
   const handleSaveClick = async () => {
-    console.log("handling save");
+    setSubmitDisabled(true);
+    setStatus({
+      open: true,
+      message: "Editing profile data...",
+      type: "info",
+    });
+
     try {
-      await axios.post(`/api/editProfile/${caseNo}`, { profileData });
-    } catch (error) {
-      console.error("Error saving profile:", error);
+      await editChildSchema.validate(profileData, { abortEarly: false });
+
+      // We use formdata instead for the file upload (pfp)
+      const formData = new FormData();
+      Object.keys(profileData).forEach((key) => {
+        if (key === "picture" && profileData[key] instanceof File) {
+          formData.append("picture", profileData[key]);
+        } else {
+          formData.append(key, profileData[key]);
+        }
+      });
+
+      await axios.post(`/api/editProfile/${caseNo}`, formData);
+
+      setStatus({
+        open: true,
+        message: "Profile data updated!",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        window.location.href = `/profile/${caseNo}`;
+      }, 1000);
+    } catch (err) {
+      console.log(err.message);
+      if (err instanceof Yup.ValidationError) {
+        handleErrorClose();
+        const newErrors = err.inner.map((error) => error.message);
+        setTimeout(() => {
+          handleStatusClose();
+          setSubmitDisabled(false);
+          setFormError({ open: true, errors: newErrors });
+        }, 600);
+      } else {
+        // Handle axios or other errors
+        setStatus({
+          open: true,
+          message: "An error occurred while updating the profile",
+          type: "error",
+        });
+      }
     }
   };
+
+  const handleStatusClose = () => {
+    setStatus({ ...status, open: false, message: "" });
+  };
+
+  useEffect(() => {
+    if (loading) {
+      setStatus({
+        open: true,
+        message: "Loading profile data...",
+        type: "info",
+      });
+    }
+
+    if (!loading) {
+      setStatus({
+        open: true,
+        message: "Profile data loaded!",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        setStatus({
+          open: false,
+          message: "Profile data loaded!",
+          type: "success",
+        });
+      }, 3000);
+    }
+
+    if (error.error) {
+      setStatus({ open: true, message: error.errorMessage, type: "error" });
+    }
+  }, [error, loading]);
+
+  useEffect(() => {
+    if (!loading) {
+      setImage(profileData.picture);
+    }
+  }, [loading]);
 
   return (
     <>
@@ -171,7 +276,7 @@ const Edit = () => {
               <div className="flex-grow h-1 mt-4 bg-bb-violet"></div>
 
               <h3 className="mt-2">
-                <strong>Case number:</strong> {profileData.caseNo}
+                <strong>Case number:</strong> {caseNo}
               </h3>
 
               <div className="flex-grow h-1 mt-4 mb-4 bg-bb-violet"></div>
@@ -190,17 +295,14 @@ const Edit = () => {
                   onChange={handleChange}
                 />
               </h1>
-              <Tooltip tooltipText={"Save"} className=" mr-6 ml-6 ">
-                <a
-                  href={`/profile/${profileData.caseNo}`}
-                  onClick={handleSaveClick}
-                >
+              <Tooltip tooltipText={"Save"} className=" mr-6 ml-8 ">
+                <button onClick={handleSaveClick} disabled={submitDisabled}>
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     save_as
                   </span>
-                </a>
+                </button>
               </Tooltip>
-              <Tooltip tooltipText={"Return"} className=" mr-6 ml-6 ">
+              <Tooltip tooltipText={"Return"} className=" mr-6 ml-2 ">
                 <a href={`/profile/${profileData.caseNo}`}>
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     keyboard_return
@@ -276,6 +378,19 @@ const Edit = () => {
           </div>
         </div>
       </div>
+
+      <Status
+        isOpen={status.open}
+        message={status.message}
+        handleClose={handleStatusClose}
+        type={status.type}
+      />
+
+      <FormError
+        isOpen={formError.open}
+        errors={formError.errors}
+        handleClose={handleErrorClose}
+      />
     </>
   );
 };
