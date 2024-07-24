@@ -18,6 +18,11 @@ const Admin = () => {
   const [newPassword, setNewPassword] = useState("");
   const [messageVisible, setMessageVisible] = useState(false); 
 
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
