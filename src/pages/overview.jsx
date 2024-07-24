@@ -30,6 +30,10 @@ const defaultFilters = {
 };
 
 const Overview = () => {
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
   const [username, setUsername] = useState("");
   const [userType, setUserType] = useState("");
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
