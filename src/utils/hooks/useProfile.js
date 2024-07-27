@@ -1,6 +1,5 @@
-import { Users } from "@/lib/placeholder/users";
 import { useEffect, useState } from "react";
-import axios from '../../axiosInstance.js'; 
+import axios from "../../axiosInstance.js";
 
 const initialState = {
   picture: "",
@@ -11,7 +10,6 @@ const initialState = {
   kasarian: "",
   birthday: "",
   relihiyon: "",
-  caseNo: "",
   goalsAchieved: [],
 };
 
@@ -23,25 +21,38 @@ const useProfile = (username) => {
   useEffect(() => {
     // pseudo get user information (while no server yet)
     //const user = Users.find((user) => user.pangalan == username);
-
+    setLoading(true);
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`/api/profile/${username}`)
-        const user = res.data[0];
+        const res = await axios.get(`/api/profile/${username}`);
+        const user = res.data;
 
         if (!user) {
           setError({ error: true, errorMessage: "User not found!" });
         } else {
-          setProfileData({ ...user });
+          setProfileData({
+            picture: res.data.picture,
+            pangalan: res.data.pangalan,
+            program: res.data.program,
+            palayaw: res.data.palayaw,
+            edad: res.data.edad,
+            kasarian: res.data.kasarian,
+            birthday: res.data.birthday,
+            relihiyon: res.data.relihiyon,
+            goalsAchieved: res.data.goalsAchieved,
+          });
         }
       } catch (err) {
-        setError('Error fetching user data');
+        setError({
+          error: true,
+          errorMessage: "An error occured in fetching user data.",
+        });
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUser(); 
+    fetchUser();
 
     // API call over here (when the server is getting developed na)
     // This would include loading state since it's asynchronous
@@ -55,6 +66,7 @@ const useProfile = (username) => {
   return {
     profileData,
     setProfileData,
+    loading,
     error,
   };
 };

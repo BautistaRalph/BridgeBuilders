@@ -130,7 +130,7 @@ const Forms = () => {
   };
 
   const handleStatusClose = () => {
-    setStatus({ open: false, message: "" });
+    setStatus({ ...status, open: false, message: "" });
   };
 
   const handleErrorClose = () => {

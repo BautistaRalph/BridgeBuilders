@@ -49,7 +49,9 @@ const FormError = ({ isOpen, errors, handleClose }) => {
     <>
       <div
         className={`fixed w-1/4 h-1/3 bottom-16 right-16 z-20 ${
-          isOpen ? "opacity-100 block" : "opacity-0 hidden"
+          isOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none"
         } transition-opacity duration-500 bg-bb-violet shadow-lg rounded-sm overflow-auto`}
       >
         <span className="flex items-center justify-center mb-1 sticky top-0 bg-bb-white text-bb-violet p-2">

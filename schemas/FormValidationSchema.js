@@ -267,6 +267,44 @@ const childSchema = Yup.object().shape({
   checkup: Yup.boolean(),
 });
 
+export const editChildSchema = Yup.object().shape({
+  pangalan: Yup.string()
+    .required("Pangunahing Impormasyon - Pangalan is required.")
+    .max(
+      500,
+      "Pangunahing Impormasyon - Pangalan must be 500 characters or less."
+    ),
+  program: Yup.string()
+    .oneOf(["Home Care", "Community Based Program"])
+    .required("Pangunahing Impormasyon - Program is required."),
+  palayaw: Yup.string()
+    .required("Pangunahing Impormasyon - Palayaw is required.")
+    .max(
+      500,
+      "Pangunahing Impormasyon - Palayaw must be 500 characters or less."
+    ),
+  edad: Yup.number()
+    .required("Pangunahing Impormasyon - Edad is required.")
+    .positive("Pangunahing Impormasyon - Edad must be a positive number.")
+    .integer("Pangunahing Impormasyon - Edad must be a number."),
+  kasarian: Yup.string()
+    .required("Pangunahing Impormasyon - Kasarian is required.")
+    .max(
+      500,
+      "Pangunahing Impormasyon - Kasarian must be 500 characters or less."
+    ),
+  birthday: Yup.string().required(
+    "Pangunahing Impormasyon - Birthday is required."
+  ),
+  relihiyon: Yup.string()
+    .required("Pangunahing Impormasyon - Relihiyon is required.")
+    .max(
+      500,
+      "Pangunahing Impormasyon - Relihiyon must be 500 characters or less."
+    ),
+  goalsAchieved: Yup.array().of(Yup.string()),
+});
+
 export const familySchemaServer = Yup.object().shape({
   bata: Yup.string()
     .required("Pangalan ng bata is required.")
