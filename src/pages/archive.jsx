@@ -23,6 +23,11 @@ const Archive = () => {
   const [filters, setFilters] = useState(defaultFilters); 
   const [searchQuery, setSearchQuery] = useState("");
 
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
   useEffect(() => {
     fetchData();
     fetchYears();

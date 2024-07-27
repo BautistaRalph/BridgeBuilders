@@ -115,40 +115,54 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
 
   return (
     <>
-      <div className="mt-4 space-y-4">
-        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
+    <div className="mt-4 space-y-4">
+      <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
+        <div className="flex flex-col w-1/2 mr-2">
+          <label htmlFor="pangalan" className="text-sm mb-1 ml-1">
+            Pangalan / Name
+          </label>
           <input
             type="text"
             placeholder="Pangalan"
             name="pangalan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            className="p-2 border-bb-violet border-2 rounded-lg w-full"
             id="pangalan"
             onChange={handleChange}
           />
+        </div>
+        <div className="flex flex-col w-1/2 ml-2">
+          <label htmlFor="palayaw" className="text-sm mb-1 ml-1">
+            Palayaw/Nickname
+          </label>
           <input
             type="text"
             placeholder="Palayaw"
             name="palayaw"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
+            className="p-2 border-bb-violet border-2 rounded-lg w-full"
             id="palayaw"
             onChange={handleChange}
           />
         </div>
+      </div>
 
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
-          <div className="w-full mr-2">
-            <Select
-              className="flex items-center overflow-auto h-14 w-full border-2 border-bb-violet pr-2 pl-2 rounded-md transition-colors duration-300 hover:border-bb-purple"
-              optionClassName="text-bb-violet bg-bb-white text-2xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
-              optionList={programList}
-              handleChange={handleChange}
-              listHeight=""
-            >
-              <h1 className="text-2xl flex-grow text-left">
-                {childData?.program ?? "Program"}
-              </h1>
-            </Select>
-          </div>
+        <div className="flex flex-col w-full mr-2">
+          <label htmlFor="programa" className="text-sm mb-1 ml-1">
+            Programa / Program
+          </label>
+          <Select
+            id="programa"
+            className="flex items-center overflow-auto h-14 w-full border-2 border-bb-violet pr-2 pl-2 rounded-md transition-colors duration-300 hover:border-bb-purple"
+            optionClassName="text-bb-violet bg-bb-white text-2xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
+            optionList={programList}
+            handleChange={handleChange}
+            listHeight=""
+          >
+            <h1 className="text-2xl flex-grow text-left">
+              {childData?.program ?? "Program"}
+            </h1>
+          </Select>
+        </div>
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
           <span className="flex items-center w-1/2 mr-2">
@@ -193,7 +207,10 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
               />
             </label>
           </span>
-          <span className="w-1/2 mr-2">
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="edad" className="text-sm mb-1 ml-1">
+              Edad / Age
+            </label>
             <input
               type="number"
               min="1"
@@ -201,36 +218,62 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
               placeholder="Edad"
               className="p-2 border-bb-violet border-2 rounded-lg bg-inherit w-full outline-none text-2xl"
               name="edad"
+              id="edad"
               onChange={handleChange}
             />
-          </span>
+          </div>
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
-          <input
-            type="date"
-            placeholder="Petsa ng Kapanganakan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="birthday"
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Lugar ng Kapanganakan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="lugarNgKapanganakan"
-            onChange={handleChange}
-          />
+        <div className="flex flex-row w-full">
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="birthday" className="text-sm mb-1 ml-1">
+              Birthday
+            </label>
+            <input
+              type="date"
+              placeholder="Petsa ng Kapanganakan"
+              className="p-2 border-bb-violet border-2 rounded-lg w-full"
+              name="birthday"
+              id="birthday"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="lugarNgKapanganakan" className="text-sm mb-1 ml-1">
+              Lugar ng Kapanganakan / Birthplace
+            </label>
+            <input
+              type="text"
+              placeholder="Lugar ng Kapanganakan"
+              className="p-2 border-bb-violet border-2 rounded-lg w-full"
+              name="lugarNgKapanganakan"
+              id="lugarNgKapanganakan"
+              onChange={handleChange}
+            />
+          </div>
+        </div>
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
-          <input
-            type="text"
-            placeholder="Relihiyon"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="relihiyon"
-            onChange={handleChange}
-          />
-          <div className="w-1/2 mr-2">
+        <div className="flex flex-row w-full">
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="relihiyon" className="text-sm mb-1 ml-1">
+              Relihiyon / Religion
+            </label>
+            <input
+              type="text"
+              placeholder="Relihiyon"
+              className="p-2 border-bb-violet border-2 rounded-lg w-full"
+              name="relihiyon"
+              id="relihiyon"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="antasNgPaaralan" className="text-sm mb-1 ml-1">
+              Antas ng Paaralan / Education Level
+            </label>
             <Select
+              id="antasNgPaaralan"
               className="flex items-center overflow-auto h-14 w-full border-2 border-bb-violet pr-2 pl-2 rounded-md transition-colors duration-300 hover:border-bb-purple"
               optionClassName="text-bb-violet bg-bb-white text-2xl transition-colors duration-300 hover:text-bb-white hover:bg-bb-purple"
               optionList={antasList}
@@ -244,37 +287,66 @@ const PangunahingImpormasyon = ({ childData, setChildData }) => {
             </Select>
           </div>
         </div>
-        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
-          <input
-            type="text"
-            placeholder="Huling Paaralang Pinasukan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="hulingPaaralangPinasukan"
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Tirahan"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="tirahan"
-            onChange={handleChange}
-          />
         </div>
         <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
-          <input
-            type="text"
-            placeholder="Allergy"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="allergy"
-            onChange={handleChange}
-          />
-          <input
-            type="text"
-            placeholder="Vaccine"
-            className="p-2 border-bb-violet border-2 rounded-lg w-1/2 mr-2"
-            name="vaccine"
-            onChange={handleChange}
-          />
+        <div className="flex flex-row w-full">
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="hulingPaaralangPinasukan" className="text-sm mb-1 ml-1">
+              Huling Paaralang Pinasukan / Last School Attended
+            </label>
+            <input
+              type="text"
+              placeholder="Huling Paaralang Pinasukan"
+              className="p-2 border-bb-violet border-2 rounded-lg w-full"
+              name="hulingPaaralangPinasukan"
+              id="hulingPaaralangPinasukan"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="tirahan" className="text-sm mb-1 ml-1">
+              Tirahan / Home
+            </label>
+            <input
+              type="text"
+              placeholder="Tirahan"
+              className="p-2 border-bb-violet border-2 rounded-lg w-full"
+              name="tirahan"
+              id="tirahan"
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+        </div>
+        <div className="flex items-center w-full" style={{ fontSize: "18px" }}>
+        <div className="flex flex-row w-full">
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="allergy" className="text-sm mb-1 ml-1">
+              Allergy
+            </label>
+            <input
+              type="text"
+              placeholder="Allergy"
+              className="p-2 border-bb-violet border-2 rounded-lg w-full"
+              name="allergy"
+              id="allergy"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="flex flex-col w-1/2 mr-2">
+            <label htmlFor="vaccine" className="text-sm mb-1 ml-1">
+              Vaccine
+            </label>
+            <input
+              type="text"
+              placeholder="Vaccine"
+              className="p-2 border-bb-violet border-2 rounded-lg w-full"
+              name="vaccine"
+              id="vaccine"
+              onChange={handleChange}
+            />
+          </div>
+        </div>
         </div>
         <p style={{ fontSize: "24px" }}>
           <b>Inisyal na Itsurang Pisikal ng Bata:</b>

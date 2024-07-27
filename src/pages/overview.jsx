@@ -30,6 +30,10 @@ const defaultFilters = {
 };
 
 const Overview = () => {
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
   const [username, setUsername] = useState("");
   const [userType, setUserType] = useState("");
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
@@ -136,9 +140,9 @@ const Overview = () => {
     }
 
     if (userType === "superUser" || userType === "homeCare") {
-      setActiveCategory("HC");
+      setActiveCategory("Home Care");
     } else if (userType === "community") {
-      setActiveCategory("CBP");
+      setActiveCategory("Community Based Program");
     }
 
     setActiveYear(2018);
@@ -460,15 +464,15 @@ const Overview = () => {
             <>
               <ToggleButton
                 category="Home Care"
-                isActive={activeCategory === "HC"}
-                onClick={() => handleCategoryToggle("HC")}
+                isActive={activeCategory === "Home Care"}
+                onClick={() => handleCategoryToggle("Home Care")}
               >
                 Home Care
               </ToggleButton>
               <ToggleButton
                 category="Community"
-                isActive={activeCategory === "CBP"}
-                onClick={() => handleCategoryToggle("CBP")}
+                isActive={activeCategory === "Community Based Program"}
+                onClick={() => handleCategoryToggle("Community Based Program")}
               >
                 Community
               </ToggleButton>
@@ -478,7 +482,7 @@ const Overview = () => {
             <ToggleButton
               category="Home Care"
               isActive={true}
-              onClick={() => handleCategoryToggle("HC")}
+              onClick={() => handleCategoryToggle("Home Care")}
             >
               Home Care
             </ToggleButton>
@@ -487,7 +491,7 @@ const Overview = () => {
             <ToggleButton
               category="Community"
               isActive={true}
-              onClick={() => handleCategoryToggle("CBP")}
+              onClick={() => handleCategoryToggle("Community Based Program")}
             >
               Community
             </ToggleButton>

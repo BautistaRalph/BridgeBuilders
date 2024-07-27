@@ -21,7 +21,6 @@ const Edit = () => {
   const { caseNo } = useParams();
   //const { profileData, setProfileData } = useProfile("Darryl Javier");
   const { profileData, setProfileData, error, loading } = useProfile(caseNo);
-
   const [image, setImage] = useState(profileData.picture);
   const [formError, setFormError] = useState({ open: false, errors: [] });
   const [submitDisabled, setSubmitDisabled] = useState(false);
@@ -30,6 +29,12 @@ const Edit = () => {
     message: "",
     type: "info",
   });
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
+
+  console.log(JSON.stringify(profileData, null, 2));
 
   const handlePictureClick = () => {
     pictureRef.current.click();

@@ -103,6 +103,10 @@ const sections = [
 ];
 
 const Forms = () => {
+  const token = sessionStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/';
+    }
   const [childData, setChildData] = useState(initialUser);
   const [sectionActive, setSectionActive] = useState("s1");
   const [error, setError] = useState({ open: false, errors: [] });
