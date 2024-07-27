@@ -6,10 +6,10 @@ import { useParams } from "react-router-dom";
 import axios from "../axiosInstance.js";
 
 const Profile = () => {
-  const token = sessionStorage.getItem('token');
-    if (!token) {
-      window.location.href = '/';
-    }
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/";
+  }
   const { caseNo } = useParams();
   const { profileData } = useProfile(caseNo);
 
@@ -28,6 +28,24 @@ const Profile = () => {
       }
     } else {
       console.log("Archive cancelled");
+    }
+  };
+
+  const handleUnarchiveClick = async () => {
+    console.log("handling unarchive");
+
+    const confirmUnarchive = window.confirm(
+      "Are you sure you want to unarchive this profile?"
+    );
+
+    if (confirmUnarchive) {
+      try {
+        await axios.post(`/api/archiveProfile/${caseNo}`);
+      } catch (error) {
+        console.error("Error saving profile:", error);
+      }
+    } else {
+      console.log("Unarchive cancelled");
     }
   };
 
@@ -118,13 +136,23 @@ const Profile = () => {
                   </span>
                 </a>
               </Tooltip>
-              <Tooltip tooltipText={"Archive"} className=" mr-6 ml-6 ">
-                <a href={`/profile/${caseNo}`} onClick={handleArchiveClick}>
-                  <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
-                    folder_open
-                  </span>
-                </a>
-              </Tooltip>
+              {profileData.status === "Active" ? (
+                <Tooltip tooltipText={"Archive"} className=" mr-6 ml-6 ">
+                  <a href={`/profile/${caseNo}`} onClick={handleArchiveClick}>
+                    <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
+                      folder_open
+                    </span>
+                  </a>
+                </Tooltip>
+              ) : (
+                <Tooltip tooltipText={"Unarchive"} className=" mr-6 ml-6 ">
+                  <a href={`/profile/${caseNo}`} onClick={handleUnarchiveClick}>
+                    <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
+                      unarchive
+                    </span>
+                  </a>
+                </Tooltip>
+              )}
             </div>
 
             <h2 className="text-3xl xl:text-5xl">

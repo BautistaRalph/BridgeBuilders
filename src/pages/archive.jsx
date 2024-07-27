@@ -216,7 +216,7 @@ const Archive = () => {
               gender={user.kasarian}
               year={user.yearAdmitted}
               category={user.status}
-              profileLink={`/profile/${user.caseNo}`}
+              profileLink={`/profile/${user._id}`}
               avatar={user.picture}
             />
           ))}
