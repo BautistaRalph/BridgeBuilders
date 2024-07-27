@@ -10,7 +10,7 @@ cloudinary.config({
 const generateSignature = (timestamp) => {
   const params = {
     timestamp: timestamp,
-    folder: "BridgeBuilderMedia", // If you still want to use a specific folder
+    folder: "BridgeBuilderMedia",
   };
 
   const stringToSign =
