@@ -34,8 +34,6 @@ const Edit = () => {
       window.location.href = '/';
     }
 
-  console.log(JSON.stringify(profileData, null, 2));
-
   const handlePictureClick = () => {
     pictureRef.current.click();
   };

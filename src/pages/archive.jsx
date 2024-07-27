@@ -1,32 +1,36 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { ToggleButton } from "@/components/custom/ToggleButton";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover";
-import search from '@/assets/search.png';
-import filter from '@/assets/filter.png';
-import UserCard from '@/components/custom/UserCard';
-import Appbar from '@/components/ui/Appbar';
-import axios from '../axiosInstance.js'; 
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+import search from "@/assets/search.png";
+import filter from "@/assets/filter.png";
+import UserCard from "@/components/custom/UserCard";
+import Appbar from "@/components/ui/Appbar";
+import axios from "../axiosInstance.js";
 
 const defaultFilters = {
-  status: 'Deleted',
-  edad: '', 
-  kasarian: ''
+  status: "Deleted",
+  edad: "",
+  kasarian: "",
 };
 
 const Archive = () => {
-  const [activeCategory, setActiveCategory] = useState("HC");
+  const [activeCategory, setActiveCategory] = useState("Home Care");
   const [activeYear, setActiveYear] = useState(2018);
   const [years, setYears] = useState(["All"]);
   const [deletedUsers, setDeletedUsers] = useState([]);
-  const [filters, setFilters] = useState(defaultFilters); 
+  const [filters, setFilters] = useState(defaultFilters);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const token = sessionStorage.getItem('token');
-    if (!token) {
-      window.location.href = '/';
-    }
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/";
+  }
 
   useEffect(() => {
     fetchData();
@@ -35,7 +39,7 @@ const Archive = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('/api/archive', {
+      const response = await axios.get("/api/archive", {
         params: {
           program: activeCategory,
           year: activeYear,
@@ -46,10 +50,9 @@ const Archive = () => {
       });
       setDeletedUsers(response.data);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     }
   };
-
 
   //Fetch functions
 
@@ -64,7 +67,6 @@ const Archive = () => {
       console.error("Failed to fetch years:", error);
     }
   };
-
 
   //Handler functions
 
@@ -83,9 +85,9 @@ const Archive = () => {
       [id]: value,
     });
   };
-  
+
   const handleSearch = (event) => {
-    setSearchQuery(event.target.value); 
+    setSearchQuery(event.target.value);
   };
 
   return (
@@ -100,15 +102,15 @@ const Archive = () => {
         <div className="flex space-x-4 mb-4">
           <ToggleButton
             category="Home Care"
-            isActive={activeCategory === "HC"}
-            onClick={() => handleCategoryToggle("HC")}
+            isActive={activeCategory === "Home Care"}
+            onClick={() => handleCategoryToggle("Home Care")}
           >
             Home Care
           </ToggleButton>
           <ToggleButton
             category="Community"
-            isActive={activeCategory === "CBP"}
-            onClick={() => handleCategoryToggle("CBP")}
+            isActive={activeCategory === "Community Based Program"}
+            onClick={() => handleCategoryToggle("Community Based Program")}
           >
             Community
           </ToggleButton>
@@ -139,8 +141,8 @@ const Archive = () => {
               placeholder="Search..."
               value={searchQuery}
               onChange={handleSearch}
-              className="pl-10" 
-              style={{ paddingLeft: '2.5rem' }} 
+              className="pl-10"
+              style={{ paddingLeft: "2.5rem" }}
             />
             <img
               src={search}
@@ -164,7 +166,9 @@ const Archive = () => {
               <div className="flex flex-col space-y-4">
                 {/* Age Range Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="edad" className="text-sm text-bb-violet">Age Range:</label>
+                  <label htmlFor="edad" className="text-sm text-bb-violet">
+                    Age Range:
+                  </label>
                   <select
                     id="edad"
                     className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"
@@ -182,7 +186,9 @@ const Archive = () => {
                 </div>
                 {/* Gender Filter */}
                 <div className="flex flex-col">
-                  <label htmlFor="kasarian" className="text-sm text-bb-violet">Gender:</label>
+                  <label htmlFor="kasarian" className="text-sm text-bb-violet">
+                    Gender:
+                  </label>
                   <select
                     id="kasarian"
                     className="mt-1 p-2 border border-gray-300 rounded text-bb-violet"

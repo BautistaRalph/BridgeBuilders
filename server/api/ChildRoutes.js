@@ -59,7 +59,7 @@ apiRouter.post(
 //archive or unarchive profile
 apiRouter.post("/archiveProfile/:caseNo", async (req, res) => {
   console.log("Editing case archive status...");
-  const caseNo = parseInt(req.params.caseNo);
+  const caseNo = req.params.caseNo;
 
   const currentDocument = await Child.findById(caseNo);
   const newStatus = currentDocument.status === "Active" ? "Deleted" : "Active";
