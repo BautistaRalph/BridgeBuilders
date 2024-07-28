@@ -29,10 +29,10 @@ const Edit = () => {
     message: "",
     type: "info",
   });
-  const token = sessionStorage.getItem('token');
-    if (!token) {
-      window.location.href = '/';
-    }
+  const token = sessionStorage.getItem("token");
+  if (!token) {
+    window.location.href = "/";
+  }
 
   const handlePictureClick = () => {
     pictureRef.current.click();
@@ -306,7 +306,7 @@ const Edit = () => {
                 </button>
               </Tooltip>
               <Tooltip tooltipText={"Return"} className=" mr-6 ml-2 ">
-                <a href={`/profile/${profileData.caseNo}`}>
+                <a href={`/profile/${caseNo}`}>
                   <span className="material-symbols-outlined text-3xl md:text-5xl text-center text-bb-purple hover:text-bb-violet cursor-pointer">
                     keyboard_return
                   </span>
