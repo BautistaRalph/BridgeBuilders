@@ -41,10 +41,6 @@ app.use("/api", kapatidRoutes);
 app.use("/api", familyRoutes);
 app.use("/api", statsRoutes);
 
-if (!process.env.VERCEL) {
-  app.listen(port, () => {
-    console.log(`Listening on port ${port}`); 
-  });
-}
-
-export default app;
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`);
+});
