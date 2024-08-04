@@ -26,7 +26,7 @@ const Admin = () => {
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
-        const response = await axios.get('http://localhost:3002/api/accounts');
+        const response = await axios.get('http://localhost:5000/api/accounts');
         console.log('Fetched accounts:', response.data);
         if (Array.isArray(response.data)) {
           setAccounts(response.data);
@@ -53,7 +53,7 @@ const Admin = () => {
     }
 
     try {
-      await axios.post('http://localhost:3002/api/reset-password', {
+      await axios.post('http://localhost:5000/api/reset-password', {
         username: selectedAccount.username,
         newPassword,
       });
@@ -62,7 +62,7 @@ const Admin = () => {
       setIsResetModalOpen(false);
       setNewPassword("");
       setSelectedAccount(null);
-      const response = await axios.get('http://localhost:3002/api/accounts');
+      const response = await axios.get('http://localhost:5000/api/accounts');
       if (Array.isArray(response.data)) {
         setAccounts(response.data);
       } else {
