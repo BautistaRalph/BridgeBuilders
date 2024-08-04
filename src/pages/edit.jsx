@@ -343,7 +343,7 @@ const Edit = () => {
                   goalsAchieved={profileData.goalsAchieved}
                   editMode
                   handleGoalChange={handleGoalChange}
-                  image={"/src/assets/logo.png"}
+                  image={"/src/assets/goal1.png"}
                   title="Mental"
                   goal={1}
                 />
@@ -355,7 +355,7 @@ const Edit = () => {
                   goalsAchieved={profileData.goalsAchieved}
                   editMode
                   handleGoalChange={handleGoalChange}
-                  image={"/src/assets/logo.png"}
+                  image={"/src/assets/goal2.png"}
                   title="Physical/Social"
                   goal={2}
                 />
@@ -367,17 +367,17 @@ const Edit = () => {
                   goalsAchieved={profileData.goalsAchieved}
                   editMode
                   handleGoalChange={handleGoalChange}
-                  image={"/src/assets/logo.png"}
+                  image={"/src/assets/goal3.png"}
                   title="Support to Caregiver"
                   goal={3}
                 />
               </div>
             </div>
 
-            <div className="flex items-center mt-8">
+            {/* <div className="flex items-center mt-8">
               <h1 className="text-4xl mr-4">More Information</h1>
               <div className="flex-grow h-1 bg-bb-violet"></div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

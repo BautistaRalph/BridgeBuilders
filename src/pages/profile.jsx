@@ -168,30 +168,30 @@ const Profile = () => {
               <Goal
                 name="goal1"
                 goalsAchieved={profileData.goalsAchieved}
-                image={"/src/assets/logo.png"}
+                image={"/src/assets/goal1.png"}
                 title="Mental"
                 goal={1}
               />
               <Goal
                 name="goal2"
                 goalsAchieved={profileData.goalsAchieved}
-                image={"/src/assets/logo.png"}
+                image={"/src/assets/goal2.png"}
                 title="Physical/Social"
                 goal={2}
               />
               <Goal
                 name="goal3"
                 goalsAchieved={profileData.goalsAchieved}
-                image={"/src/assets/logo.png"}
+                image={"/src/assets/goal3.png"}
                 title="Support to Caregiver"
                 goal={3}
               />
             </div>
 
-            <div className="flex items-center mt-8">
+            {/* <div className="flex items-center mt-8">
               <h1 className="text-4xl mr-4">More Information</h1>
               <div className="flex-grow h-1 bg-bb-violet"></div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
