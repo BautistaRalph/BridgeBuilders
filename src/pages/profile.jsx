@@ -58,7 +58,7 @@ const Profile = () => {
           <div className="flex flex-col h-full w-full md:w-3/4 lg:w-1/3 xl:w-1/4 mr-8">
             <div className="w-full h-full md:h-1/2 lg:h-2/3 xl:h-3/6 bg-bb-light-purple flex align-center justify-center self-center">
               <img
-                src={profileData.picture ?? "/src/assets/logo.png"}
+                src={profileData.picture ?? "/images/logo.png"}
                 className="object-contain"
               />
             </div>
@@ -168,21 +168,21 @@ const Profile = () => {
               <Goal
                 name="goal1"
                 goalsAchieved={profileData.goalsAchieved}
-                image={"/src/assets/goal1.png"}
+                image={"/images/goal1.png"}
                 title="Mental"
                 goal={1}
               />
               <Goal
                 name="goal2"
                 goalsAchieved={profileData.goalsAchieved}
-                image={"/src/assets/goal2.png"}
+                image={"/images/goal2.png"}
                 title="Physical/Social"
                 goal={2}
               />
               <Goal
                 name="goal3"
                 goalsAchieved={profileData.goalsAchieved}
-                image={"/src/assets/goal3.png"}
+                image={"/images/goal3.png"}
                 title="Support to Caregiver"
                 goal={3}
               />

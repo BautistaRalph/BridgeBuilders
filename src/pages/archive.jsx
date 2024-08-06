@@ -7,8 +7,6 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@radix-ui/react-popover";
-import search from "@/assets/search.png";
-import filter from "@/assets/filter.png";
 import UserCard from "@/components/custom/UserCard";
 import Appbar from "@/components/ui/Appbar";
 import axios from "../axiosInstance.js";
@@ -145,7 +143,7 @@ const Archive = () => {
               style={{ paddingLeft: "2.5rem" }}
             />
             <img
-              src={search}
+              src="/images/search.png"
               alt="Search Icon"
               className="absolute left-2 top-1/2 transform -translate-y-1/2 h-6 w-6"
             />
@@ -157,7 +155,7 @@ const Archive = () => {
                 Filter
               </Button>
               <img
-                src={filter}
+                src="/images/filter.png"
                 alt="Filter Icon"
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 h-6 w-6"
               />

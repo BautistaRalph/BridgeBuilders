@@ -3,8 +3,6 @@ import axios from "../axiosInstance.js";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.png";
-import bg from "@/assets/bb-bg-blurred.png";
 import { useNavigate } from 'react-router-dom'; 
 
 export default function SignUp() {
@@ -53,14 +51,14 @@ export default function SignUp() {
   return (
     <div className="relative flex justify-center min-h-screen bg-gray-100 dark:bg-gray-950">
       <img
-        src={bg}
+        src="/images/bb-bg-blurred.png"
         alt="BridgeBuilder bg"
         className="absolute top-0 left-0 w-full h-full object-cover"
       />
       <div className="relative w-full max-w-xl p-8 m-auto bg-pink-100 rounded-lg shadow-md">
         <div className="mb-8 text-center">
           <img
-            src={logo}
+            src="/images/logo.png"
             alt="BridgeBuilder Foundation"
             className="w-50 h-50 mx-auto text-bb-violet"
           />
