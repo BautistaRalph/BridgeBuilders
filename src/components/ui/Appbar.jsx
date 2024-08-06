@@ -20,7 +20,7 @@ const Appbar = () => {
         return;
       }
       const response = await axios.get(
-        "/api/current-user",
+        '/api/current-user',
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -28,7 +28,9 @@ const Appbar = () => {
         }
       );
       if (response.status === 200) {
+        console.log(response)
         setUserType(response.data.userType);
+        console.log("User type set:", response.data.userType);
       }
     } catch (error) {
       console.error("Failed to fetch user info:", error);
@@ -45,7 +47,7 @@ const Appbar = () => {
         <div className="h-full w-28 md:w-48">
           <a href="/overview">
             <img
-              src="/src/assets/logo2.png"
+              src="/images/logo2.png"
               className="object-fill cursor-pointer"
             />
           </a>

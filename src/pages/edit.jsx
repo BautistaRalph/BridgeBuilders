@@ -343,7 +343,7 @@ const Edit = () => {
                   goalsAchieved={profileData.goalsAchieved}
                   editMode
                   handleGoalChange={handleGoalChange}
-                  image={"/src/assets/goal1.png"}
+                  image={"/images/goal1.png"}
                   title="Mental"
                   goal={1}
                 />
@@ -355,7 +355,7 @@ const Edit = () => {
                   goalsAchieved={profileData.goalsAchieved}
                   editMode
                   handleGoalChange={handleGoalChange}
-                  image={"/src/assets/goal2.png"}
+                  image={"/images/goal2.png"}
                   title="Physical/Social"
                   goal={2}
                 />
@@ -367,7 +367,7 @@ const Edit = () => {
                   goalsAchieved={profileData.goalsAchieved}
                   editMode
                   handleGoalChange={handleGoalChange}
-                  image={"/src/assets/goal3.png"}
+                  image={"/images/goal3.png"}
                   title="Support to Caregiver"
                   goal={3}
                 />
