@@ -10,8 +10,6 @@ import {
 } from "@radix-ui/react-popover";
 import { MdEditNote, MdDeleteForever, MdEditSquare } from "react-icons/md";
 import { IoMdAddCircle } from "react-icons/io";
-import search from "@/assets/search.png";
-import filter from "@/assets/filter.png";
 import UserCard from "@/components/custom/UserCard";
 import { Modal } from "@/components/custom/Modal";
 import { AddYearModal } from "@/components/custom/AddYearModal";
@@ -635,7 +633,7 @@ const Overview = () => {
               style={{ paddingLeft: "2.5rem" }}
             />
             <img
-              src={search}
+              src="/images/search.png"
               alt="Search Icon"
               className="absolute left-2 top-1/2 transform -translate-y-1/2 h-6 w-6"
             />
@@ -647,7 +645,7 @@ const Overview = () => {
                 Filter
               </Button>
               <img
-                src={filter}
+                src="/images/filter.png"
                 alt="Filter Icon"
                 className="absolute left-2 top-1/2 transform -translate-y-1/2 h-6 w-6"
               />
