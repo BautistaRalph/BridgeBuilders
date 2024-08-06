@@ -101,7 +101,7 @@ const Overview = () => {
         }
 
         const response = await axios.get(
-          "http://localhost:5000/api/current-user",
+          "/api/current-user",
           {
             headers: {
               Authorization: `Bearer ${token}`,
